@@ -1,0 +1,28 @@
+{
+    "name": "zendframework/zend-event-manager",
+    "description": "Zend\\EventManager component",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "event-manager"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Zend\\EventManager\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.23"
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer": "1.7.*",
+        "satooshi/php-coveralls": "dev-master",
+        "phpunit/PHPUnit": "~4.0"
+    },
+    "homepage": "https://github.com/zendframework/zend-event-manager",
+    "autoload-dev": {
+        "psr-4": {
+            "ZendTest\\EventManager\\": "test/"
+        }
+    }
+}
