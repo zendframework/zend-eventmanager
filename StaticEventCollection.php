@@ -24,14 +24,14 @@
 namespace Zend\EventManager;
 
 /**
- * Interface for global (static) message delivery
+ * Interface for global (static) event handler collections
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface StaticEventDispatcher
+interface StaticEventCollection
 {
     public function getHandlers($id, $event);
 }
