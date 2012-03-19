@@ -14,67 +14,29 @@
  *
  * @category   Zend
  * @package    Zend_EventManager
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
 namespace Zend\EventManager;
 
-use Zend\Stdlib\CallbackHandler;
-
 /**
- * Static version of EventManager
+ * Interface to automate setter injection for an EventManager instance
  *
  * @category   Zend
  * @package    Zend_EventManager
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class StaticEventManager extends SharedEventManager
+interface EventManagerAware
 {
     /**
-     * @var StaticEventManager
-     */
-    protected static $instance;
-
-    /**
-     * Singleton
+     * Inject an EventManager instance
      * 
+     * @param  EventCollection $eventManager 
      * @return void
      */
-    protected function __construct()
-    {
-    }
-
-    /**
-     * Singleton
-     *
-     * @return void
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * Retrieve instance
-     * 
-     * @return StaticEventManager
-     */
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    /**
-     * Reset the singleton instance
-     * 
-     * @return void
-     */
-    public static function resetInstance()
-    {
-        self::$instance = null;
-    }
+    public function setEventManager(EventCollection $eventManager);
 }
