@@ -30,13 +30,13 @@ namespace Zend\EventManager;
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface EventManagerAware
+interface EventManagerAwareInterface
 {
     /**
      * Inject an EventManager instance
      * 
-     * @param  EventCollection $eventManager 
+     * @param  EventManagerInterface $eventManager
      * @return void
      */
-    public function setEventManager(EventCollection $eventManager);
+    public function setEventManager(EventManagerInterface $eventManager);
 }

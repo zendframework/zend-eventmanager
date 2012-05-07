@@ -21,14 +21,21 @@
 namespace Zend\EventManager;
 
 /**
- * Interface for shared event listener collections
+ * Interface providing events that can be attached, detached and triggered.
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface SharedEventCollection
+interface EventsCapableInterface
 {
-    public function getListeners($id, $event);
+    /**
+     * Retrieve the event manager
+     *
+     * Lazy-loads an EventManager instance if none registered.
+     *
+     * @return EventCollection
+     */
+    public function events();
 }

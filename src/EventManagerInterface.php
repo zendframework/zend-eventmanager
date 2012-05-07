@@ -30,7 +30,7 @@ use Zend\Stdlib\CallbackHandler;
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface EventCollection
+interface EventManagerInterface
 {
     /**
      * Trigger an event
@@ -81,7 +81,7 @@ interface EventCollection
     /**
      * Detach an event listener
      * 
-     * @param  CallbackHandler|ListenerAggregate $listener 
+     * @param  CallbackHandler|ListenerAggregateInterface $listener 
      * @return void
      */
     public function detach($listener);

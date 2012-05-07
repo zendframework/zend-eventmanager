@@ -14,29 +14,20 @@
  *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace Zend\EventManager;
+namespace Zend\EventManager\Exception;
 
 /**
- * Interface to automate setter injection for a SharedEventCollection instance
+ * Base exception interface
  *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface SharedEventCollectionAware
+interface ExceptionInterface
 {
-    /**
-     * Inject an EventManager instance
-     * 
-     * @param  SharedEventCollection $sharedEventCollection 
-     * @return SharedEventCollectionAware
-     */
-    public function setSharedCollections(SharedEventCollection $sharedEventCollection);
 }
