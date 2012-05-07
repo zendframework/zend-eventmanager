@@ -18,63 +18,63 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace Zend\EventManager;
+namespace Zend\EventManager\Filter;
 
 use Zend\Stdlib\CallbackHandler;
 
 /**
- * Static version of EventManager
+ * Interface for intercepting filter chains
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class StaticEventManager extends SharedEventManager
+interface FilterInterface
 {
     /**
-     * @var StaticEventManager
+     * Execute the filter chain
+     * 
+     * @param  string|object $context 
+     * @param  array $params 
+     * @return mixed
      */
-    protected static $instance;
+    public function run($context, array $params = array());
 
     /**
-     * Singleton
+     * Attach an intercepting filter
+     * 
+     * @param  callback $callback 
+     * @return CallbackHandler
+     */
+    public function attach($callback);
+
+    /**
+     * Detach an intercepting filter
+     * 
+     * @param  CallbackHandler $filter 
+     * @return bool
+     */
+    public function detach(CallbackHandler $filter);
+
+    /**
+     * Get all intercepting filters
+     * 
+     * @return array
+     */
+    public function getFilters();
+
+    /**
+     * Clear all filters
      * 
      * @return void
      */
-    protected function __construct()
-    {
-    }
+    public function clearFilters();
 
     /**
-     * Singleton
-     *
-     * @return void
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * Retrieve instance
+     * Get all filter responses
      * 
-     * @return StaticEventManager
+     * @return ResponseCollection
      */
-    public static function getInstance()
-    {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    /**
-     * Reset the singleton instance
-     * 
-     * @return void
-     */
-    public static function resetInstance()
-    {
-        self::$instance = null;
-    }
+    public function getResponses();
 }

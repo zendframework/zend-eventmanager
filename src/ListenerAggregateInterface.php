@@ -20,61 +20,36 @@
 
 namespace Zend\EventManager;
 
-use Zend\Stdlib\CallbackHandler;
-
 /**
- * Interface for intercepting filter chains
+ * Interface for self-registering event listeners.
+ *
+ * Classes implementing this interface may be registered by name or instance
+ * with an EventManager, without an event name. The {@link attach()} method will
+ * then be called with the current EventManager instance, allowing the class to
+ * wire up one or more listeners.
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Filter
+interface ListenerAggregateInterface
 {
     /**
-     * Execute the filter chain
-     * 
-     * @param  string|object $context 
-     * @param  array $params 
-     * @return mixed
+     * Attach one or more listeners
+     *
+     * Implementors may add an optional $priority argument; the EventManager
+     * implementation will pass this to the aggregate.
+     *
+     * @param EventManagerInterface $events
+     * @param null|int $priority Optional priority "hint" to use when attaching listeners
      */
-    public function run($context, array $params = array());
+    public function attach(EventManagerInterface $events);
 
     /**
-     * Attach an intercepting filter
-     * 
-     * @param  callback $callback 
-     * @return CallbackHandler
+     * Detach all previously attached listeners
+     *
+     * @param EventManagerInterface $events
      */
-    public function attach($callback);
-
-    /**
-     * Detach an intercepting filter
-     * 
-     * @param  CallbackHandler $filter 
-     * @return bool
-     */
-    public function detach(CallbackHandler $filter);
-
-    /**
-     * Get all intercepting filters
-     * 
-     * @return array
-     */
-    public function getFilters();
-
-    /**
-     * Clear all filters
-     * 
-     * @return void
-     */
-    public function clearFilters();
-
-    /**
-     * Get all filter responses
-     * 
-     * @return ResponseCollection
-     */
-    public function getResponses();
+    public function detach(EventManagerInterface $events);
 }

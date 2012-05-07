@@ -21,35 +21,14 @@
 namespace Zend\EventManager;
 
 /**
- * Interface for self-registering event listeners.
- *
- * Classes implementing this interface may be registered by name or instance
- * with an EventManager, without an event name. The {@link attach()} method will
- * then be called with the current EventManager instance, allowing the class to
- * wire up one or more listeners.
+ * Interface for shared event listener collections
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface ListenerAggregate
+interface SharedEventManagerInterface
 {
-    /**
-     * Attach one or more listeners
-     *
-     * Implementors may add an optional $priority argument; the EventManager
-     * implementation will pass this to the aggregate.
-     *
-     * @param EventCollection $events
-     * @param null|int $priority Optional priority "hint" to use when attaching listeners
-     */
-    public function attach(EventCollection $events);
-
-    /**
-     * Detach all previously attached listeners
-     *
-     * @param EventCollection $events
-     */
-    public function detach(EventCollection $events);
+    public function getListeners($id, $event);
 }
