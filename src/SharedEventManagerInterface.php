@@ -14,30 +14,33 @@
  *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace ZendTest\EventManager\TestAsset;
+namespace Zend\EventManager;
 
-use Zend\EventManager\SharedEventManagerInterface,
-    Zend\Stdlib\CallbackHandler;
+use Zend\Stdlib\CallbackHandler,
+    Zend\Stdlib\PriorityQueue;
 
 /**
+ * Interface for shared event listener collections
+ *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
- * @group      Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class StaticEventsMock implements SharedEventManagerInterface
+interface SharedEventManagerInterface
 {
-    public function getListeners($id, $event)
-    {
-        return array();
-    }
+    /**
+     * Retrieve all listeners for a given identifier and event
+     *
+     * @param  string|int $id
+     * @param  string|int $event
+     * @return false|PriorityQueue
+     */
+    public function getListeners($id, $event);
 
     /**
      * Attach a listener to an event
@@ -48,10 +51,7 @@ class StaticEventsMock implements SharedEventManagerInterface
      * @param  int $priority Priority at which listener should execute
      * @return void
      */
-    public function attach($id, $event, $callback, $priority = 1)
-    {
-
-    }
+    public function attach($id, $event, $callback, $priority = 1);
 
     /**
      * Detach a listener from an event offered by a given resource
@@ -60,10 +60,7 @@ class StaticEventsMock implements SharedEventManagerInterface
      * @param  CallbackHandler $listener
      * @return bool Returns true if event and listener found, and unsubscribed; returns false if either event or listener not found
      */
-    public function detach($id, CallbackHandler $listener)
-    {
-        return true;
-    }
+    public function detach($id, CallbackHandler $listener);
 
     /**
      * Retrieve all registered events for a given resource
@@ -71,10 +68,7 @@ class StaticEventsMock implements SharedEventManagerInterface
      * @param  string|int $id
      * @return array
      */
-    public function getEvents($id)
-    {
-        return array();
-    }
+    public function getEvents($id);
 
     /**
      * Clear all listeners for a given identifier, optionally for a specific event
@@ -83,10 +77,6 @@ class StaticEventsMock implements SharedEventManagerInterface
      * @param  null|string $event
      * @return bool
      */
-    public function clearListeners($id, $event = null)
-    {
-        return true;
-    }
-
+    public function clearListeners($id, $event = null);
 
 }
