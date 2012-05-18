@@ -18,17 +18,16 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace Zend\EventManager;
+namespace Zend\EventManager\Exception;
 
 /**
- * Interface for global (static) event listener collections
+ * Base exception interface
  *
  * @category   Zend
  * @package    Zend_EventManager
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface StaticEventCollection
+interface ExceptionInterface
 {
-    public function getListeners($id, $event);
 }
