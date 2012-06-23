@@ -18,10 +18,9 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @namespace
- */
 namespace Zend\EventManager;
+
+use ArrayAccess;
 
 /**
  * Representation of an event
@@ -31,7 +30,7 @@ namespace Zend\EventManager;
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface EventDescription
+interface EventInterface
 {
     /**
      * Get event name
@@ -97,7 +96,7 @@ interface EventDescription
     public function setParam($name, $value);
 
     /**
-     * Indicate whether or not the parent EventCollection should stop propagating events
+     * Indicate whether or not the parent EventManagerInterface should stop propagating events
      * 
      * @param  bool $flag 
      * @return void

@@ -14,41 +14,29 @@
  *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace ZendTest\EventManager\TestAsset;
-
-use Zend\EventManager\EventManagerInterface,
-    Zend\EventManager\EventManager;
+namespace Zend\EventManager;
 
 /**
+ * Interface to automate setter injection for an EventManager instance
+ *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
- * @group      Zend_EventManager
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class ClassWithEvents
+interface EventManagerAwareInterface extends EventsCapableInterface
 {
-    protected $events;
-
-    public function events(EventManagerInterface $events = null)
-    {
-        if (null !== $events) {
-            $this->events = $events;
-        }
-        if (null === $this->events) {
-            $this->events = new EventManager(__CLASS__);
-        }
-        return $this->events;
-    }
-
-    public function foo()
-    {
-        $this->events()->trigger(__FUNCTION__, $this, array());
-    }
+    /**
+     * Inject an EventManager instance
+     * 
+     * @param  EventManagerInterface $eventManager
+     * @return void
+     */
+    public function setEventManager(EventManagerInterface $eventManager);
 }

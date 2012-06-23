@@ -14,41 +14,43 @@
  *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-namespace ZendTest\EventManager\TestAsset;
-
-use Zend\EventManager\EventManagerInterface,
-    Zend\EventManager\EventManager;
+namespace Zend\EventManager;
 
 /**
+ * Interface to automate setter injection for a SharedEventManagerInterface instance
+ *
  * @category   Zend
  * @package    Zend_EventManager
- * @subpackage UnitTests
- * @group      Zend_EventManager
+ * @subpackage UnitTest
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class ClassWithEvents
+interface SharedEventManagerAwareInterface
 {
-    protected $events;
+    /**
+     * Inject a SharedEventManager instance
+     * 
+     * @param  SharedEventManagerInterface $sharedEventManager
+     * @return SharedEventManagerAwareInterface
+     */
+    public function setSharedManager(SharedEventManagerInterface $sharedEventManager);
 
-    public function events(EventManagerInterface $events = null)
-    {
-        if (null !== $events) {
-            $this->events = $events;
-        }
-        if (null === $this->events) {
-            $this->events = new EventManager(__CLASS__);
-        }
-        return $this->events;
-    }
+    /**
+     * Get shared collections container
+     *
+     * @return SharedEventManagerInterface
+     */
+    public function getSharedManager();
 
-    public function foo()
-    {
-        $this->events()->trigger(__FUNCTION__, $this, array());
-    }
+    /**
+     * Remove any shared collections
+     *
+     * @return void
+     */
+    public function unsetSharedManager();
 }
