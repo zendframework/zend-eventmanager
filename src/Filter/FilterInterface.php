@@ -18,11 +18,9 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-/**
- * @namespace
- */
-namespace Zend\EventManager;
+namespace Zend\EventManager\Filter;
 
+use Zend\EventManager\ResponseCollection;
 use Zend\Stdlib\CallbackHandler;
 
 /**
@@ -33,7 +31,7 @@ use Zend\Stdlib\CallbackHandler;
  * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Filter
+interface FilterInterface
 {
     /**
      * Execute the filter chain
