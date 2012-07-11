@@ -8,22 +8,14 @@
  * @package   Zend_EventManager
  */
 
-namespace Zend\EventManager;
+namespace Zend\EventManager\Exception;
 
 /**
- * Interface providing events that can be attached, detached and triggered.
+ * Invalid callback exception
  *
  * @category   Zend
  * @package    Zend_EventManager
  */
-interface EventsCapableInterface
+class InvalidCallbackException extends DomainException implements ExceptionInterface
 {
-    /**
-     * Retrieve the event manager
-     *
-     * Lazy-loads an EventManager instance if none registered.
-     *
-     * @return EventManagerInterface
-     */
-    public function getEventManager();
 }
