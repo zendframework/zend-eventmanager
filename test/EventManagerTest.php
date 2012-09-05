@@ -277,10 +277,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testCanDetachListenerAggregates()
     {
         // setup some other event listeners, to ensure appropriate items are detached
-        $listenerFooBar1 = $this->events->attach('foo.bar', function(){ return true; });
-        $listenerFooBar2 = $this->events->attach('foo.bar', function(){ return true; });
-        $listenerFooBaz1 = $this->events->attach('foo.baz', function(){ return true; });
-        $listenerOther   = $this->events->attach('other', function(){ return true; });
+        $listenerFooBar1 = $this->events->attach('foo.bar', function() { return true; });
+        $listenerFooBar2 = $this->events->attach('foo.bar', function() { return true; });
+        $listenerFooBaz1 = $this->events->attach('foo.baz', function() { return true; });
+        $listenerOther   = $this->events->attach('other', function() { return true; });
 
         $aggregate = new TestAsset\MockAggregate();
         $this->events->attachAggregate($aggregate);
@@ -307,10 +307,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testCanDetachListenerAggregatesViaDetach()
     {
         // setup some other event listeners, to ensure appropriate items are detached
-        $listenerFooBar1 = $this->events->attach('foo.bar', function(){ return true; });
-        $listenerFooBar2 = $this->events->attach('foo.bar', function(){ return true; });
-        $listenerFooBaz1 = $this->events->attach('foo.baz', function(){ return true; });
-        $listenerOther   = $this->events->attach('other', function(){ return true; });
+        $listenerFooBar1 = $this->events->attach('foo.bar', function() { return true; });
+        $listenerFooBar2 = $this->events->attach('foo.bar', function() { return true; });
+        $listenerFooBaz1 = $this->events->attach('foo.baz', function() { return true; });
+        $listenerOther   = $this->events->attach('other', function() { return true; });
 
         $aggregate = new TestAsset\MockAggregate();
         $this->events->attach($aggregate);
@@ -610,6 +610,19 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->setSharedManager($shared);
         $this->assertSame($shared, $this->events->getSharedManager());
         $this->assertSame($shared, StaticEventManager::getInstance());
+    }
+
+    public function testSharedEventManagerAttachReturnsCallbackHandler()
+    {
+        $shared = new SharedEventManager;
+        $callbackHandler = $shared->attach(
+            'foo',
+            'bar',
+            function($e) {
+                return true;
+            }
+        );
+        $this->assertTrue($callbackHandler instanceof CallbackHandler);
     }
 
     public function testDoesNotCreateStaticInstanceIfNonePresent()
