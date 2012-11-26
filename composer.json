@@ -1,5 +1,6 @@
 {
     "name": "zendframework/zend-eventmanager",
+    "description": " ",
     "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
@@ -7,7 +8,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Zend\\EventManager": "src/"
+            "Zend\\EventManager\\": "src/"
         }
     },
     "require": {

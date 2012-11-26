@@ -1,38 +1,25 @@
 <?php
 /**
- * Zend Framework
+ * Zend Framework (http://framework.zend.com/)
  *
- * LICENSE
- *
- * This source file is subject to the new BSD license that is bundled
- * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
- *
- * @category   Zend
- * @package    Zend_EventManager
- * @subpackage UnitTests
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @copyright Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @package   Zend_EventManager
  */
 
 namespace ZendTest\EventManager;
 
-use PHPUnit_Framework_TestCase as TestCase,
-    stdClass,
-    Zend\EventManager\EventManager,
-    Zend\EventManager\StaticEventManager;
+use PHPUnit_Framework_TestCase as TestCase;
+use stdClass;
+use Zend\EventManager\EventManager;
+use Zend\EventManager\StaticEventManager;
 
 /**
  * @category   Zend
  * @package    Zend_EventManager
  * @subpackage UnitTests
  * @group      Zend_EventManager
- * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class StaticEventManagerTest extends TestCase
 {
@@ -192,11 +179,35 @@ class StaticEventManagerTest extends TestCase
         $this->assertEquals(array('bar'), $events->getEvents('foo'));
     }
 
+    public function testCanGetEventsByWildcard()
+    {
+        $events = StaticEventManager::getInstance();
+        $events->attach('*', 'bar', array($this, __FUNCTION__));
+        $this->assertEquals(array('bar'), $events->getEvents('foo'));
+    }
+
     public function testCanGetListenersByResourceAndEvent()
     {
         $events = StaticEventManager::getInstance();
         $events->attach('foo', 'bar', array($this, __FUNCTION__));
         $listeners = $events->getListeners('foo', 'bar');
+        $this->assertInstanceOf('Zend\Stdlib\PriorityQueue', $listeners);
+        $this->assertEquals(1, count($listeners));
+    }
+
+    public function testCanNotGetListenersByResourceAndEventWithWildcard()
+    {
+        $events = StaticEventManager::getInstance();
+        $events->attach('*', 'bar', array($this, __FUNCTION__));
+        $listeners = $events->getListeners('foo', 'bar');
+        $this->assertFalse($listeners);
+    }
+
+    public function testCanGetListenersByWildcardAndEvent()
+    {
+        $events = StaticEventManager::getInstance();
+        $events->attach('*', 'bar', array($this, __FUNCTION__));
+        $listeners = $events->getListeners('*', 'bar');
         $this->assertInstanceOf('Zend\Stdlib\PriorityQueue', $listeners);
         $this->assertEquals(1, count($listeners));
     }
@@ -249,5 +260,51 @@ class StaticEventManagerTest extends TestCase
         });
         $manager->trigger('bar', $this, array());
         $this->assertEquals(2, $test->triggered);
+    }
+
+    public function testListenersAttachedToWildcardsWillBeTriggered()
+    {
+        $identifiers = array('foo', 'bar');
+        $events  = StaticEventManager::getInstance();
+        $manager = new EventManager($identifiers);
+        $manager->setSharedManager($events);
+
+        $test = new \stdClass;
+        $test->triggered = 0;
+        $events->attach('*', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        //Tests one can have multiple wildcards attached
+        $events->attach('*', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        $manager->trigger('bar', $this, array());
+        $this->assertEquals(2, $test->triggered);
+    }
+
+    public function testListenersAttachedToAnyIdentifierProvidedToEventManagerOrWildcardsWillBeTriggered()
+    {
+        $identifiers = array('foo', 'bar');
+        $events  = StaticEventManager::getInstance();
+        $manager = new EventManager($identifiers);
+        $manager->setSharedManager($events);
+
+        $test = new \stdClass;
+        $test->triggered = 0;
+        $events->attach('foo', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        $events->attach('bar', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        $events->attach('*', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        //Tests one can have multiple wildcards attached
+        $events->attach('*', 'bar', function($e) use ($test) {
+            $test->triggered++;
+        });
+        $manager->trigger('bar', $this, array());
+        $this->assertEquals(4, $test->triggered);
     }
 }
