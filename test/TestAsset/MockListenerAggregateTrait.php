@@ -11,7 +11,7 @@
 namespace ZendTest\EventManager\TestAsset;
 
 use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\EventManager;
+use Zend\EventManager\ListenerAggregateTrait;
 
 /**
  * @category   Zend
@@ -19,23 +19,22 @@ use Zend\EventManager\EventManager;
  * @subpackage UnitTests
  * @group      Zend_EventManager
  */
-class ClassWithEvents
+class MockListenerAggregateTrait
 {
-    protected $events;
+    use ListenerAggregateTrait;
 
-    public function getEventManager(EventManagerInterface $events = null)
+    public function attach(EventManagerInterface $events)
     {
-        if (null !== $events) {
-            $this->events = $events;
-        }
-        if (null === $this->events) {
-            $this->events = new EventManager(__CLASS__);
-        }
-        return $this->events;
+        $this->listeners[] = $events->attach('foo.bar', array($this, 'doFoo'));
+        $this->listeners[] = $events->attach('foo.baz', array($this, 'doFoo'));
     }
 
-    public function foo()
+    public function getCallbacks()
     {
-        $this->getEventManager()->trigger(__FUNCTION__, $this, array());
+        return $this->listeners;
+    }
+
+    public function doFoo()
+    {
     }
 }

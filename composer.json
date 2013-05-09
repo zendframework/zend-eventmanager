@@ -15,6 +15,12 @@
         "php": ">=5.3.3",
         "zendframework/zend-stdlib": "self.version"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2-dev",
+            "dev-develop": "2.3-dev"
+        }
+    },
     "homepage": "https://github.com/zendframework/zend-event-manager",
     "autoload-dev": {
         "psr-4": {

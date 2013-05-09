@@ -9,17 +9,9 @@
 
 namespace Zend\EventManager;
 
-/**
- * Interface providing events that can be attached, detached and triggered.
- */
-interface EventsCapableInterface
+use \Zend\EventManager\ProvidesEvents;
+
+trait EventManagerAwareTrait
 {
-    /**
-     * Retrieve the event manager
-     *
-     * Lazy-loads an EventManager instance if none registered.
-     *
-     * @return EventManagerInterface
-     */
-    public function getEventManager();
+    use ProvidesEvents;
 }

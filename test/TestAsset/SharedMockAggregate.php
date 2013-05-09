@@ -10,8 +10,8 @@
 
 namespace ZendTest\EventManager\TestAsset;
 
-use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\SharedEventManagerInterface;
+use Zend\EventManager\SharedListenerAggregateInterface;
 
 /**
  * @category   Zend
@@ -19,29 +19,36 @@ use Zend\EventManager\ListenerAggregateInterface;
  * @subpackage UnitTests
  * @group      Zend_EventManager
  */
-class MockAggregate implements ListenerAggregateInterface
+class SharedMockAggregate implements SharedListenerAggregateInterface
 {
+
+    protected $identity;
+
+    public function __construct($identity)
+    {
+        $this->identity = $identity;
+    }
 
     protected $listeners = array();
     public $priority;
 
-    public function attach(EventManagerInterface $events, $priority = null)
+    public function attachShared(SharedEventManagerInterface $events, $priority = null)
     {
         $this->priority = $priority;
 
         $listeners = array();
-        $listeners[] = $events->attach('foo.bar', array( $this, 'fooBar' ));
-        $listeners[] = $events->attach('foo.baz', array( $this, 'fooBaz' ));
+        $listeners[] = $events->attach($this->identity, 'foo.bar', array( $this, 'fooBar' ));
+        $listeners[] = $events->attach($this->identity, 'foo.baz', array( $this, 'fooBaz' ));
 
         $this->listeners[ \spl_object_hash($events) ] = $listeners;
 
         return __METHOD__;
     }
 
-    public function detach(EventManagerInterface $events)
+    public function detachShared(SharedEventManagerInterface $events)
     {
         foreach ($this->listeners[ \spl_object_hash($events) ] as $listener) {
-            $events->detach($listener);
+            $events->detach($this->identity, $listener);
         }
 
         return __METHOD__;
