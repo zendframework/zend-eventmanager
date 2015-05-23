@@ -6,7 +6,7 @@
         "zf2",
         "eventmanager"
     ],
-    "homepage": "https://github.com/zendframework/zend-event-manager",
+    "homepage": "https://github.com/zendframework/zend-eventmanager",
     "autoload": {
         "psr-4": {
             "Zend\\EventManager\\": "src/"
