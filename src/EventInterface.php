@@ -1,96 +1,72 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
  */
 
 namespace Zend\EventManager;
 
-use ArrayAccess;
-
 /**
- * Representation of an event
+ * EventInterface
  */
 interface EventInterface
 {
     /**
-     * Get event name
+     * Set a list of params
      *
-     * @return string
+     * @param  array $params
+     * @return void
      */
-    public function getName();
+    public function setParams(array $params);
 
     /**
-     * Get target/context from which event was triggered
+     * Get a list of params
      *
-     * @return null|string|object
-     */
-    public function getTarget();
-
-    /**
-     * Get parameters passed to the event
-     *
-     * @return array|ArrayAccess
+     * @return array
      */
     public function getParams();
 
     /**
-     * Get a single parameter by name
+     * Set a single param
      *
-     * @param  string $name
-     * @param  mixed $default Default value to return if parameter does not exist
+     * @param  string $key
+     * @param  mixed  $value
+     * @return void
+     */
+    public function setParam($key, $value);
+
+    /**
+     * Get a single param
+     *
+     * @param  string $key
+     * @param  mixed  $defaultValue
      * @return mixed
      */
-    public function getParam($name, $default = null);
+    public function getParam($key, $defaultValue = null);
 
     /**
-     * Set the event name
+     * Stop the propagation of the event
      *
-     * @param  string $name
      * @return void
      */
-    public function setName($name);
+    public function stopPropagation();
 
     /**
-     * Set the event target/context
-     *
-     * @param  null|string|object $target
-     * @return void
-     */
-    public function setTarget($target);
-
-    /**
-     * Set event parameters
-     *
-     * @param  string $params
-     * @return void
-     */
-    public function setParams($params);
-
-    /**
-     * Set a single parameter by key
-     *
-     * @param  string $name
-     * @param  mixed $value
-     * @return void
-     */
-    public function setParam($name, $value);
-
-    /**
-     * Indicate whether or not the parent EventManagerInterface should stop propagating events
-     *
-     * @param  bool $flag
-     * @return void
-     */
-    public function stopPropagation($flag = true);
-
-    /**
-     * Has this event indicated event propagation should stop?
+     * Is the propagation stopped?
      *
      * @return bool
      */
-    public function propagationIsStopped();
+    public function isPropagationStopped();
 }
