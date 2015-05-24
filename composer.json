@@ -16,6 +16,8 @@
         "php": ">=5.3.23",
         "zendframework/zend-stdlib": "~2.4"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "2.4-dev",
