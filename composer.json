@@ -14,7 +14,7 @@
     },
     "require": {
         "php": ">=5.3.23",
-        "zendframework/zend-stdlib": "~2.5.0"
+        "zendframework/zend-stdlib": "~2.5"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
