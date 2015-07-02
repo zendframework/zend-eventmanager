@@ -9,9 +9,6 @@
 
 namespace Zend\EventManager;
 
-use Zend\Stdlib\CallbackHandler;
-use Zend\Stdlib\PriorityQueue;
-
 /**
  * Shared/contextual EventManager
  *
@@ -57,22 +54,20 @@ class SharedEventManager implements
      * @param  string $event
      * @param  callable $callback PHP Callback
      * @param  int $priority Priority at which listener should execute
-     * @return CallbackHandler|array Either CallbackHandler or array of CallbackHandlers
+     * @return void
      */
     public function attach($id, $event, $callback, $priority = 1)
     {
         $ids = (array) $id;
-        $listeners = [];
         foreach ($ids as $id) {
-            if (!array_key_exists($id, $this->identifiers)) {
-                $this->identifiers[$id] = new EventManager($id);
+            if (! isset($this->identifiers[$id][$event])) {
+                $this->identifiers[$id][$event] = [];
             }
-            $listeners[] = $this->identifiers[$id]->attach($event, $callback, $priority);
+            $listeners[] = $this->identifiers[$id][$event][] = [
+                'callback' => $callback,
+                'priority' => $priority,
+            ];
         }
-        if (count($listeners) > 1) {
-            return $listeners;
-        }
-        return $listeners[0];
     }
 
     /**
@@ -92,35 +87,6 @@ class SharedEventManager implements
     }
 
     /**
-     * Detach a listener from an event offered by a given resource
-     *
-     * @param  string|int $id
-     * @param  CallbackHandler $listener
-     * @return bool Returns true if event and listener found, and unsubscribed; returns false if either event or listener not found
-     */
-    public function detach($id, CallbackHandler $listener)
-    {
-        if (!array_key_exists($id, $this->identifiers)) {
-            return false;
-        }
-        return $this->identifiers[$id]->detach($listener);
-    }
-
-    /**
-     * Detach a listener aggregate
-     *
-     * Listener aggregates accept a SharedEventManagerInterface instance, and call detachShared()
-     * of all previously attached listeners.
-     *
-     * @param  SharedListenerAggregateInterface $aggregate
-     * @return mixed return value of {@link SharedListenerAggregateInterface::detachShared()}
-     */
-    public function detachAggregate(SharedListenerAggregateInterface $aggregate)
-    {
-        return $aggregate->detachShared($this);
-    }
-
-    /**
      * Retrieve all registered events for a given resource
      *
      * @param  string|int $id
@@ -128,29 +94,38 @@ class SharedEventManager implements
      */
     public function getEvents($id)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
-            //Check if there are any id wildcards listeners
+        if (! array_key_exists($id, $this->identifiers)) {
+            // Check if there are any identifier wildcard listeners
             if ('*' != $id && array_key_exists('*', $this->identifiers)) {
-                return $this->identifiers['*']->getEvents();
+                return array_keys($this->identifiers['*']);
             }
             return false;
         }
-        return $this->identifiers[$id]->getEvents();
+        return array_keys($this->identifiers[$id]);
     }
 
     /**
      * Retrieve all listeners for a given identifier and event
      *
-     * @param  string|int $id
-     * @param  string|int $event
-     * @return false|PriorityQueue
+     * @param  string $id
+     * @param  string $event
+     * @return array[]
      */
-    public function getListeners($id, $event)
+    public function getListeners($id, $event = null)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
-            return false;
+        if (! array_key_exists($id, $this->identifiers)) {
+            return [];
         }
-        return $this->identifiers[$id]->getListeners($event);
+
+        if (! $event) {
+            return $this->identifiers[$id];
+        }
+
+        if (! isset($this->identifiers[$id][$event])) {
+            return [];
+        }
+
+        return $this->identifiers[$id][$event];
     }
 
     /**
@@ -162,7 +137,7 @@ class SharedEventManager implements
      */
     public function clearListeners($id, $event = null)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
+        if (! array_key_exists($id, $this->identifiers)) {
             return false;
         }
 
@@ -171,6 +146,11 @@ class SharedEventManager implements
             return true;
         }
 
-        return $this->identifiers[$id]->clearListeners($event);
+        if (! isset($this->identifiers[$id][$event])) {
+            return true;
+        }
+
+        unset($this->identifiers[$id][$event]);
+        return true;
     }
 }
