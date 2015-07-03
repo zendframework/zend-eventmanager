@@ -30,10 +30,10 @@ interface SharedEventManagerInterface
      *
      * @param  string|string[] $id Identifier(s) for event emitting component(s)
      * @param  string $event
-     * @param  callable $callback PHP Callback
+     * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
      */
-    public function attach($id, $event, $callback, $priority = 1);
+    public function attach($id, $event, callable $listener, $priority = 1);
 
     /**
      * Retrieve all registered events for a given resource

@@ -90,6 +90,14 @@ interface EventManagerInterface extends SharedEventManagerAwareInterface
     public function setIdentifiers($identifiers);
 
     /**
+     * Add identifier(s) (appends to any currently set identifiers)
+     *
+     * @param string|string[]|Traversable $identifiers
+     * @return EventManagerInterface
+     */
+    public function addIdentifiers($identifiers);
+
+    /**
      * Attach a listener aggregate
      *
      * @param  ListenerAggregateInterface $aggregate

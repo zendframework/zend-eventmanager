@@ -40,10 +40,22 @@ class EventManager implements EventManagerInterface
     protected $identifiers = [];
 
     /**
+     * Have shared/wildcard listeners been prepared already?
+     *
+     * @var bool
+     */
+    private $isPrepared = false;
+
+    /**
      * Shared event manager
      * @var false|null|SharedEventManagerInterface
      */
     protected $sharedManager = null;
+
+    /**
+     * @var array List of wildcard listeners.
+     */
+    private $wildcardListeners = [];
 
     /**
      * Constructor
@@ -85,9 +97,6 @@ class EventManager implements EventManagerInterface
     public function setSharedManager(SharedEventManagerInterface $sharedEventManager)
     {
         $this->sharedManager = $sharedEventManager;
-        if (! empty($this->identifiers)) {
-            $this->prepareListeners();
-        }
         return $this;
     }
 
@@ -104,40 +113,43 @@ class EventManager implements EventManagerInterface
     /**
      * Set the identifiers (overrides any currently set identifiers)
      *
-     * @param string|int|array|Traversable $identifiers
+     * @param string|string[]|Traversable $identifiers
      * @return EventManager Provides a fluent interface
-     * @throws Exception\RuntimeException if called more than once.
      */
     public function setIdentifiers($identifiers)
     {
-        if (! empty($this->identifiers)) {
+        if ($this->isPrepared) {
             throw new Exception\RuntimeException(sprintf(
-                '%s cannot be called more than once for the same instance',
+                '%s cannot be called after any events have been triggered',
                 __METHOD__
             ));
         }
 
-        if ($identifiers instanceof Traversable) {
-            $identifiers = iterator_to_array($identifiers);
-        }
+        $this->identifiers = array_unique($this->prepareIdentifiers($identifiers));
 
-        if (is_string($identifiers) && ! empty($identifiers)) {
-            $identifiers = (array) $identifiers;
-        }
+        return $this;
+    }
 
-        if (! is_array($identifiers)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects an array or Traversable set of identifiers, or a string identifier; received %s',
-                __METHOD__,
-                (is_object($identifiers) ? get_class($identifiers) : gettype($identifiers))
+    /**
+     * Add identifier(s) (appends to any currently set identifiers)
+     *
+     * @param string|int|array|Traversable $identifiers
+     * @return EventManager Provides a fluent interface
+     * @throws Exception\RuntimeException if called more than once.
+     */
+    public function addIdentifiers($identifiers)
+    {
+        if ($this->isPrepared) {
+            throw new Exception\RuntimeException(sprintf(
+                '%s cannot be called after any events have been triggered',
+                __METHOD__
             ));
         }
 
-        $this->identifiers = array_unique($identifiers);
-
-        if ($this->sharedManager) {
-            $this->prepareListeners();
-        }
+        $this->identifiers = array_unique(array_merge(
+            $this->identifiers,
+            $this->prepareIdentifiers($identifiers)
+        ));
 
         return $this;
     }
@@ -154,6 +166,8 @@ class EventManager implements EventManagerInterface
      */
     public function trigger($event, $target = null, $argv = array(), callable $callback = null)
     {
+        $this->prepareListeners();
+
         if ($event instanceof EventInterface) {
             $e        = $event;
             $event    = $e->getName();
@@ -220,12 +234,13 @@ class EventManager implements EventManagerInterface
             return;
         }
 
-        // Is this the wildcard event? If so, attach the listener to any events
-        // that already exist.
+        // Is this the wildcard event? If so, add the listener to the wildcard
+        // list with its priority, to inject later.
         if ('*' === $event) {
-            foreach ($this->getEvents() as $event) {
-                $this->attach($event, $listener, $priority);
-            }
+            $this->wildcardListeners[] = [
+                'listener' => $listener,
+                'priority' => $priority,
+            ];
             return;
         }
 
@@ -345,55 +360,109 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * Prepare identifier arguments to inject in the instance.
+     *
+     * @param string|string[]|Traversable $identifiers
+     * @return array
+     * @throws Exception\InvalidArgumentException for invalid identifiers.
+     */
+    private function prepareIdentifiers($identifiers)
+    {
+        if ($identifiers instanceof Traversable) {
+            $identifiers = iterator_to_array($identifiers);
+        }
+
+        if (is_string($identifiers) && ! empty($identifiers)) {
+            $identifiers = (array) $identifiers;
+        }
+
+        if (! is_array($identifiers)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Identifiers must be a non-empty string, an array, or a Traversable set; received %s',
+                (is_object($identifiers) ? get_class($identifiers) : gettype($identifiers))
+            ));
+        }
+
+        return $identifiers;
+    }
+
+    /**
      * Prepare listeners.
      *
      * Attaches all listeners from the shared event manager to the current
      * instance by:
      *
      * - Looping through identifiers in this instance, and attaching any
-     *   listeners from the shared manager on the given identifier; any
-     *   listeners on a wildcard event are deferred for later attachment.
-     * - Looping through shared listeners on the wildcard identifier; any
-     *   listeners on a wildcard event are deferred for later attachment.
+     *   listeners from the shared manager on the given identifier.
+     * - Looping through shared listeners on the wildcard identifier.
      * - Looping through any listeners on wildcard events and attaching them.
      *
-     * This method is only called once per instance, when both identifiers
-     * and a shared manager are both first present in the instance; the net
-     * result is that shared listeners typically MUST be attached before the
-     * instance is created.
+     * This method is only called once per instance, the first time any event
+     * is triggered; as such, all shared and wildcard listeners MUST be
+     * injected BEFORE the first trigger.
      */
     private function prepareListeners()
     {
-        $wildcardListeners = [];
+        if ($this->isPrepared) {
+            return;
+        }
 
+        if ($this->sharedManager) {
+            $this->attachSharedListeners();
+        }
+
+        $this->prepareWildcardListeners($this->getEvents(), $this->wildcardListeners);
+
+        $this->isPrepared = true;
+    }
+
+    /**
+     * Attach shared listeners.
+     *
+     * Attaches shared listeners for identifiers in the current instance, as
+     * well as any on the wildcard listener.
+     */
+    private function attachSharedListeners()
+    {
         foreach ($this->identifiers as $identifier) {
             foreach ($this->sharedManager->getListeners($identifier) as $event => $listeners) {
-                if ($event === '*') {
-                    $wildcardListeners = array_merge($wildcardListeners, $listeners);
-                    continue;
-                }
-
-                foreach ($listeners as $struct) {
-                    $this->attach($event, $struct['callback'], $struct['priority']);
-                }
+                $this->attachListenerStructs($event, $listeners);
             }
         }
 
         foreach ($this->sharedManager->getListeners('*') as $event => $listeners) {
-            if ($event === '*') {
-                $wildcardListeners = array_merge($wildcardListeners, $listeners);
-                continue;
-            }
-
-            foreach ($listeners as $struct) {
-                $this->attach($event, $struct['callback'], $struct['priority']);
-            }
+            $this->attachListenerStructs($event, $listeners);
         }
+    }
 
-        foreach ($this->getEvents() as $event) {
-            foreach ($wildcardListeners as $struct) {
-                $this->attach($event, $struct['callback'], $struct['priority']);
-            }
+    /**
+     * Attach listener structs to a given event.
+     *
+     * Loops through each listener struct, attaching the listener at the given
+     * priority to the specified event.
+     *
+     * @param string $event
+     * @param array $listeners
+     */
+    private function attachListenerStructs($event, array $listeners)
+    {
+        foreach ($listeners as $struct) {
+            $this->attach($event, $struct['listener'], $struct['priority']);
+        }
+    }
+
+    /**
+     * Inject wildcard listeners.
+     *
+     * Loops through each event, injecting each wildcard listener available.
+     *
+     * @param array $events
+     * @param array $listeners
+     */
+    private function prepareWildcardListeners(array $events, array $listeners)
+    {
+        foreach ($events as $event) {
+            $this->attachListenerStructs($event, $listeners);
         }
     }
 }

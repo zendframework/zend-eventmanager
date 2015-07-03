@@ -29,7 +29,7 @@ class SharedEventManager implements
     /**
      * Attach a listener to an event
      *
-     * Allows attaching a callback to an event offered by one or more
+     * Allows attaching a listener to an event offered by one or more
      * identifying components. As an example, the following connects to the
      * "getAll" event of both an AbstractResource and EntityResource:
      *
@@ -52,11 +52,11 @@ class SharedEventManager implements
      *
      * @param  string|array $id Identifier(s) for event emitting component(s)
      * @param  string $event
-     * @param  callable $callback PHP Callback
+     * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
      * @return void
      */
-    public function attach($id, $event, $callback, $priority = 1)
+    public function attach($id, $event, callable $listener, $priority = 1)
     {
         $ids = (array) $id;
         foreach ($ids as $id) {
@@ -64,7 +64,7 @@ class SharedEventManager implements
                 $this->identifiers[$id][$event] = [];
             }
             $listeners[] = $this->identifiers[$id][$event][] = [
-                'callback' => $callback,
+                'listener' => $listener,
                 'priority' => $priority,
             ];
         }
