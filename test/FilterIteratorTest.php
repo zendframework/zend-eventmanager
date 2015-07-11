@@ -35,5 +35,4 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $filterIterator->insert(null, 1);
         $this->assertNull($filterIterator->next([0, 1, 2]));
     }
-
 }
