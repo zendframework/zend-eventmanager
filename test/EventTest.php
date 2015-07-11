@@ -34,7 +34,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
     {
         $event = new Event('foo');
         $this->setExpectedException('Zend\EventManager\Exception\InvalidArgumentException');
-		$event->setParams('test');
+        $event->setParams('test');
     }
 
     public function testGetParamReturnsDefault()
