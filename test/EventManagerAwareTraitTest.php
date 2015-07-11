@@ -11,6 +11,7 @@ namespace ZendTest\EventManager;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Zend\EventManager\EventManager;
+use ZendTest\EventManager\TestAsset\MockEventManagerAwareTrait;
 
 /**
  * @requires PHP 5.4
@@ -41,5 +42,22 @@ class EventManagerAwareTraitTest extends TestCase
         $object->setEventManager($eventManager);
 
         $this->assertSame($eventManager, $object->getEventManager());
+    }
+
+    public function testSetEventManagerWithEventIdentifier()
+    {
+        $object = new MockEventManagerAwareTrait();
+        $eventManager = new EventManager();
+
+        $eventIdentifier = 'foo';
+        $object->setEventIdentifier($eventIdentifier);
+
+        $object->setEventManager($eventManager);
+
+        //check that the identifer has been added.
+        $this->assertContains($eventIdentifier, $eventManager->getIdentifiers());
+
+        //check that the method attachDefaultListeners has been called
+        $this->assertTrue($object->defaultEventListenersCalled());
     }
 }
