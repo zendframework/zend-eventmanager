@@ -71,6 +71,6 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
 
         $chain = new FilterIterator();
 
-        $this->assertNull($filterIterator->next([0, 1, 2], ['foo','bar'], $chain));
+        $this->assertNull($filterIterator->next([0, 1, 2], ['foo', 'bar'], $chain));
     }
 }
