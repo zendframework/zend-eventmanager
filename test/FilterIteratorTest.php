@@ -26,14 +26,14 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
     public function testNextReturnsNullWithEmptyHeap()
     {
         $filterIterator = new FilterIterator();
-        $this->assertNull($filterIterator->next([0,1,2]));
+        $this->assertNull($filterIterator->next([0, 1, 2]));
     }
 
     public function testNextReturnsNullOnInvalidCallback()
     {
         $filterIterator = new FilterIterator();
         $filterIterator->insert(null, 1);
-        $this->assertNull($filterIterator->next([0,1,2]));
+        $this->assertNull($filterIterator->next([0, 1, 2]));
     }
 
 }
