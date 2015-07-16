@@ -138,4 +138,31 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf('Zend\EventManager\Filter\FilterIterator', $chain);
     }
+
+    public function testRunReturnsNullWhenChainIsEmpty()
+    {
+        $filterChain = new FilterChain();
+        $this->assertNull($filterChain->run(null));
+    }
+
+    public function testAttachThrowsInvalidCallbackException()
+    {
+        $filterChain = new FilterChain();
+
+        $this->setExpectedException('Zend\EventManager\Exception\InvalidCallbackException', 'No callback provided');
+        $filterChain->attach([]);
+    }
+
+    public function testGetResponses()
+    {
+        $filterChain = new FilterChain();
+        $this->assertNull($filterChain->getResponses());
+    }
+
+    public function testRunWithNullCallback()
+    {
+        $filterChain = new FilterChain();
+        $filterChain->getFilters()->insert(null, 1);
+        $this->assertNull($filterChain->run(null));
+    }
 }
