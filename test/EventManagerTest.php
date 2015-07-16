@@ -16,6 +16,8 @@ use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\StaticEventManager;
+use ReflectionClass;
+use Zend\Stdlib\CallBackHandler;
 
 /**
  * @group      Zend_EventManager
@@ -680,5 +682,96 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         restore_error_handler();
 
         $this->assertTrue($deprecated, 'EventManager::triggerUntil not marked as E_USER_DEPRECATED');
+    }
+
+    public function testSetEventClass()
+    {
+        $eventClass = 'NewEventClass';
+        $this->events->setEventClass($eventClass);
+
+        $reflection = new ReflectionClass($this->events);
+        $property = $reflection->getProperty('eventClass');
+        $property->setAccessible(true);
+
+        $this->assertEquals($eventClass, $property->getValue($this->events));
+    }
+
+    public function testTriggerThrowsInvalidCallbackExceptionForInvalidCallback()
+    {
+        $this->setExpectedException('Zend\EventManager\Exception\InvalidCallbackException',
+        'Invalid callback provided');
+
+        $responses = $this->events->trigger(
+            'foo.bar',
+            $this,
+            ['string' => 'foo', 'search' => 'f'],
+            true
+        );
+    }
+
+    public function testAttachThrowsInvalidArgumentExceptionForInvalidCallback()
+    {
+        $this->setExpectedException('Zend\EventManager\Exception\InvalidArgumentException');
+        $this->events->attach('*', null);
+    }
+
+    public function testDetachThrowsInvalidArgumentForInvalidCallback()
+    {
+        $this->setExpectedException('Zend\EventManager\Exception\InvalidArgumentException');
+        $this->events->detach(null);
+    }
+
+    public function testGetSharedManagerGetsNewInstance()
+    {
+        $eventManager = new EventManager();
+        StaticEventManager::resetInstance();
+
+        $reflection = new ReflectionClass($eventManager);
+        $property = $reflection->getProperty('sharedManager');
+        $property->setAccessible(true);
+        $property->setValue($eventManager, null);
+
+        $expectedEventManager = StaticEventManager::getInstance();
+
+        $this->assertSame($expectedEventManager, $eventManager->getSharedManager());
+    }
+
+    public function testSharedManagerGetEventsReturnsFalse()
+    {
+        $shared = new SharedEventManager;
+        $this->assertFalse($shared->getEvents('foo'));
+    }
+
+    public function testSharedManagerClearListenersReturnsFalse()
+    {
+        $shared = new SharedEventManager();
+        $this->assertFalse($shared->clearListeners('foo'));
+    }
+
+    public function testSharedManagerDetachReturnsFalse()
+    {
+        $shared = new SharedEventManager();
+        $criteria = function ($r) {
+            return false;
+        };
+        $callbackHandler = new CallbackHandler($criteria);
+        $this->assertFalse($shared->detach('foo', $callbackHandler));
+    }
+
+    public function testStaticEventManagerClone()
+    {
+        $staticEventManager = StaticEventManager::getInstance();
+
+        $reflection = new ReflectionClass($staticEventManager);
+        $method = $reflection->getMethod('__clone');
+        $method->setAccessible(true);
+
+        $this->assertNull($method->invoke($staticEventManager));
+    }
+
+    public function testResponseCollectionLastReturnsNull()
+    {
+        $responses = $this->events->trigger('string.transform', $this, ['string' => ' foo ']);
+        $this->assertNull($responses->last());
     }
 }
