@@ -16,7 +16,9 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- Nothing.
+- [#3](https://github.com/zendframework/zend-eventmanager/pull/3) removes some
+  PHP 5.3- and 5.4-isms (such as marking Traits as requiring 5.4, and closing
+  over a copy of `$this`) from the test suite.
 
 ### Fixed
 
