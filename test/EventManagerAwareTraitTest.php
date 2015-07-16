@@ -13,9 +13,6 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Zend\EventManager\EventManager;
 use ZendTest\EventManager\TestAsset\MockEventManagerAwareTrait;
 
-/**
- * @requires PHP 5.4
- */
 class EventManagerAwareTraitTest extends TestCase
 {
     public function testSetEventManager()
