@@ -561,4 +561,20 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $responses = $this->events->trigger('string.transform', $this, ['string' => ' foo ']);
         $this->assertNull($responses->last());
     }
+
+    public function testCanAddWildcardListenersAfterFirstTrigger()
+    {
+        $this->events->attach('foo', function ($e) {
+            $this->assertEquals('foo', $e->getName());
+        });
+        $this->events->trigger('foo');
+
+        $triggered = false;
+        $this->events->attach('*', function ($e) use (&$triggered) {
+            $this->assertEquals('foo', $e->getName());
+            $triggered = true;
+        });
+        $this->events->trigger('foo');
+        $this->assertTrue($triggered, 'Wildcard listener was not triggered');
+    }
 }

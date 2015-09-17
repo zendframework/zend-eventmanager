@@ -247,10 +247,17 @@ class EventManager implements EventManagerInterface
         // Is this the wildcard event? If so, add the listener to the wildcard
         // list with its priority, to inject later.
         if ('*' === $event) {
-            $this->wildcardListeners[] = [
+            $struct = [
                 'listener' => $listener,
                 'priority' => $priority,
             ];
+            $this->wildcardListeners[] = $struct;
+
+            // Attaching after first trigger requires special handling.
+            if ($this->isPrepared) {
+                $this->prepareWildcardListeners($this->getEvents(), [ $struct ]);
+            }
+
             return;
         }
 
