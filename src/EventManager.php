@@ -101,6 +101,14 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * @return null|SharedEventManagerInterface
+     */
+    public function getSharedManager()
+    {
+        return $this->sharedManager;
+    }
+
+    /**
      * Get the identifier(s) for this EventManager
      *
      * @return array
@@ -164,9 +172,11 @@ class EventManager implements EventManagerInterface
      * @return ResponseCollection All listener return values
      * @throws Exception\InvalidCallbackException
      */
-    public function trigger($event, $target = null, $argv = array(), callable $callback = null)
+    public function trigger($event, $target = null, $argv = [], callable $callback = null)
     {
-        $this->prepareListeners();
+        if (! $this->isPrepared) {
+            $this->prepareListeners();
+        }
 
         if ($event instanceof EventInterface) {
             $e        = $event;
@@ -175,7 +185,7 @@ class EventManager implements EventManagerInterface
         } elseif ($target instanceof EventInterface) {
             $e = $target;
             $e->setName($event);
-            $callback = $argv;
+            $callback = empty($argv) ? null : $argv;
         } elseif ($argv instanceof EventInterface) {
             $e = $argv;
             $e->setName($event);
@@ -187,7 +197,7 @@ class EventManager implements EventManagerInterface
             $e->setParams($argv);
         }
 
-        if ($callback && !is_callable($callback)) {
+        if ($callback && ! is_callable($callback)) {
             throw new Exception\InvalidCallbackException('Invalid callback provided');
         }
 
@@ -337,7 +347,7 @@ class EventManager implements EventManagerInterface
     {
         $responses = new ResponseCollection;
 
-        foreach ($this->getListeners($event->getName()) as $listener) {
+        foreach ($this->getListenersForEvent($event->getName()) as $listener) {
             // Trigger the listener, and push its result onto the response collection
             $response = call_user_func($listener, $event);
             $responses->push($response);
@@ -403,10 +413,6 @@ class EventManager implements EventManagerInterface
      */
     private function prepareListeners()
     {
-        if ($this->isPrepared) {
-            return;
-        }
-
         if ($this->sharedManager) {
             $this->attachSharedListeners();
         }
@@ -464,5 +470,26 @@ class EventManager implements EventManagerInterface
         foreach ($events as $event) {
             $this->attachListenerStructs($event, $listeners);
         }
+    }
+
+    /**
+     * Get listeners for the currently triggered event.
+     *
+     * If we have listeners defined for this specific event already, we can
+     * return them directly; however, if not, we need to attach wildcard
+     * listeners, as we have an event with no dedicated listeners.
+     *
+     * @param  string $event
+     * @return PriorityQueue
+     */
+    private function getListenersForEvent($event)
+    {
+        if (isset($this->events[$event])) {
+            return $this->events[$event];
+        }
+
+        $this->events[$event] = new PriorityQueue();
+        $this->prepareWildcardListeners([$event], $this->wildcardListeners);
+        return $this->events[$event];
     }
 }
