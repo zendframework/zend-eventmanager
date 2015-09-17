@@ -9,9 +9,12 @@
 
 namespace ZendTest\EventManager;
 
+use ArrayIterator;
 use PHPUnit_Framework_TestCase as TestCase;
+use Prophecy\Argument;
 use Zend\EventManager\Exception;
 use Zend\EventManager\SharedEventManager;
+use Zend\EventManager\SharedListenerAggregateInterface;
 
 class SharedEventManagerTest extends TestCase
 {
@@ -81,6 +84,24 @@ class SharedEventManagerTest extends TestCase
         ]], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
     }
 
+    public function testCanAttachUsingATraversableSetOfIdentifiers()
+    {
+        $ids = ['IDENTIFIER', __CLASS__];
+        $this->manager->attach(new ArrayIterator($ids), 'EVENT', $this->callback);
+
+        foreach ($ids as $id) {
+            $this->assertSame([[
+                'listener' => $this->callback,
+                'priority' => 1,
+            ]], $this->manager->getListeners($id, 'EVENT'));
+        }
+    }
+
+    public function testGetEventsReturnsEmptyListIfIdentifierDoesNotExist()
+    {
+        $this->assertEquals([], $this->manager->getEvents('IDENTIFIER'));
+    }
+
     public function testGetEventsReturnsAllEventsWithSharedListeners()
     {
         $this->manager->attach('IDENTIFIER', 'EVENT', $this->callback);
@@ -92,6 +113,16 @@ class SharedEventManagerTest extends TestCase
             'EVENT',
             __FUNCTION__,
             __METHOD__,
+        ], $this->manager->getEvents('IDENTIFIER'));
+    }
+
+    public function testGetEventsOmitsWildcardEvent()
+    {
+        $this->manager->attach('IDENTIFIER', 'EVENT', $this->callback);
+        $this->manager->attach('IDENTIFIER', '*', $this->callback);
+
+        $this->assertEquals([
+            'EVENT',
         ], $this->manager->getEvents('IDENTIFIER'));
     }
 
@@ -318,5 +349,38 @@ class SharedEventManagerTest extends TestCase
             $this->manager->getListeners('*', 'EVENT'),
             'Expected listener on * identifier not found'
         );
+    }
+
+    public function testClearListenersDoesNothingIfNoEventsRegisteredForIdentifier()
+    {
+        $callback = clone $this->callback;
+        $this->manager->attach('IDENTIFIER', 'NOTEVENT', $this->callback);
+        $this->manager->attach('*', 'EVENT', $this->callback);
+
+        $this->manager->clearListeners('IDENTIFIER', 'EVENT');
+        $this->assertEquals([], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
+    }
+
+    public function testCanAttachSharedAggregates()
+    {
+        $manager = $this->manager;
+        $callback1 = clone $this->callback;
+
+        $aggregate = $this->prophesize(SharedListenerAggregateInterface::class);
+        $aggregate
+            ->attachShared(Argument::type(SharedEventManager::class), Argument::type('int'))
+            ->will(function ($args) use ($callback1) {
+                $args[0]->attach('IDENTIFIER', 'EVENT', $callback1, $args[1]);
+            });
+
+        $manager->attachAggregate($aggregate->reveal(), 2);
+        $listeners = $manager->getListeners('IDENTIFIER', 'EVENT');
+        $expected  = [
+            [
+                'listener' => $callback1,
+                'priority' => 2,
+            ],
+        ];
+        $this->assertEquals($expected, $listeners, 'Aggregate did not attach as expected');
     }
 }

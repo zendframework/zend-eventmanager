@@ -9,6 +9,8 @@
 
 namespace Zend\EventManager;
 
+use Traversable;
+
 /**
  * Shared/contextual EventManager
  *
