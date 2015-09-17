@@ -50,15 +50,39 @@ class SharedEventManager implements
      * );
      * </code>
      *
-     * @param  string|array $id Identifier(s) for event emitting component(s)
+     * @param  string|array $ids Identifier(s) for event emitting component(s)
      * @param  string $event
      * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
      * @return void
+     * @throws Exception\InvalidArgumentException for invalid identifier arguments.
+     * @throws Exception\InvalidArgumentException for invalid event arguments.
      */
-    public function attach($id, $event, callable $listener, $priority = 1)
+    public function attach($ids, $event, callable $listener, $priority = 1)
     {
-        $ids = (array) $id;
+        if ($ids instanceof Traversable) {
+            $ids = iterator_to_array($ids);
+        }
+
+        if (is_string($ids) && ! empty($ids)) {
+            $ids = (array) $ids;
+        }
+
+        if (! is_array($ids)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Invalid identifier(s) provided; must be a string, or an array/Traversable of strings; '
+                . 'received "%s"',
+                (is_object($ids) ? get_class($ids) : gettype($ids))
+            ));
+        }
+
+        if (! is_string($event) || empty($event)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Invalid event provided; must be a non-empty string; received "%s"',
+                (is_object($ids) ? get_class($ids) : gettype($ids))
+            ));
+        }
+
         foreach ($ids as $id) {
             if (! isset($this->identifiers[$id][$event])) {
                 $this->identifiers[$id][$event] = [];
@@ -94,14 +118,11 @@ class SharedEventManager implements
      */
     public function getEvents($id)
     {
-        if (! array_key_exists($id, $this->identifiers)) {
-            // Check if there are any identifier wildcard listeners
-            if ('*' != $id && array_key_exists('*', $this->identifiers)) {
-                return array_keys($this->identifiers['*']);
-            }
-            return false;
-        }
-        return array_keys($this->identifiers[$id]);
+        $events = array_merge(
+            $this->getEventsForIdentifier($id),
+            $this->getEventsForWildcardIdentifiers()
+        );
+        return array_unique($events);
     }
 
     /**
@@ -121,11 +142,14 @@ class SharedEventManager implements
             return $this->identifiers[$id];
         }
 
-        if (! isset($this->identifiers[$id][$event])) {
-            return [];
+        if ('*' === $event) {
+            return $this->getListenersForEvent($id, '*');
         }
 
-        return $this->identifiers[$id][$event];
+        return array_merge(
+            $this->getListenersForEvent($id, $event),
+            $this->getListenersForEvent($id, '*')
+        );
     }
 
     /**
@@ -152,5 +176,57 @@ class SharedEventManager implements
 
         unset($this->identifiers[$id][$event]);
         return true;
+    }
+
+    /**
+     * Retrieve unique events for a given identifier.
+     *
+     * Removes the wildcard event from the list, if present.
+     *
+     * @param string $id
+     * @return array
+     */
+    private function getEventsForIdentifier($id)
+    {
+        if (! isset($this->identifiers[$id])) {
+            return [];
+        }
+
+        $events = array_keys($this->identifiers[$id]);
+        $events = array_flip($events);
+        if (isset($events['*'])) {
+            unset($events['*']);
+        }
+        return array_keys($events);
+    }
+
+    /**
+     * Retrieves set of named events from wildcard identifiers.
+     *
+     * @return array
+     */
+    private function getEventsForWildcardIdentifiers()
+    {
+        if (! isset($this->identifiers['*'])) {
+            return [];
+        }
+
+        return $this->getEventsForIdentifier('*');
+    }
+
+    /**
+     * Retrieve all listeners for a given identifier and event.
+     *
+     * @param string $id
+     * @param string $event
+     * @return array
+     */
+    private function getListenersForEvent($id, $event)
+    {
+        if (! isset($this->identifiers[$id][$event])) {
+            return [];
+        }
+
+        return $this->identifiers[$id][$event];
     }
 }

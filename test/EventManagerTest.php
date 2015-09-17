@@ -546,12 +546,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($eventClass, $property->getValue($this->events));
     }
 
-    public function testSharedManagerGetEventsReturnsFalse()
-    {
-        $shared = new SharedEventManager;
-        $this->assertFalse($shared->getEvents('foo'));
-    }
-
     public function testSharedManagerClearListenersReturnsFalse()
     {
         $shared = new SharedEventManager();
