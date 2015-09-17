@@ -16,20 +16,7 @@ namespace Zend\EventManager;
 trait ListenerAggregateTrait
 {
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var callable[]
      */
     protected $listeners = [];
-
-    /**
-     * {@inheritDoc}
-     */
-    public function detach(EventManagerInterface $events)
-    {
-        foreach ($this->listeners as $index => $callback) {
-            //if ($events->detach($callback)) {
-            if ($callback) {
-                unset($this->listeners[$index]);
-            }
-        }
-    }
 }
