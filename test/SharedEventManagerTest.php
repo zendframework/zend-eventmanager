@@ -244,7 +244,11 @@ class SharedEventManagerTest extends TestCase
         $this->assertInternalType('array', $listeners, 'Unexpected return value from getListeners()');
         $this->assertCount(0, $listeners, sprintf('Listener list is non-empty: %s', var_export($listeners, 1)));
 
-        $this->assertCount(1, $this->manager->getListeners('*', 'EVENT'), 'Expected listener on * identifier not found');
+        $this->assertCount(
+            1,
+            $this->manager->getListeners('*', 'EVENT'),
+            'Expected listener on * identifier not found'
+        );
     }
 
     public function testClearListenersRemovesAllListenersForGivenIdentifierAndEvent()
@@ -258,13 +262,25 @@ class SharedEventManagerTest extends TestCase
 
         $listeners = $this->manager->getListeners('IDENTIFIER', 'EVENT');
         $this->assertInternalType('array', $listeners, 'Unexpected return value from getListeners() for event EVENT');
-        $this->assertCount(0, $listeners, sprintf('Listener list for EVENT is non-empty: %s', var_export($listeners, 1)));
+        $this->assertCount(
+            0,
+            $listeners,
+            sprintf('Listener list for EVENT is non-empty: %s', var_export($listeners, 1))
+        );
 
         $listeners = $this->manager->getListeners('IDENTIFIER', 'ALTERNATE');
-        $this->assertInternalType('array', $listeners, 'Unexpected return value from getListeners() for event ALTERNATE');
+        $this->assertInternalType(
+            'array',
+            $listeners,
+            'Unexpected return value from getListeners() for event ALTERNATE'
+        );
         $this->assertCount(1, $listeners, 'Unexpected listener list for event ALTERNATE');
 
-        $this->assertCount(1, $this->manager->getListeners('*', 'EVENT'), 'Expected listener on * identifier not found');
+        $this->assertCount(
+            1,
+            $this->manager->getListeners('*', 'EVENT'),
+            'Expected listener on * identifier not found'
+        );
     }
 
     public function testClearListenersDoesNotRemoveWildcardListenersWhenEventIsProvided()
@@ -297,6 +313,10 @@ class SharedEventManagerTest extends TestCase
             'Wildcard Listener after clear operation does not match wildcard listener'
         );
 
-        $this->assertCount(1, $this->manager->getListeners('*', 'EVENT'), 'Expected listener on * identifier not found');
+        $this->assertCount(
+            1,
+            $this->manager->getListeners('*', 'EVENT'),
+            'Expected listener on * identifier not found'
+        );
     }
 }
