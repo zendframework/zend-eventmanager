@@ -17,7 +17,7 @@ use Zend\Stdlib\CallbackHandler;
  */
 class StaticEventsMock implements SharedEventManagerInterface
 {
-    public function getListeners($id, $event)
+    public function getListeners($id, $event = null)
     {
         return array();
     }
@@ -31,21 +31,9 @@ class StaticEventsMock implements SharedEventManagerInterface
      * @param  int $priority Priority at which listener should execute
      * @return void
      */
-    public function attach($id, $event, $callback, $priority = 1)
+    public function attach($id, $event, callable $listener, $priority = 1)
     {
 
-    }
-
-    /**
-     * Detach a listener from an event offered by a given resource
-     *
-     * @param  string|int $id
-     * @param  CallbackHandler $listener
-     * @return bool Returns true if event and listener found, and unsubscribed; returns false if either event or listener not found
-     */
-    public function detach($id, CallbackHandler $listener)
-    {
-        return true;
     }
 
     /**
@@ -70,6 +58,4 @@ class StaticEventsMock implements SharedEventManagerInterface
     {
         return true;
     }
-
-
 }

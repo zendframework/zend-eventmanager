@@ -26,7 +26,8 @@ trait ListenerAggregateTrait
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $callback) {
-            if ($events->detach($callback)) {
+            //if ($events->detach($callback)) {
+            if ($callback) {
                 unset($this->listeners[$index]);
             }
         }

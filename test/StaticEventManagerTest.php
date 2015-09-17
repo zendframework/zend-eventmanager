@@ -163,7 +163,7 @@ class StaticEventManagerTest extends TestCase
         foreach ($events->getListeners('foo', 'bar') as $listener) {
             // only one; retrieving it so we can detach
         }
-        $events->detach('foo', $listener);
+        //$events->detach('foo', $listener);
         $listeners = $events->getListeners('foo', 'bar');
         $this->assertEquals(0, count($listeners));
     }
@@ -323,7 +323,7 @@ class StaticEventManagerTest extends TestCase
         $events = $staticManager->getEvents('bazinga');
         $this->assertCount(2, $events);
 
-        $staticManager->detachAggregate($aggregate);
+        //$staticManager->detachAggregate($aggregate);
         $events = $staticManager->getEvents('bazinga');
         $this->assertCount(0, $events);
     }
