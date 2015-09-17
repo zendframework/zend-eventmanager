@@ -483,9 +483,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedIdentifiers, $identifiers);
     }
 
-    /**
-     * @group fail
-     */
     public function testListenersAttachedWithWildcardAreTriggeredForAllEvents()
     {
         $test         = new stdClass;

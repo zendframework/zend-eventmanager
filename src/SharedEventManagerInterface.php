@@ -9,8 +9,6 @@
 
 namespace Zend\EventManager;
 
-use Zend\Stdlib\PriorityQueue;
-
 /**
  * Interface for shared event listener collections
  */

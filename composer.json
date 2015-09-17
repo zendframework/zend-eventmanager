@@ -1,28 +1,25 @@
 {
     "name": "zendframework/zend-eventmanager",
-    "description": " ",
+    "description": "Trigger and listen to events within a PHP application",
     "license": "BSD-3-Clause",
     "keywords": [
         "zf2",
+        "event",
+        "events",
         "eventmanager"
     ],
     "homepage": "https://github.com/zendframework/zend-eventmanager",
-    "autoload": {
-        "psr-4": {
-            "Zend\\EventManager\\": "src/"
-        }
-    },
-    "require": {
-        "php": ">=5.5",
-        "zendframework/zend-stdlib": "~2.5",
-        "athletic/athletic": "dev-master"
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
             "dev-master": "2.5-dev",
-            "dev-develop": "2.6-dev"
+            "dev-develop": "3.0-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Zend\\EventManager\\": "src/"
         }
     },
     "autoload-dev": {
@@ -30,6 +27,10 @@
             "ZendTest\\EventManager\\": "test/",
             "ZendBench\\EventManager\\": "benchmarks/"
         }
+    },
+    "require": {
+        "php": ">=5.5",
+        "zendframework/zend-stdlib": "~2.7"
     },
     "require-dev": {
         "phpunit/PHPUnit": "~4.0",

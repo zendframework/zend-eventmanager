@@ -12,7 +12,7 @@ namespace Zend\EventManager;
 use ArrayAccess;
 use ArrayObject;
 use Traversable;
-use Zend\Stdlib\PriorityQueue;
+use Zend\Stdlib\FastPriorityQueue;
 
 /**
  * Event manager: notification system
@@ -24,7 +24,7 @@ class EventManager implements EventManagerInterface
 {
     /**
      * Subscribed events and their listeners
-     * @var array Array of PriorityQueue objects
+     * @var array Array of FastPriorityQueue objects
      */
     protected $events = [];
 
@@ -263,8 +263,8 @@ class EventManager implements EventManagerInterface
         }
 
         // If we don't have a priority queue for the event yet, create one
-        if (empty($this->events[$event])) {
-            $this->events[$event] = new PriorityQueue();
+        if (! isset($this->events[$event])) {
+            $this->events[$event] = new FastPriorityQueue();
         }
 
         // Inject the listener into the queue
@@ -301,12 +301,12 @@ class EventManager implements EventManagerInterface
      * Retrieve all listeners for a given event
      *
      * @param  string $event
-     * @return PriorityQueue
+     * @return FastPriorityQueue
      */
     public function getListeners($event)
     {
         if (! array_key_exists($event, $this->events)) {
-            return new PriorityQueue();
+            return new FastPriorityQueue();
         }
 
         return $this->events[$event];
@@ -486,16 +486,16 @@ class EventManager implements EventManagerInterface
      * listeners, as we have an event with no dedicated listeners.
      *
      * @param  string $event
-     * @return PriorityQueue
+     * @return FastPriorityQueue
      */
     private function getListenersForEvent($event)
     {
         if (isset($this->events[$event])) {
-            return $this->events[$event];
+            return clone $this->events[$event];
         }
 
-        $this->events[$event] = new PriorityQueue();
+        $this->events[$event] = new FastPriorityQueue();
         $this->prepareWildcardListeners([$event], $this->wildcardListeners);
-        return $this->events[$event];
+        return clone $this->events[$event];
     }
 }

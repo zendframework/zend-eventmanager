@@ -9,8 +9,6 @@
 
 namespace Zend\EventManager;
 
-use Zend\Stdlib\CallbackHandler;
-
 /**
  * FilterChain: intercepting filter manager
  */
@@ -49,11 +47,11 @@ class FilterChain implements Filter\FilterInterface
         }
 
         $next = $chain->extract();
-        if (!$next instanceof CallbackHandler) {
+        if (! is_callable($next)) {
             return;
         }
 
-        return call_user_func($next->getCallback(), $context, $argv, $chain);
+        return $next($context, $argv, $chain);
     }
 
     /**
@@ -65,23 +63,19 @@ class FilterChain implements Filter\FilterInterface
      * @return CallbackHandler (to allow later unsubscribe)
      * @throws Exception\InvalidCallbackException
      */
-    public function attach($callback, $priority = 1)
+    public function attach(callable $callback, $priority = 1)
     {
-        if (empty($callback)) {
-            throw new Exception\InvalidCallbackException('No callback provided');
-        }
-        $filter = new CallbackHandler($callback, ['priority' => $priority]);
-        $this->filters->insert($filter, $priority);
-        return $filter;
+        $this->filters->insert($callback, $priority);
+        return $callback;
     }
 
     /**
      * Detach a filter from the chain
      *
-     * @param  CallbackHandler $filter
+     * @param  callable $filter
      * @return bool Returns true if filter found and unsubscribed; returns false otherwise
      */
-    public function detach(CallbackHandler $filter)
+    public function detach(callable $filter)
     {
         return $this->filters->remove($filter);
     }

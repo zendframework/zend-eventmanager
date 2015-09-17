@@ -29,13 +29,6 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($filterIterator->next([0, 1, 2]));
     }
 
-    public function testNextReturnsNullOnInvalidCallback()
-    {
-        $filterIterator = new FilterIterator();
-        $filterIterator->insert(null, 1);
-        $this->assertNull($filterIterator->next([0, 1, 2]));
-    }
-
     public function testContainsReturnsFalseForInvalidElement()
     {
         $filterIterator = new FilterIterator();
@@ -44,9 +37,11 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testContainsReturnsTrueForValidElement()
     {
+        $callback = function () {
+        };
         $filterIterator = new FilterIterator();
-        $filterIterator->insert('foo', 1);
-        $this->assertTrue($filterIterator->contains('foo'));
+        $filterIterator->insert($callback, 1);
+        $this->assertTrue($filterIterator->contains($callback));
     }
 
     public function testRemoveFromEmptyQueueReturnsFalse()
@@ -56,13 +51,24 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($filterIterator->remove('foo'));
     }
 
-    public function testRemoveInvalidItemFromQueueReturnsFalse()
+    public function testRemoveUnrecognizedItemFromQueueReturnsFalse()
     {
+        $callback = function () {
+        };
         $filterIterator = new FilterIterator();
-        $filterIterator->insert('foo', 1);
-        $filterIterator->insert('bar', 2);
+        $filterIterator->insert($callback, 1);
 
-        $this->assertTrue($filterIterator->remove('foo'));
+        $this->assertFalse($filterIterator->remove(clone $callback));
+    }
+
+    public function testRemoveValidItemFromQueueReturnsTrue()
+    {
+        $callback = function () {
+        };
+        $filterIterator = new FilterIterator();
+        $filterIterator->insert($callback, 1);
+
+        $this->assertTrue($filterIterator->remove($callback));
     }
 
     public function testNextReturnsNullWhenFilterChainIsEmpty()
