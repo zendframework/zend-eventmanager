@@ -232,6 +232,7 @@ class EventManager implements EventManagerInterface
         if (! is_string($event) && ! is_array($event) && ! $event instanceof Traversable) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects a string or array/Traversable of strings for the event; received %s',
+                __METHOD__,
                 (is_object($event) ? get_class($event) : gettype($event))
             ));
         }
@@ -319,11 +320,9 @@ class EventManager implements EventManagerInterface
      */
     public function clearListeners($event)
     {
-        if (empty($this->events[$event])) {
-            return;
+        if (isset($this->events[$event])) {
+            unset($this->events[$event]);
         }
-
-        unset($this->events[$event]);
     }
 
     /**

@@ -16,7 +16,9 @@ use Traversable;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
+use Zend\EventManager\Exception;
 use Zend\EventManager\SharedEventManager;
+use Zend\EventManager\SharedEventManagerInterface;
 
 /**
  * @group      Zend_EventManager
@@ -576,5 +578,157 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         });
         $this->events->trigger('foo');
         $this->assertTrue($triggered, 'Wildcard listener was not triggered');
+    }
+
+    public function testCanInjectSharedManagerDuringConstruction()
+    {
+        $shared = $this->prophesize(SharedEventManagerInterface::class)->reveal();
+        $events = new EventManager(null, $shared);
+        $this->assertSame($shared, $events->getSharedManager());
+    }
+
+    public function testCanInjectSharedManagerViaSetter()
+    {
+        $shared = $this->prophesize(SharedEventManagerInterface::class)->reveal();
+        $this->events->setSharedManager($shared);
+        $this->assertSame($shared, $this->events->getSharedManager());
+    }
+
+    public function testSettingIdentifiersAfterFirstTriggerRaisesAnException()
+    {
+        $this->events->trigger('foo');
+        $this->setExpectedException(Exception\RuntimeException::class, 'cannot be called after');
+        $this->events->setIdentifiers(['foo', 'bar']);
+    }
+
+    public function testAddingIdentifiersAfterFirstTriggerRaisesAnException()
+    {
+        $this->events->trigger('foo');
+        $this->setExpectedException(Exception\RuntimeException::class, 'cannot be called after');
+        $this->events->addIdentifiers(['foo', 'bar']);
+    }
+
+    public function invalidIdentifierTypes()
+    {
+        $invalidTypes = [
+            'null'                   => null,
+            'true'                   => true,
+            'false'                  => false,
+            'zero'                   => 0,
+            'int'                    => 1,
+            'zero-float'             => 0.0,
+            'float'                  => 1.1,
+            'empty-string'           => '',
+            'non-traversable-object' => (object) ['foo' => 'bar'],
+        ];
+
+        $data = [];
+        foreach (['setIdentifiers', 'addIdentifiers'] as $method) {
+            foreach ($invalidTypes as $description => $type) {
+                $key   = sprintf('%s-%s', $method, $description);
+                $value = [$method, $type];
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @dataProvider invalidIdentifierTypes
+     */
+    public function testProvidingIdentifiersOfAnInvalidTypeRaisesAnException($method, $identifiers)
+    {
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Identifiers');
+        $this->events->{$method}($identifiers);
+    }
+
+    public function testTriggerRaisesExceptionWithInvalidResponseCallback()
+    {
+        $event = new Event();
+        $this->setExpectedException(Exception\InvalidCallbackException::class, 'Invalid callback');
+        $this->events->trigger('foo', $event, 'not-valid');
+    }
+
+    public function invalidEventsForAttach()
+    {
+        return [
+            'null'                   => [null],
+            'true'                   => [true],
+            'false'                  => [false],
+            'zero'                   => [0],
+            'int'                    => [1],
+            'zero-float'             => [0.0],
+            'float'                  => [1.1],
+            'non-traversable-object' => [(object) ['foo' => 'bar']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidEventsForAttach
+     */
+    public function testAttachRaisesExceptionForInvalidEventType($event)
+    {
+        $callback = function () {
+        };
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string or array/Traversable');
+        $this->events->attach($event, $callback);
+    }
+
+    public function testCanClearAllListenersForAnEvent()
+    {
+        $events   = ['foo', 'bar', 'baz'];
+        $listener = function ($e) {
+        };
+        foreach ($events as $event) {
+            $this->events->attach($event, $listener);
+        }
+
+        $this->assertEquals($events, $this->events->getEvents());
+        $this->events->clearListeners('foo');
+        $this->assertCount(0, $this->events->getListeners('foo'), 'Event foo listeners were not cleared');
+
+        foreach (['bar', 'baz'] as $event) {
+            $this->assertCount(1, $this->events->getListeners($event), sprintf(
+                'Event %s listeners were cleared and should not have been',
+                $event
+            ));
+        }
+    }
+
+    public function testWillTriggerSharedListeners()
+    {
+        $name      = __FUNCTION__;
+        $triggered = false;
+
+        $shared = new SharedEventManager();
+        $shared->attach(__CLASS__, $name, function ($event) use ($name, &$triggered) {
+            $this->assertEquals($name, $event->getName());
+            $triggered = true;
+        });
+
+        $this->events->setSharedManager($shared);
+        $this->events->addIdentifiers(__CLASS__);
+
+        $this->events->trigger(__FUNCTION__);
+        $this->assertTrue($triggered, 'Shared listener was not triggered');
+    }
+
+    public function testWillTriggerSharedWildcardListeners()
+    {
+        $name      = __FUNCTION__;
+        $triggered = false;
+
+        $shared = new SharedEventManager();
+        $shared->attach('*', $name, function ($event) use ($name, &$triggered) {
+            $this->assertEquals($name, $event->getName());
+            $triggered = true;
+        });
+
+        $this->events->setSharedManager($shared);
+        $this->events->addIdentifiers(__CLASS__);
+
+        $this->events->trigger(__FUNCTION__);
+        $this->assertTrue($triggered, 'Shared listener was not triggered');
     }
 }
