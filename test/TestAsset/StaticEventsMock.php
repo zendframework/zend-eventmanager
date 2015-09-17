@@ -19,7 +19,7 @@ class StaticEventsMock implements SharedEventManagerInterface
 {
     public function getListeners($id, $event = null)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -44,7 +44,7 @@ class StaticEventsMock implements SharedEventManagerInterface
      */
     public function getEvents($id)
     {
-        return array();
+        return [];
     }
 
     /**

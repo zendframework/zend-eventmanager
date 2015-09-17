@@ -60,7 +60,8 @@ class FilterChain implements Filter\FilterInterface
      * Connect a filter to the chain
      *
      * @param  callable $callback PHP Callback
-     * @param  int $priority Priority in the queue at which to execute; defaults to 1 (higher numbers == higher priority)
+     * @param  int $priority Priority in the queue at which to execute;
+     *     defaults to 1 (higher numbers == higher priority)
      * @return CallbackHandler (to allow later unsubscribe)
      * @throws Exception\InvalidCallbackException
      */
