@@ -37,6 +37,6 @@ interface ListenerAggregateInterface
      * @param EventManagerInterface $events
      *
      * @return void
-     */
     public function detach(EventManagerInterface $events);
+     */
 }
