@@ -121,10 +121,10 @@ class EventManager implements EventManagerInterface
     /**
      * Set the identifiers (overrides any currently set identifiers)
      *
-     * @param string|string[]|Traversable $identifiers
+     * @param string[] $identifiers
      * @return EventManager Provides a fluent interface
      */
-    public function setIdentifiers($identifiers)
+    public function setIdentifiers(array $identifiers)
     {
         if ($this->isPrepared) {
             throw new Exception\RuntimeException(sprintf(
@@ -133,19 +133,19 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        $this->identifiers = array_unique($this->prepareIdentifiers($identifiers));
+        $this->identifiers = array_unique($identifiers);
 
         return $this;
     }
 
     /**
-     * Add identifier(s) (appends to any currently set identifiers)
+     * Add identifiers (merges to any currently set identifiers)
      *
-     * @param string|int|array|Traversable $identifiers
+     * @param string[] $identifiers
      * @return EventManager Provides a fluent interface
      * @throws Exception\RuntimeException if called more than once.
      */
-    public function addIdentifiers($identifiers)
+    public function addIdentifiers(array $identifiers)
     {
         if ($this->isPrepared) {
             throw new Exception\RuntimeException(sprintf(
@@ -156,7 +156,7 @@ class EventManager implements EventManagerInterface
 
         $this->identifiers = array_unique(array_merge(
             $this->identifiers,
-            $this->prepareIdentifiers($identifiers)
+            $identifiers
         ));
 
         return $this;
@@ -423,33 +423,6 @@ class EventManager implements EventManagerInterface
         }
 
         return $responses;
-    }
-
-    /**
-     * Prepare identifier arguments to inject in the instance.
-     *
-     * @param string|string[]|Traversable $identifiers
-     * @return array
-     * @throws Exception\InvalidArgumentException for invalid identifiers.
-     */
-    private function prepareIdentifiers($identifiers)
-    {
-        if ($identifiers instanceof Traversable) {
-            $identifiers = iterator_to_array($identifiers);
-        }
-
-        if (is_string($identifiers) && ! empty($identifiers)) {
-            $identifiers = (array) $identifiers;
-        }
-
-        if (! is_array($identifiers)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Identifiers must be a non-empty string, an array, or a Traversable set; received %s',
-                (is_object($identifiers) ? get_class($identifiers) : gettype($identifiers))
-            ));
-        }
-
-        return $identifiers;
     }
 
     /**

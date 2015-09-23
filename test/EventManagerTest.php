@@ -441,24 +441,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $identifiers = $events->getIdentifiers();
         $this->assertSame(count($identifiers), 1);
         $this->assertSame($identifiers[0], __CLASS__);
-        $events->addIdentifiers(__CLASS__);
+        $events->addIdentifiers([__CLASS__]);
         $this->assertSame(count($identifiers), 1);
         $this->assertSame($identifiers[0], __CLASS__);
     }
 
-    public function testIdentifierGetterSettersWorkWithStrings()
-    {
-        $identifier1 = 'foo';
-        $identifiers = [$identifier1];
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->setIdentifiers($identifier1));
-        $this->assertSame($this->events->getIdentifiers(), $identifiers);
-        $identifier2 = 'baz';
-        $identifiers = [$identifier1, $identifier2];
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->addIdentifiers($identifier2));
-        $this->assertSame($this->events->getIdentifiers(), $identifiers);
-    }
-
-    public function testIdentifierGetterSettersWorkWithArrays()
+    public function testIdentifierGetterSetters()
     {
         $identifiers = ['foo', 'bar'];
         $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->setIdentifiers($identifiers));
@@ -469,22 +457,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         // This is done because the keys doesn't matter, just the values
         $expectedIdentifiers = $this->events->getIdentifiers();
         sort($expectedIdentifiers);
-        sort($identifiers);
-        $this->assertSame($expectedIdentifiers, $identifiers);
-    }
-
-    public function testIdentifierGetterSettersWorkWithTraversables()
-    {
-        $identifiers = new ArrayIterator(['foo', 'bar']);
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->setIdentifiers($identifiers));
-        $this->assertSame($this->events->getIdentifiers(), (array) $identifiers);
-        $identifiers = new ArrayIterator(['foo', 'bar', 'baz']);
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->addIdentifiers($identifiers));
-
-        // This is done because the keys doesn't matter, just the values
-        $expectedIdentifiers = $this->events->getIdentifiers();
-        sort($expectedIdentifiers);
-        $identifiers = (array) $identifiers;
         sort($identifiers);
         $this->assertSame($expectedIdentifiers, $identifiers);
     }
@@ -605,41 +577,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->addIdentifiers(['foo', 'bar']);
     }
 
-    public function invalidIdentifierTypes()
-    {
-        $invalidTypes = [
-            'null'                   => null,
-            'true'                   => true,
-            'false'                  => false,
-            'zero'                   => 0,
-            'int'                    => 1,
-            'zero-float'             => 0.0,
-            'float'                  => 1.1,
-            'empty-string'           => '',
-            'non-traversable-object' => (object) ['foo' => 'bar'],
-        ];
-
-        $data = [];
-        foreach (['setIdentifiers', 'addIdentifiers'] as $method) {
-            foreach ($invalidTypes as $description => $type) {
-                $key   = sprintf('%s-%s', $method, $description);
-                $value = [$method, $type];
-                $data[$key] = $value;
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @dataProvider invalidIdentifierTypes
-     */
-    public function testProvidingIdentifiersOfAnInvalidTypeRaisesAnException($method, $identifiers)
-    {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Identifiers');
-        $this->events->{$method}($identifiers);
-    }
-
     public function testTriggerRaisesExceptionWithInvalidResponseCallback()
     {
         $event = new Event();
@@ -705,7 +642,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->events->setSharedManager($shared);
-        $this->events->addIdentifiers(__CLASS__);
+        $this->events->addIdentifiers([__CLASS__]);
 
         $this->events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
@@ -723,7 +660,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         });
 
         $this->events->setSharedManager($shared);
-        $this->events->addIdentifiers(__CLASS__);
+        $this->events->addIdentifiers([__CLASS__]);
 
         $this->events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
