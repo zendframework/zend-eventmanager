@@ -19,4 +19,15 @@ trait ListenerAggregateTrait
      * @var callable[]
      */
     protected $listeners = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function detach(EventManagerInterface $events)
+    {
+        foreach ($this->listeners as $index => $callback) {
+            $events->detach($callback);
+            unset($this->listeners[$index]);
+        }
+    }
 }

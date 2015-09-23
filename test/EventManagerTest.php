@@ -10,6 +10,7 @@
 namespace ZendTest\EventManager;
 
 use ArrayIterator;
+use Prophecy\Argument;
 use ReflectionProperty;
 use stdClass;
 use Traversable;
@@ -17,6 +18,7 @@ use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\Exception;
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\SharedEventManagerInterface;
 
@@ -235,13 +237,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         foreach (['foo.bar', 'foo.baz'] as $event) {
             $this->assertContains($event, $events);
         }
-    }
-
-    public function testAttachAggregateReturnsAttachOfListenerAggregate()
-    {
-        $aggregate = new TestAsset\MockAggregate();
-        $method    = $this->events->attachAggregate($aggregate);
-        $this->assertSame('ZendTest\EventManager\TestAsset\MockAggregate::attach', $method);
     }
 
     public function testAttachAggregateAcceptsOptionalPriorityValue()
@@ -920,5 +915,25 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listeners = $this->events->getListeners('foo');
         $this->assertCount(0, $listeners);
         $this->assertFalse($listeners->contains($listener));
+    }
+
+    public function testCanDetachAnAggregate()
+    {
+        $events    = $this->events;
+        $aggregate = $this->prophesize(ListenerAggregateInterface::class);
+        $aggregate->attach(Argument::is($events), 1)->shouldBeCalled();
+        $aggregate->detach(Argument::is($events))->shouldBeCalled();
+
+        $events->attachAggregate($aggregate->reveal());
+        $events->detachAggregate($aggregate->reveal());
+    }
+
+    public function testCanAttachAggregateWithPriority()
+    {
+        $events    = $this->events;
+        $aggregate = $this->prophesize(ListenerAggregateInterface::class);
+        $aggregate->attach(Argument::is($events), 5)->shouldBeCalled();
+
+        $events->attachAggregate($aggregate->reveal(), 5);
     }
 }

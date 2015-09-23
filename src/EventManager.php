@@ -323,11 +323,10 @@ class EventManager implements EventManagerInterface
      *
      * @param  ListenerAggregateInterface $aggregate
      * @param  int $priority If provided, a suggested priority for the aggregate to use
-     * @return mixed return value of {@link ListenerAggregateInterface::attach()}
      */
     public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1)
     {
-        return $aggregate->attach($this, $priority);
+        $aggregate->attach($this, $priority);
     }
 
     /**
@@ -335,6 +334,7 @@ class EventManager implements EventManagerInterface
      */
     public function detachAggregate(ListenerAggregateInterface $aggregate)
     {
+        $aggregate->detach($this);
     }
 
     /**
