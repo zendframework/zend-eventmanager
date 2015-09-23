@@ -24,7 +24,7 @@ class EventManager implements EventManagerInterface
 {
     /**
      * Subscribed events and their listeners
-     * @var array Array of FastPriorityQueue objects
+     * @var FastPriorityQueue[]
      */
     protected $events = [];
 
@@ -272,6 +272,49 @@ class EventManager implements EventManagerInterface
     }
 
     /**
+     * @inheritDoc
+     * @throws Exception\InvalidArgumentException for invalid event types.
+     */
+    public function detach(callable $listener, $event = null)
+    {
+        $events = $event;
+        if (null === $event || '*' === $event) {
+            $this->detachWildcardListener($listener);
+            $events = $this->getEvents();
+        }
+
+        $events = ($events instanceof Traversable)
+            ? iterator_to_array($events)
+            : $events;
+
+        if (! is_string($events) && ! is_array($events)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects a string or array/Traversable of strings for the event; received %s',
+                __METHOD__,
+                (is_object($event) ? get_class($event) : gettype($event))
+            ));
+        }
+
+        if (is_array($events)) {
+            foreach ($events as $event) {
+                $this->detach($listener, $event);
+            }
+            return;
+        }
+
+        $event = $events;
+        if (! isset($this->events[$event])) {
+            return;
+        }
+
+        // Remove all instances from queue.
+        $queue = $this->events[$event];
+        while ($queue->contains($listener)) {
+            $queue->remove($listener);
+        }
+    }
+
+    /**
      * Attach a listener aggregate
      *
      * Listener aggregates accept an EventManagerInterface instance, and call attach()
@@ -285,6 +328,13 @@ class EventManager implements EventManagerInterface
     public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1)
     {
         return $aggregate->attach($this, $priority);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function detachAggregate(ListenerAggregateInterface $aggregate)
+    {
     }
 
     /**
@@ -491,11 +541,25 @@ class EventManager implements EventManagerInterface
     private function getListenersForEvent($event)
     {
         if (isset($this->events[$event])) {
-            return clone $this->events[$event];
+            return $this->events[$event];
         }
 
         $this->events[$event] = new FastPriorityQueue();
         $this->prepareWildcardListeners([$event], $this->wildcardListeners);
-        return clone $this->events[$event];
+        return $this->events[$event];
+    }
+
+    /**
+     * Detach a wildcard listener
+     *
+     * @param callable $listener
+     */
+    private function detachWildcardListener(callable $listener)
+    {
+        foreach ($this->wildcardListeners as $index => $struct) {
+            if ($listener === $struct['listener']) {
+                unset($this->wildcardListeners[$index]);
+            }
+        }
     }
 }

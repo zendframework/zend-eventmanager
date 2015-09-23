@@ -38,8 +38,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listener  = [$this, __METHOD__];
         $this->events->attach('test', $listener);
         $listeners = $this->events->getListeners('test');
-        $this->assertEquals(1, count($listeners));
-        $this->assertContains($listener, $listeners);
+        $this->assertCount(1, $listeners);
+        $this->assertTrue($listeners->contains($listener));
+        return [
+            'event'    => 'test',
+            'events'   => $this->events,
+            'listener' => $listener,
+        ];
     }
 
     public function testAttachShouldAddEventIfItDoesNotExist()
@@ -54,18 +59,24 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAllowsPassingArrayOfEventNamesWhenAttaching()
     {
+        $events   = ['foo', 'bar'];
         $callback = function ($e) {
             return $e->getName();
         };
-        $this->events->attach(['foo', 'bar'], $callback);
+        $this->events->attach($events, $callback);
 
-        foreach (['foo', 'bar'] as $event) {
+        foreach ($events as $event) {
             $listeners = $this->events->getListeners($event);
             $this->assertNotEmpty($listeners);
             foreach ($listeners as $listener) {
                 $this->assertSame($callback, $listener);
             }
         }
+        return [
+            'event_names' => $events,
+            'events'      => $this->events,
+            'listener'    => $callback,
+        ];
     }
 
     public function testPassingArrayOfEventNamesWhenAttachingReturnsArrayOfCallbackHandlers()
@@ -721,5 +732,193 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
+    }
+
+    /**
+     * @depends testAttachShouldAddListenerToEvent
+     */
+    public function testCanDetachListenerFromNamedEvent($dependencies)
+    {
+        $event    = $dependencies['event'];
+        $events   = $dependencies['events'];
+        $listener = $dependencies['listener'];
+
+        $events->detach($listener, $event);
+
+        $listeners = $events->getListeners($event);
+        $this->assertCount(0, $listeners);
+        $this->assertFalse($listeners->contains($listener));
+    }
+
+    public function testCanDetachWildcardListeners()
+    {
+        $events   = ['foo', 'bar'];
+        $listener = function ($e) {
+            return 'non-wildcard';
+        };
+        $wildcardListener = function ($e) {
+            return 'wildcard';
+        };
+
+        $this->events->attach($events, $listener);
+        $this->events->attach('*', $wildcardListener);
+
+        $this->events->detach($wildcardListener, '*'); // Semantically the same as null
+
+        foreach ($events as $event) {
+            $listeners = $this->events->getListeners($event);
+            $this->assertCount(1, $listeners);
+            $this->assertFalse($listeners->contains($wildcardListener));
+        }
+
+        return [
+            'event_names'  => $events,
+            'events'       => $this->events,
+            'not_contains' => 'wildcard',
+        ];
+    }
+
+    /**
+     * @depends testCanDetachWildcardListeners
+     */
+    public function testDetachedWildcardListenerWillNotBeTriggered($dependencies)
+    {
+        $eventNames  = $dependencies['event_names'];
+        $events      = $dependencies['events'];
+        $notContains = $dependencies['not_contains'];
+
+        foreach ($eventNames as $event) {
+            $results = $events->trigger($event, $this, []);
+            $this->assertFalse($results->contains($notContains), 'Discovered unexpected wildcard value in results');
+        }
+    }
+
+    /**
+     * @depends testAllowsPassingArrayOfEventNamesWhenAttaching
+     */
+    public function testNotPassingEventNameToDetachDetachesListenerFromAllEvents($dependencies)
+    {
+        $eventNames = $dependencies['event_names'];
+        $events     = $dependencies['events'];
+        $listener   = $dependencies['listener'];
+
+        $events->detach($listener);
+
+        foreach ($eventNames as $event) {
+            $listeners = $events->getListeners($event);
+            $this->assertCount(0, $listeners);
+            $this->assertFalse($listeners->contains($listener));
+        }
+    }
+
+    public function testCanDetachFromMultipleEventsAtOnce()
+    {
+        $events   = ['foo', 'bar'];
+        $listener = function ($e) {
+        };
+        $alternateListener = clone $listener;
+
+        $this->events->attach($events, $listener);
+        $this->events->attach($events, $alternateListener);
+
+        foreach ($events as $event) {
+            $listeners = $this->events->getListeners($event);
+            $this->assertCount(
+                2,
+                $listeners,
+                sprintf('Listener count after attaching alternate listener for event %s was unexpected', $event)
+            );
+            $this->assertTrue($listeners->contains($listener));
+            $this->assertTrue($listeners->contains($alternateListener));
+        }
+
+        $this->events->detach($listener, $events);
+
+        foreach ($events as $event) {
+            $listeners = $this->events->getListeners($event);
+            $this->assertCount(
+                1,
+                $listeners,
+                sprintf(
+                    "Listener count after detaching listener for event %s was unexpected;\nListeners: %s",
+                    $event,
+                    var_export($listeners, 1)
+                )
+            );
+            $this->assertFalse($listeners->contains($listener));
+            $this->assertTrue($listeners->contains($alternateListener));
+        }
+    }
+
+    public function testCanDetachASingleListenerFromAnEventWithMultipleListeners()
+    {
+        $listener = function ($e) {
+        };
+        $alternateListener = clone $listener;
+
+        $this->events->attach('foo', $listener);
+        $this->events->attach('foo', $alternateListener);
+
+        $listeners = $this->events->getListeners('foo');
+        $this->assertCount(
+            2,
+            $listeners,
+            sprintf('Listener count after attaching alternate listener for event %s was unexpected', 'foo')
+        );
+        $this->assertTrue($listeners->contains($listener));
+        $this->assertTrue($listeners->contains($alternateListener));
+
+        $this->events->detach($listener, 'foo');
+
+        $listeners = $this->events->getListeners('foo');
+        $this->assertCount(
+            1,
+            $listeners,
+            sprintf(
+                "Listener count after detaching listener for event %s was unexpected;\nListeners: %s",
+                'foo',
+                var_export($listeners, 1)
+            )
+        );
+        $this->assertFalse($listeners->contains($listener));
+        $this->assertTrue($listeners->contains($alternateListener));
+    }
+
+    public function invalidEventsForDetach()
+    {
+        $events = $this->invalidEventsForAttach();
+        unset($events['null']);
+        return $events;
+    }
+
+    /**
+     * @dataProvider invalidEventsForDetach
+     */
+    public function testPassingInvalidEventTypeToDetachRaisesException($event)
+    {
+        $listener = function ($e) {
+        };
+
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string or array/Traversable');
+        $this->events->detach($listener, $event);
+    }
+
+    public function testDetachRemovesAllOccurrencesOfListenerForEvent()
+    {
+        $listener = function ($e) {
+        };
+
+        for ($i = 0; $i < 5; $i += 1) {
+            $this->events->attach('foo', $listener, $i);
+        }
+
+        $listeners = $this->events->getListeners('foo');
+        $this->assertCount(5, $listeners);
+
+        $this->events->detach($listener, 'foo');
+
+        $listeners = $this->events->getListeners('foo');
+        $this->assertCount(0, $listeners);
+        $this->assertFalse($listeners->contains($listener));
     }
 }

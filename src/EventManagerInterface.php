@@ -44,6 +44,19 @@ interface EventManagerInterface extends SharedEventManagerAwareInterface
     public function attach($event, callable $listener, $priority = 1);
 
     /**
+     * Detach a listener.
+     *
+     * If no $event is provided, detaches listener from all events; if
+     * provided, detaches only from the named event.
+     *
+     * $event may also be an array of event names.
+     *
+     * @param callable $listener
+     * @param null|string|string[] $event
+     */
+    public function detach(callable $listener, $event = null);
+
+    /**
      * Get a list of events for which this collection has listeners
      *
      * @return array
@@ -105,4 +118,13 @@ interface EventManagerInterface extends SharedEventManagerAwareInterface
      * @return mixed return value of {@link ListenerAggregateInterface::attach()}
      */
     public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1);
+
+    /**
+     * Detach a listener aggregate.
+     *
+     * Should delegate to the aggregate's detach() method.
+     *
+     * @param  ListenerAggregateInterface $aggregate
+     */
+    public function detachAggregate(ListenerAggregateInterface $aggregate);
 }
