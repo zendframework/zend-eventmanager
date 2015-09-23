@@ -30,7 +30,8 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zend-stdlib": "~2.7"
+        "zendframework/zend-stdlib": "~2.7",
+        "container-interop/container-interop": "dev-master"
     },
     "require-dev": {
         "phpunit/PHPUnit": "~4.0",
