@@ -22,7 +22,7 @@ use Interop\Container\ContainerInterface;
  *
  * <code>
  * $events->attachAggregate(new LazyListenerAggregate(
- *     $lazyListenersOrLazyListenerDefinitions,
+ *     $lazyEventListenersOrDefinitions,
  *     $container
  * ));
  * </code>
@@ -42,9 +42,9 @@ class LazyListenerAggregate implements ListenerAggregateInterface
     private $env;
 
     /**
-     * Generated LazyListener instances.
+     * Generated LazyEventListener instances.
      *
-     * @var LazyListener[]
+     * @var LazyEventListener[]
      */
     private $lazyListeners = [];
 
@@ -55,13 +55,13 @@ class LazyListenerAggregate implements ListenerAggregateInterface
      * order to create a listener aggregate that defers listener creation until
      * the listener is triggered.
      *
-     * Listeners may be either LazyListener instances, or lazy listener
-     * definitions that can be provided to a LazyListener constructor in order
-     * to create a new instance; in the latter case, the $container and $env
-     * will be passed at instantiation as well.
+     * Listeners may be either LazyEventListener instances, or lazy event
+     * listener definitions that can be provided to a LazyEventListener
+     * constructor in order to create a new instance; in the latter case, the
+     * $container and $env will be passed at instantiation as well.
      *
-     * @var array $listeners LazyListener instances or array structs to pass to
-     *     the LazyListener constructor.
+     * @var array $listeners LazyEventListener instances or array definitions
+     *     to pass to the LazyEventListener constructor.
      * @var ContainerInterface $container
      * @var array $env
      * @throws Exception\InvalidArgumentException for invalid listener items.
@@ -74,12 +74,12 @@ class LazyListenerAggregate implements ListenerAggregateInterface
         // This would raise an exception for invalid structs
         foreach ($listeners as $listener) {
             if (is_array($listener)) {
-                $listener = new LazyListener($listener, $container, $env);
+                $listener = new LazyEventListener($listener, $container, $env);
             }
 
-            if (! $listener instanceof LazyListener) {
+            if (! $listener instanceof LazyEventListener) {
                 throw new Exception\InvalidArgumentException(sprintf(
-                    'All listeners must be LazyListener instances or structs used to instantiate one; received %s',
+                    'All listeners must be LazyEventListener instances or definitions; received %s',
                     (is_object($listener) ? get_class($listener) : gettype($listener))
                 ));
             }

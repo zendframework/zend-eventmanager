@@ -14,13 +14,14 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use stdClass;
 use Zend\EventManager\EventInterface;
-use Zend\EventManager\LazyListener;
 use Zend\EventManager\Exception\InvalidArgumentException;
+use Zend\EventManager\LazyListener;
 
 class LazyListenerTest extends TestCase
 {
     public function setUp()
     {
+        $this->listenerClass = LazyListener::class;
         $this->container = $this->prophesize(ContainerInterface::class);
     }
 
@@ -40,38 +41,15 @@ class LazyListenerTest extends TestCase
         ];
     }
 
-    public function testConstructorRaisesExceptionForMissingEvent()
-    {
-        $struct = [
-            'listener' => 'listener',
-            'method'   => 'method',
-        ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "event"');
-        new LazyListener($struct, $this->container->reveal());
-    }
-
-    /**
-     * @dataProvider invalidTypes
-     */
-    public function testConstructorRaisesExceptionForInvalidEventType($event)
-    {
-        $struct = [
-            'event'    => $event,
-            'listener' => 'listener',
-            'method'   => 'method',
-        ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "event"');
-        new LazyListener($struct, $this->container->reveal());
-    }
-
     public function testConstructorRaisesExceptionForMissingListener()
     {
+        $class  = $this->listenerClass;
         $struct = [
             'event'  => 'event',
             'method' => 'method',
         ];
         $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "listener"');
-        new LazyListener($struct, $this->container->reveal());
+        new $class($struct, $this->container->reveal());
     }
 
     /**
@@ -79,23 +57,25 @@ class LazyListenerTest extends TestCase
      */
     public function testConstructorRaisesExceptionForInvalidListenerType($listener)
     {
+        $class  = $this->listenerClass;
         $struct = [
             'event'    => 'event',
             'listener' => $listener,
             'method'   => 'method',
         ];
         $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "listener"');
-        new LazyListener($struct, $this->container->reveal());
+        new $class($struct, $this->container->reveal());
     }
 
     public function testConstructorRaisesExceptionForMissingMethod()
     {
+        $class  = $this->listenerClass;
         $struct = [
             'event'    => 'event',
             'listener' => 'listener',
         ];
         $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "method"');
-        new LazyListener($struct, $this->container->reveal());
+        new $class($struct, $this->container->reveal());
     }
 
     /**
@@ -103,35 +83,27 @@ class LazyListenerTest extends TestCase
      */
     public function testConstructorRaisesExceptionForInvalidMethodType($method)
     {
+        $class  = $this->listenerClass;
         $struct = [
             'event'    => 'event',
             'listener' => 'listener',
             'method'   => $method,
         ];
         $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "method"');
-        new LazyListener($struct, $this->container->reveal());
+        new $class($struct, $this->container->reveal());
     }
 
     public function testCanInstantiateLazyListenerWithValidDefinition()
     {
+        $class  = $this->listenerClass;
         $struct = [
-            'event'    => 'event',
             'listener' => 'listener',
             'method'   => 'method',
-            'priority' => 5,
         ];
 
-        $listener = new LazyListener($struct, $this->container->reveal());
-        $this->assertInstanceOf(LazyListener::class, $listener);
+        $listener = new $class($struct, $this->container->reveal());
+        $this->assertInstanceOf($class, $listener);
         return $listener;
-    }
-
-    /**
-     * @depends testCanInstantiateLazyListenerWithValidDefinition
-     */
-    public function testCanRetrieveEventFromListener($listener)
-    {
-        $this->assertEquals('event', $listener->getEvent());
     }
 
     /**
@@ -142,29 +114,9 @@ class LazyListenerTest extends TestCase
         $this->assertAttributeEquals('method', 'method', $listener);
     }
 
-    /**
-     * @depends testCanInstantiateLazyListenerWithValidDefinition
-     */
-    public function testCanRetrievePriorityFromListener($listener)
-    {
-        $this->assertEquals(5, $listener->getPriority());
-    }
-
-    public function testGetPriorityWillReturnProvidedPriorityIfNoneGivenAtInstantiation()
-    {
-        $struct = [
-            'event'    => 'event',
-            'listener' => 'listener',
-            'method'   => 'method',
-        ];
-
-        $listener = new LazyListener($struct, $this->container->reveal());
-        $this->assertInstanceOf(LazyListener::class, $listener);
-        $this->assertEquals(5, $listener->getPriority(5));
-    }
-
     public function testLazyListenerActsAsInvokableAroundListenerCreation()
     {
+        $class    = $this->listenerClass;
         $listener = $this->prophesize(TestAsset\BuilderInterface::class);
         $listener->build(Argument::type(EventInterface::class))->willReturn('RECEIVED');
 
@@ -181,14 +133,15 @@ class LazyListenerTest extends TestCase
             'priority' => 5,
         ];
 
-        $lazyListener = new LazyListener($struct, $this->container->reveal());
-        $this->assertInstanceOf(LazyListener::class, $lazyListener);
+        $lazyListener = new $class($struct, $this->container->reveal());
+        $this->assertInstanceOf($class, $lazyListener);
 
         $this->assertEquals('RECEIVED', $lazyListener($event->reveal()));
     }
 
     public function testInvocationWillDelegateToContainerBuildMethodWhenPresentAndEnvIsNonEmpty()
     {
+        $class    = $this->listenerClass;
         $listener = $this->prophesize(TestAsset\BuilderInterface::class);
         $listener->build(Argument::type(EventInterface::class))->willReturn('RECEIVED');
 
@@ -211,8 +164,8 @@ class LazyListenerTest extends TestCase
             'priority' => 5,
         ];
 
-        $lazyListener = new LazyListener($struct, $container->reveal(), $env);
-        $this->assertInstanceOf(LazyListener::class, $lazyListener);
+        $lazyListener = new $class($struct, $container->reveal(), $env);
+        $this->assertInstanceOf($class, $lazyListener);
 
         $this->assertEquals('RECEIVED', $lazyListener($event->reveal()));
     }

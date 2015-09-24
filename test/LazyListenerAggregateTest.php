@@ -15,7 +15,7 @@ use Prophecy\Argument;
 use ReflectionProperty;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
-use Zend\EventManager\LazyListener;
+use Zend\EventManager\LazyEventListener;
 use Zend\EventManager\LazyListenerAggregate;
 use Zend\EventManager\Exception\InvalidArgumentException;
 
@@ -70,7 +70,7 @@ class LazyListenerAggregateTest extends TestCase
      */
     public function testPassingInvalidListenerTypesAtInstantiationRaisesException($listener)
     {
-        $this->setExpectedException(InvalidArgumentException::class, 'must be LazyListener instances');
+        $this->setExpectedException(InvalidArgumentException::class, 'must be LazyEventListener instances');
         new LazyListenerAggregate([$listener], $this->container->reveal());
     }
 
@@ -83,7 +83,7 @@ class LazyListenerAggregateTest extends TestCase
         new LazyListenerAggregate([$listener], $this->container->reveal());
     }
 
-    public function testCanPassMixOfValidLazyListenerInstancesAndDefinitionsAtInstantiation()
+    public function testCanPassMixOfValidLazyEventListenerInstancesAndDefinitionsAtInstantiation()
     {
         $listeners = [
             [
@@ -92,7 +92,7 @@ class LazyListenerAggregateTest extends TestCase
                 'method'   => 'method',
                 'priority' => 5,
             ],
-            new LazyListener([
+            new LazyEventListener([
                 'event'    => 'event2',
                 'listener' => 'listener2',
                 'method'   => 'method2',
@@ -105,14 +105,14 @@ class LazyListenerAggregateTest extends TestCase
         $r->setAccessible(true);
         $test = $r->getValue($aggregate);
 
-        $this->assertInstanceOf(LazyListener::class, $test[0]);
+        $this->assertInstanceOf(LazyEventListener::class, $test[0]);
         $this->assertEquals('event', $test[0]->getEvent());
-        $this->assertSame($listeners[1], $test[1], 'LazyListener instance changed during instantiation');
+        $this->assertSame($listeners[1], $test[1], 'LazyEventListener instance changed during instantiation');
         return $listeners;
     }
 
     /**
-     * @depends testCanPassMixOfValidLazyListenerInstancesAndDefinitionsAtInstantiation
+     * @depends testCanPassMixOfValidLazyEventListenerInstancesAndDefinitionsAtInstantiation
      */
     public function testAttachAttachesLazyListenersViaClosures($listeners)
     {
@@ -158,7 +158,7 @@ class LazyListenerAggregateTest extends TestCase
         $this->assertInternalType('array', $listeners);
         $this->assertCount(1, $listeners);
         $listener = array_shift($listeners);
-        $this->assertInstanceOf(LazyListener::class, $listener);
+        $this->assertInstanceOf(LazyEventListener::class, $listener);
         $listener($event->reveal());
     }
 }

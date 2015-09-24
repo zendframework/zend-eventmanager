@@ -14,23 +14,20 @@ use Interop\Container\ContainerInterface;
 /**
  * Lazy listener instance.
  *
- * Used as an internal class for the LazyAggregate to allow lazy creation of
- * listeners via a dependency injection container.
+ * Used to allow lazy creation of listeners via a dependency injection
+ * container.
  *
- * Lazy listener structs have the following members:
+ * Lazy listener definitions have the following members:
  *
- * - event: the event name to attach to.
  * - listener: the service name of the listener to use.
  * - method: the method name of the listener to invoke for the specified event.
- * - priority: the priority at which to attach the listener.
  *
  * If desired, you can pass $env at instantiation; this will be passed to the
  * container's `build()` method, if it has one, when creating the listener
  * instance.
  *
- * You can also use this to create your own lazy listeners; if you do, pass the
- * return value of `getListener()` to the event manager's `attach()` method;
- * the value is a closure around instance creation and method invocation.
+ * Pass instances directly to the event manager's `attach()` method as the
+ * listener argument.
  */
 class LazyListener
 {
@@ -45,11 +42,6 @@ class LazyListener
     private $env;
 
     /**
-     * @var string Event name to which to attach.
-     */
-    private $event;
-
-    /**
      * @var callable Marshaled listener callback.
      */
     private $listener;
@@ -58,11 +50,6 @@ class LazyListener
      * @var string Method name to invoke on listener.
      */
     private $method;
-
-    /**
-     * @var null|int Priority at which to attach.
-     */
-    private $priority;
 
     /**
      * @var string Service name of listener.
@@ -76,15 +63,6 @@ class LazyListener
      */
     public function __construct(array $definition, ContainerInterface $container, array $env = [])
     {
-        if ((! isset($definition['event'])
-            || ! is_string($definition['event'])
-            || empty($definition['event']))
-        ) {
-            throw new Exception\InvalidArgumentException(
-                'Lazy listener definition is missing a valid "event" member; cannot create LazyListener'
-            );
-        }
-
         if ((! isset($definition['listener'])
             || ! is_string($definition['listener'])
             || empty($definition['listener']))
@@ -103,10 +81,8 @@ class LazyListener
             );
         }
 
-        $this->event     = $definition['event'];
         $this->service   = $definition['listener'];
         $this->method    = $definition['method'];
-        $this->priority  = isset($definition['priority']) ? (int) $definition['priority'] : null;
         $this->container = $container;
         $this->env       = $env;
     }
@@ -122,22 +98,6 @@ class LazyListener
         $listener = $this->fetchListener();
         $method   = $this->method;
         return $listener->{$method}($event);
-    }
-
-    /**
-     * @return string
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPriority($default = 1)
-    {
-        return (null !== $this->priority) ? $this->priority : $default;
     }
 
     /**
