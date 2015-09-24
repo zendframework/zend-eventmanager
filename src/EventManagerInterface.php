@@ -79,12 +79,15 @@ interface EventManagerInterface extends SharedEventManagerAwareInterface
     public function clearListeners($event);
 
     /**
-     * Set the event class to utilize
+     * Provide an event prototype to use with trigger().
      *
-     * @param  string $class
+     * When `trigger()` needs to create an event instance, it should clone the
+     * prototype provided to this method.
+     *
+     * @param  EventInterface $prototype
      * @return EventManagerInterface
      */
-    public function setEventClass($class);
+    public function setEventPrototype(EventInterface $prototype);
 
     /**
      * Get the identifier(s) for this EventManager

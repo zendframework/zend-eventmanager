@@ -29,9 +29,9 @@ class EventManager implements EventManagerInterface
     protected $events = [];
 
     /**
-     * @var string Class representing the event being emitted
+     * @var EventInterface Prototype to use when creating an event at trigger().
      */
-    protected $eventClass = 'Zend\EventManager\Event';
+    protected $eventPrototype;
 
     /**
      * Identifiers, used to pull shared signals from SharedEventManagerInterface instance
@@ -74,17 +74,16 @@ class EventManager implements EventManagerInterface
         if ($identifiers !== null) {
             $this->setIdentifiers($identifiers);
         }
+
+        $this->eventPrototype = new Event();
     }
 
     /**
-     * Set the event class to utilize
-     *
-     * @param  string $class
-     * @return EventManager
+     * @inheritDoc
      */
-    public function setEventClass($class)
+    public function setEventPrototype(EventInterface $prototype)
     {
-        $this->eventClass = $class;
+        $this->eventPrototype = $prototype;
         return $this;
     }
 
@@ -191,7 +190,7 @@ class EventManager implements EventManagerInterface
             $e->setName($event);
             $e->setTarget($target);
         } else {
-            $e = new $this->eventClass();
+            $e = clone $this->eventPrototype;
             $e->setName($event);
             $e->setTarget($target);
             $e->setParams($argv);

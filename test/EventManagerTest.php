@@ -486,15 +486,17 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($event->propagationIsStopped());
     }
 
-    public function testSetEventClass()
+    public function testCreatesAnEventPrototypeAtInstantiation()
     {
-        $eventClass = 'NewEventClass';
-        $this->events->setEventClass($eventClass);
+        $this->assertAttributeInstanceOf(EventInterface::class, 'eventPrototype', $this->events);
+    }
 
-        $property = new ReflectionProperty($this->events, 'eventClass');
-        $property->setAccessible(true);
+    public function testSetEventPrototype()
+    {
+        $event = $this->prophesize(EventInterface::class)->reveal();
+        $this->events->setEventPrototype($event);
 
-        $this->assertEquals($eventClass, $property->getValue($this->events));
+        $this->assertAttributeSame($event, 'eventPrototype', $this->events);
     }
 
     public function testSharedManagerClearListenersReturnsFalse()
