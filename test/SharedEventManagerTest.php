@@ -360,27 +360,4 @@ class SharedEventManagerTest extends TestCase
         $this->manager->clearListeners('IDENTIFIER', 'EVENT');
         $this->assertEquals([], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
     }
-
-    public function testCanAttachSharedAggregates()
-    {
-        $manager = $this->manager;
-        $callback1 = clone $this->callback;
-
-        $aggregate = $this->prophesize(SharedListenerAggregateInterface::class);
-        $aggregate
-            ->attachShared(Argument::type(SharedEventManager::class), Argument::type('int'))
-            ->will(function ($args) use ($callback1) {
-                $args[0]->attach('IDENTIFIER', 'EVENT', $callback1, $args[1]);
-            });
-
-        $manager->attachAggregate($aggregate->reveal(), 2);
-        $listeners = $manager->getListeners('IDENTIFIER', 'EVENT');
-        $expected  = [
-            [
-                'listener' => $callback1,
-                'priority' => 2,
-            ],
-        ];
-        $this->assertEquals($expected, $listeners, 'Aggregate did not attach as expected');
-    }
 }

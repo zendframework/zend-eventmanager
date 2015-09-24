@@ -18,9 +18,7 @@ use Traversable;
  * The assumption is that the SharedEventManager will be injected into EventManager
  * instances, and then queried for additional listeners when triggering an event.
  */
-class SharedEventManager implements
-    SharedEventAggregateAwareInterface,
-    SharedEventManagerInterface
+class SharedEventManager implements SharedEventManagerInterface
 {
     /**
      * Identifiers with event connections
@@ -94,22 +92,6 @@ class SharedEventManager implements
                 'priority' => $priority,
             ];
         }
-    }
-
-    /**
-     * Attach a listener aggregate
-     *
-     * Listener aggregates accept an EventManagerInterface instance, and call attachShared()
-     * one or more times, typically to attach to multiple events using local
-     * methods.
-     *
-     * @param  SharedListenerAggregateInterface $aggregate
-     * @param  int $priority If provided, a suggested priority for the aggregate to use
-     * @return mixed return value of {@link ListenerAggregateInterface::attachShared()}
-     */
-    public function attachAggregate(SharedListenerAggregateInterface $aggregate, $priority = 1)
-    {
-        return $aggregate->attachShared($this, $priority);
     }
 
     /**
