@@ -106,6 +106,26 @@ class SharedEventManagerTest extends TestCase
         $this->assertSame([], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
     }
 
+    public function testDetachDoesNothingIfIdentifierNotInManager()
+    {
+        $this->manager->attach('IDENTIFIER', 'EVENT', $this->callback);
+        $this->manager->detach($this->callback, 'DIFFERENT-IDENTIFIER');
+        $this->assertSame([[
+            'listener' => $this->callback,
+            'priority' => 1,
+        ]], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
+    }
+
+    public function testDetachDoesNothingIfIdentifierDoesNotContainEvent()
+    {
+        $this->manager->attach('IDENTIFIER', 'EVENT', $this->callback);
+        $this->manager->detach($this->callback, 'IDENTIFIER', 'DIFFERENT-EVENT');
+        $this->assertSame([[
+            'listener' => $this->callback,
+            'priority' => 1,
+        ]], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
+    }
+
     public function testGetEventsReturnsEmptyListIfIdentifierDoesNotExist()
     {
         $this->assertEquals([], $this->manager->getEvents('IDENTIFIER'));
