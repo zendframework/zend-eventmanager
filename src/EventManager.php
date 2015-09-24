@@ -437,7 +437,12 @@ class EventManager implements EventManagerInterface
      */
     private function attachListenerStructs($event, array $listeners)
     {
+        $queue = isset($this->events[$event]) ? $this->events[$event] : false;
         foreach ($listeners as $struct) {
+            // Do not attach a listener if it's already been attached.
+            if ($queue && $queue->contains($struct['listener'])) {
+                continue;
+            }
             $this->attach($event, $struct['listener'], $struct['priority']);
         }
     }
