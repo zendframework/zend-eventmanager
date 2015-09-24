@@ -526,6 +526,8 @@ class EventManager implements EventManagerInterface
             return [];
         }
 
+        // Leave the inline anonymous function. Caching it in an instance
+        // property degrades performance!
         $diff = array_udiff($cached, $current, function ($original, $current) {
             if ($original['listener'] === $current['listener']
                 && $original['priority'] === $current['priority']
