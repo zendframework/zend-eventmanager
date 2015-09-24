@@ -53,7 +53,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'single-named-event' => ['test'],
-            'multiple-events'    => [['test', 'test2']],
             'wildcard-event'     => ['*'],
         ];
     }
@@ -75,47 +74,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $events = $this->events->getEvents();
         $this->assertNotEmpty($events);
         $this->assertContains('test', $events);
-    }
-
-    public function testAllowsPassingArrayOfEventNamesWhenAttaching()
-    {
-        $events   = ['foo', 'bar'];
-        $callback = function ($e) {
-            return $e->getName();
-        };
-        $this->events->attach($events, $callback);
-
-        foreach ($events as $event) {
-            $listeners = $this->events->getListeners($event);
-            $this->assertNotEmpty($listeners);
-            foreach ($listeners as $listener) {
-                $this->assertSame($callback, $listener);
-            }
-        }
-        return [
-            'event_names' => $events,
-            'events'      => $this->events,
-            'listener'    => $callback,
-        ];
-    }
-
-    public function testPassingArrayOfEventNamesWhenAttachingReturnsArrayOfCallbackHandlers()
-    {
-        $callback = function ($e) {
-            return $e->getName();
-        };
-        $this->events->attach(['foo', 'bar'], $callback);
-
-        $events = $this->events->getEvents();
-        $this->assertEquals(['foo', 'bar'], $events);
-
-        foreach ($events as $event) {
-            $listeners = $this->events->getListeners($event);
-            $this->assertInstanceOf(Traversable::class, $listeners);
-            foreach ($listeners as $listener) {
-                $this->assertSame($callback, $listener);
-            }
-        }
     }
 
     public function testRetrievingAttachedListenersShouldReturnEmptyArrayWhenEventDoesNotExist()
@@ -612,6 +570,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             'int'                    => [1],
             'zero-float'             => [0.0],
             'float'                  => [1.1],
+            'array'                  => [['test1', 'test2']],
             'non-traversable-object' => [(object) ['foo' => 'bar']],
         ];
     }
@@ -623,7 +582,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $callback = function () {
         };
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string or array/Traversable');
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string');
         $this->events->attach($event, $callback);
     }
 
@@ -710,7 +669,9 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             return 'wildcard';
         };
 
-        $this->events->attach($events, $listener);
+        array_walk($events, function ($event) use ($listener) {
+            $this->events->attach($event, $listener);
+        });
         $this->events->attach('*', $wildcardListener);
 
         $this->events->detach($wildcardListener, '*'); // Semantically the same as null
@@ -758,45 +719,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $listeners = $events->getListeners($event);
             $this->assertCount(0, $listeners);
             $this->assertFalse($listeners->contains($listener));
-        }
-    }
-
-    public function testCanDetachFromMultipleEventsAtOnce()
-    {
-        $events   = ['foo', 'bar'];
-        $listener = function ($e) {
-        };
-        $alternateListener = clone $listener;
-
-        $this->events->attach($events, $listener);
-        $this->events->attach($events, $alternateListener);
-
-        foreach ($events as $event) {
-            $listeners = $this->events->getListeners($event);
-            $this->assertCount(
-                2,
-                $listeners,
-                sprintf('Listener count after attaching alternate listener for event %s was unexpected', $event)
-            );
-            $this->assertTrue($listeners->contains($listener));
-            $this->assertTrue($listeners->contains($alternateListener));
-        }
-
-        $this->events->detach($listener, $events);
-
-        foreach ($events as $event) {
-            $listeners = $this->events->getListeners($event);
-            $this->assertCount(
-                1,
-                $listeners,
-                sprintf(
-                    "Listener count after detaching listener for event %s was unexpected;\nListeners: %s",
-                    $event,
-                    var_export($listeners, 1)
-                )
-            );
-            $this->assertFalse($listeners->contains($listener));
-            $this->assertTrue($listeners->contains($alternateListener));
         }
     }
 
@@ -849,7 +771,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listener = function ($e) {
         };
 
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string or array/Traversable');
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string');
         $this->events->detach($listener, $event);
     }
 

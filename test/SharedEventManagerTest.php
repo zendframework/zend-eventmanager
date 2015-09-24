@@ -36,6 +36,7 @@ class SharedEventManagerTest extends TestCase
             'zero-float'             => [0.0],
             'float'                  => [1.1],
             'empty-string'           => [''],
+            'array'                  => [['test', 'foo']],
             'non-traversable-object' => [(object) ['foo' => 'bar']],
         ];
     }
@@ -84,17 +85,25 @@ class SharedEventManagerTest extends TestCase
         ]], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
     }
 
-    public function testCanAttachUsingATraversableSetOfIdentifiers()
+    public function detachIdentifierAndEvent()
     {
-        $ids = ['IDENTIFIER', __CLASS__];
-        $this->manager->attach(new ArrayIterator($ids), 'EVENT', $this->callback);
+        return [
+            'null-identifier-and-null-event' => [null, null],
+            'same-identifier-and-null-event' => ['IDENTIFIER', null],
+            'null-identifier-and-same-event' => [null, 'EVENT'],
+            'same-identifier-and-same-event' => ['IDENTIFIER', 'EVENT'],
+        ];
+    }
 
-        foreach ($ids as $id) {
-            $this->assertSame([[
-                'listener' => $this->callback,
-                'priority' => 1,
-            ]], $this->manager->getListeners($id, 'EVENT'));
-        }
+    /**
+     * @dataProvider detachIdentifierAndEvent
+     * @group fail
+     */
+    public function testCanDetachFromSharedManagerUsingIdentifierAndEvent($identifier, $event)
+    {
+        $this->manager->attach('IDENTIFIER', 'EVENT', $this->callback);
+        $this->manager->detach($this->callback, $identifier, $event);
+        $this->assertSame([], $this->manager->getListeners('IDENTIFIER', 'EVENT'));
     }
 
     public function testGetEventsReturnsEmptyListIfIdentifierDoesNotExist()

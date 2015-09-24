@@ -37,22 +37,21 @@ interface EventManagerInterface extends SharedEventManagerAwareInterface
     /**
      * Attach a listener to an event
      *
-     * @param  string|string[]|ListenerAggregateInterface $event
-     * @param  callable $callback
-     * @param  int $priority Priority at which to register listener
+     * @param  string $event Event to which to listen.
+     * @param  callable $listener
+     * @param  int $priority Priority at which to register listener.
      */
     public function attach($event, callable $listener, $priority = 1);
 
     /**
      * Detach a listener.
      *
-     * If no $event is provided, detaches listener from all events; if
-     * provided, detaches only from the named event.
-     *
-     * $event may also be an array of event names.
+     * If no $event or '*' is provided, detaches listener from all events;
+     * otherwise, detaches only from the named event.
      *
      * @param callable $listener
-     * @param null|string|string[] $event
+     * @param null|string $event Event from which to detach; null and '*'
+     *     indicate all events.
      */
     public function detach(callable $listener, $event = null);
 

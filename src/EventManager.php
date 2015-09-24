@@ -221,7 +221,7 @@ class EventManager implements EventManagerInterface
      * be triggered for every event *that has registered listeners at the time
      * it is attached*. As such, register wildcard events last whenever possible!
      *
-     * @param  string|string[] $event An event or array of event names.
+     * @param  string $event Event to which to attach.
      * @param  callable $listener Event listener.
      * @param  int $priority If provided, the priority at which to register the
      *     listener.
@@ -230,20 +230,12 @@ class EventManager implements EventManagerInterface
      */
     public function attach($event, callable $listener, $priority = 1)
     {
-        if (! is_string($event) && ! is_array($event) && ! $event instanceof Traversable) {
+        if (! is_string($event)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects a string or array/Traversable of strings for the event; received %s',
+                '%s expects a string for the event; received %s',
                 __METHOD__,
                 (is_object($event) ? get_class($event) : gettype($event))
             ));
-        }
-
-        // Array of events should be registered individually, and return an array of all listeners
-        if (! is_string($event)) {
-            foreach ($event as $name) {
-                $this->attach($name, $listener, $priority);
-            }
-            return $listener;
         }
 
         // Is this the wildcard event? If so, add the listener to the wildcard
@@ -280,32 +272,22 @@ class EventManager implements EventManagerInterface
      */
     public function detach(callable $listener, $event = null)
     {
-        $events = $event;
         if (null === $event || '*' === $event) {
             $this->detachWildcardListener($listener);
-            $events = $this->getEvents();
-        }
-
-        $events = ($events instanceof Traversable)
-            ? iterator_to_array($events)
-            : $events;
-
-        if (! is_string($events) && ! is_array($events)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects a string or array/Traversable of strings for the event; received %s',
-                __METHOD__,
-                (is_object($event) ? get_class($event) : gettype($event))
-            ));
-        }
-
-        if (is_array($events)) {
-            foreach ($events as $event) {
+            foreach ($this->getEvents() as $event) {
                 $this->detach($listener, $event);
             }
             return;
         }
 
-        $event = $events;
+        if (! is_string($event)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects a string for the event; received %s',
+                __METHOD__,
+                (is_object($event) ? get_class($event) : gettype($event))
+            ));
+        }
+
         if (! isset($this->events[$event])) {
             return;
         }

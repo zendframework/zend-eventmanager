@@ -24,14 +24,31 @@ interface SharedEventManagerInterface
     public function getListeners($id, $event = null);
 
     /**
-     * Attach a listener to an event
+     * Attach a listener to an event emitted by components with specific identifiers.
      *
-     * @param  string|string[] $id Identifier(s) for event emitting component(s)
+     * @param  string $id Identifier for event emitting component
      * @param  string $event
      * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
      */
     public function attach($id, $event, callable $listener, $priority = 1);
+
+    /**
+     * Detach a shared listener.
+     *
+     * Allows detaching a listener from one or more events to which it may be
+     * attached.
+     *
+     * @param  callable $listener Listener to detach.
+     * @param  null|string $id Identifier from which to detach; null indicates
+     *      all registered identifiers.
+     * @param  null|string $event Event from which to detach; null indicates
+     *      all registered events.
+     * @return void
+     * @throws Exception\InvalidArgumentException for invalid identifier arguments.
+     * @throws Exception\InvalidArgumentException for invalid event arguments.
+     */
+    public function detach(callable $listener, $id = null, $event = null);
 
     /**
      * Retrieve all registered events for a given resource
