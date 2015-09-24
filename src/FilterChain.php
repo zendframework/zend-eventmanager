@@ -47,9 +47,6 @@ class FilterChain implements Filter\FilterInterface
         }
 
         $next = $chain->extract();
-        if (! is_callable($next)) {
-            return;
-        }
 
         return $next($context, $argv, $chain);
     }
