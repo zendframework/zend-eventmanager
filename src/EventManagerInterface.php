@@ -17,22 +17,74 @@ use Traversable;
 interface EventManagerInterface extends SharedEventManagerAwareInterface
 {
     /**
-     * Trigger an event
+     * Create and trigger an event.
      *
-     * Should allow handling the following scenarios:
-     * - Passing Event object only
-     * - Passing event name and Event object only
-     * - Passing event name, target, and Event object
-     * - Passing event name, target, and array|ArrayAccess of arguments
-     * - Passing event name, target, array|ArrayAccess of arguments, and callback
+     * Use this method when you do not want to create an EventInterface
+     * instance prior to triggering. You will be required to pass:
      *
-     * @param  string|EventInterface $event
-     * @param  object|string $target
+     * - the event name
+     * - the event target (can be null)
+     * - any event parameters you want to provide (empty array by default)
+     *
+     * It will create the Event instance for you and then trigger all listeners
+     * related to the event.
+     *
+     * @param  string $event
+     * @param  null|object|string $target
      * @param  array|object $argv
-     * @param  null|callable $callback
      * @return ResponseCollection
      */
-    public function trigger($event, $target = null, $argv = [], callable $callback = null);
+    public function trigger($event, $target = null, $argv = []);
+
+    /**
+     * Create and trigger an event, applying a callback to each listener result.
+     *
+     * Use this method when you do not want to create an EventInterface
+     * instance prior to triggering. You will be required to pass:
+     *
+     * - the event name
+     * - the event target (can be null)
+     * - any event parameters you want to provide (empty array by default)
+     *
+     * It will create the Event instance for you, and trigger all listeners
+     * related to the event.
+     *
+     * The result of each listener is passed to $callback; if $callback returns
+     * a boolean true value, the manager must short-circuit listener execution.
+     *
+     * @param  callable $callback
+     * @param  string $event
+     * @param  null|object|string $target
+     * @param  array|object $argv
+     * @return ResponseCollection
+     */
+    public function triggerUntil(callable $callback, $event, $target = null, $argv = []);
+
+    /**
+     * Trigger an event
+     *
+     * Provided an EventInterface instance, this method will trigger listeners
+     * based on the event name, raising an exception if the event name is missing.
+     *
+     * @param  EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEvent(EventInterface $event);
+
+    /**
+     * Trigger an event, applying a callback to each listener result.
+     *
+     * Provided an EventInterface instance, this method will trigger listeners
+     * based on the event name, raising an exception if the event name is missing.
+     *
+     * The result of each listener is passed to $callback; if $callback returns
+     * a boolean true value, the manager must short-circuit listener execution.
+     *
+     * @param  callable $callback
+     * @param  EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEventUntil(callable $callback, EventInterface $event);
 
     /**
      * Attach a listener to an event

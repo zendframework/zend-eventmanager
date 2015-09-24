@@ -148,42 +148,83 @@ class EventManager implements EventManagerInterface
     /**
      * Trigger all listeners for a given event
      *
-     * @param  string|EventInterface $event
-     * @param  string|object     $target   Object calling emit, or symbol describing target (such as static method name)
-     * @param  array|ArrayAccess $argv     Array of arguments; typically, should be associative
-     * @param  null|callable     $callback Trigger listeners until return value of this callback evaluate to true
+     * @param  string $event Name of event to trigger
+     * @param  null|string|object $target Object calling emit, or symbol
+     *     describing target (such as static method name)
+     * @param  array|ArrayAccess $argv Array of arguments; typically, should be
+     *     associative
      * @return ResponseCollection All listener return values
-     * @throws Exception\InvalidCallbackException
      */
-    public function trigger($event, $target = null, $argv = [], callable $callback = null)
+    public function trigger($event, $target = null, $argv = [])
     {
-        if ($event instanceof EventInterface) {
-            $e        = $event;
-            $event    = $e->getName();
-            $callback = $target;
-        } elseif ($target instanceof EventInterface) {
-            $e = $target;
-            $e->setName($event);
-            $callback = empty($argv) ? null : $argv;
-        } elseif ($argv instanceof EventInterface) {
-            $e = $argv;
-            $e->setName($event);
-            $e->setTarget($target);
-        } else {
-            $e = clone $this->eventPrototype;
-            $e->setName($event);
-            $e->setTarget($target);
-            $e->setParams($argv);
-        }
+        $e = clone $this->eventPrototype;
+        $e->setName($event);
+        $e->setTarget($target);
+        $e->setParams($argv);
 
-        if ($callback && ! is_callable($callback)) {
-            throw new Exception\InvalidCallbackException('Invalid callback provided');
-        }
+        return $this->triggerListeners($e);
+    }
 
-        // Initial value of stop propagation flag should be false
-        $e->stopPropagation(false);
+    /**
+     * Create and trigger an event, applying a callback to each listener result.
+     *
+     * Use this method when you do not want to create an EventInterface
+     * instance prior to triggering. You will be required to pass:
+     *
+     * - the event name
+     * - the event target (can be null)
+     * - any event parameters you want to provide (empty array by default)
+     *
+     * It will create the Event instance for you, passing that and the
+     * $callback to `triggerEventUntil()`.
+     *
+     * @param  callable $callback
+     * @param  string $event
+     * @param  null|object|string $target
+     * @param  array|object $argv
+     * @return ResponseCollection
+     */
+    public function triggerUntil(callable $callback, $event, $target = null, $argv = [])
+    {
+        $e = clone $this->eventPrototype;
+        $e->setName($event);
+        $e->setTarget($target);
+        $e->setParams($argv);
 
         return $this->triggerListeners($e, $callback);
+    }
+
+    /**
+     * Trigger an event
+     *
+     * Provided an EventInterface instance, this method will trigger listeners
+     * based on the event name, raising an exception if the event name is missing.
+     *
+     * @param  EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEvent(EventInterface $event)
+    {
+        return $this->triggerListeners($event);
+    }
+
+    /**
+     * Trigger an event, applying a callback to each listener result.
+     *
+     * Provided an EventInterface instance, this method will trigger listeners
+     * based on the event name, raising an exception if the event name is missing.
+     *
+     * Each result returned by a listener is passed to $callback; if $callback
+     * returns a boolean true value, the manager should short-circuit execution
+     * of the listener queue.
+     *
+     * @param  callable $callback
+     * @param  EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEventUntil(callable $callback, EventInterface $event)
+    {
+        return $this->triggerListeners($event, $callback);
     }
 
     /**
@@ -360,7 +401,14 @@ class EventManager implements EventManagerInterface
     protected function triggerListeners(EventInterface $event, callable $callback = null)
     {
         $name = $event->getName();
+        if (empty($name)) {
+            throw new Exception\RuntimeException('Event is missing a name; cannot trigger!');
+        }
+
         $this->prepareListeners($name);
+
+        // Initial value of stop propagation flag should be false
+        $event->stopPropagation(false);
 
         $responses = new ResponseCollection;
 
