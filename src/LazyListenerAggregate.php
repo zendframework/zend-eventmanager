@@ -55,10 +55,10 @@ class LazyListenerAggregate implements ListenerAggregateInterface
      * order to create a listener aggregate that defers listener creation until
      * the listener is triggered.
      *
-     * Listeners may be either LazyListener instances, or array structs that can
-     * be provided to a LazyListener constructor in order to create a new
-     * instance; in the latter case, the $container and $env will be passed at
-     * instantiation as well.
+     * Listeners may be either LazyListener instances, or lazy listener
+     * definitions that can be provided to a LazyListener constructor in order
+     * to create a new instance; in the latter case, the $container and $env
+     * will be passed at instantiation as well.
      *
      * @var array $listeners LazyListener instances or array structs to pass to
      *     the LazyListener constructor.
@@ -69,7 +69,7 @@ class LazyListenerAggregate implements ListenerAggregateInterface
     public function __construct(array $listeners, ContainerInterface $container, array $env = [])
     {
         $this->container = $container;
-        $this->env = $env;
+        $this->env       = $env;
 
         // This would raise an exception for invalid structs
         foreach ($listeners as $listener) {
@@ -94,21 +94,15 @@ class LazyListenerAggregate implements ListenerAggregateInterface
      * Loops through all composed lazy listeners, and attaches them to the
      * event manager.
      *
-     * It uses the lazy listener event and priority to attach, and creates
-     * a closure around the lazy listener instance that retrieves the
-     * listener and method, which it then invokes and returns.
-     *
      * @var EventManagerInterface $events
      * @var int $priority
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         foreach ($this->lazyListeners as $lazyListener) {
-            $this->listeners[] = $listener = $lazyListener->getListener();
-
-            $events->attach(
+            $this->listeners[] = $events->attach(
                 $lazyListener->getEvent(),
-                $listener,
+                $lazyListener,
                 $lazyListener->getPriority($priority)
             );
         }

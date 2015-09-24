@@ -136,7 +136,9 @@ class LazyListenerAggregateTest extends TestCase
         });
 
         $events = $this->prophesize(EventManagerInterface::class);
-        $events->attach('event', Argument::type('callable'), 1)->shouldBeCalled();
+        $events->attach('event', Argument::type('callable'), 1)->will(function ($args) {
+            return $args[1];
+        });
 
         $listeners = [
             [
@@ -153,8 +155,10 @@ class LazyListenerAggregateTest extends TestCase
         $r->setAccessible(true);
         $listeners = $r->getValue($aggregate);
 
+        $this->assertInternalType('array', $listeners);
+        $this->assertCount(1, $listeners);
         $listener = array_shift($listeners);
-        $this->assertInternalType('callable', $listener);
+        $this->assertInstanceOf(LazyListener::class, $listener);
         $listener($event->reveal());
     }
 }

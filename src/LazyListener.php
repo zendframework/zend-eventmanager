@@ -70,78 +70,93 @@ class LazyListener
     private $service;
 
     /**
-     * @param array $struct
+     * @param array $definition
      * @param ContainerInterface $container
      * @param array $env
      */
-    public function __construct(array $struct, ContainerInterface $container, array $env = [])
+    public function __construct(array $definition, ContainerInterface $container, array $env = [])
     {
-        if ((! isset($struct['event']) || ! is_string($struct['event']) || empty($struct['event']))) {
+        if ((! isset($definition['event'])
+            || ! is_string($definition['event'])
+            || empty($definition['event']))
+        ) {
             throw new Exception\InvalidArgumentException(
-                'Lazy listener struct is missing a valid "event" member; cannot create LazyListener'
+                'Lazy listener definition is missing a valid "event" member; cannot create LazyListener'
             );
         }
 
-        if ((! isset($struct['listener']) || ! is_string($struct['listener']) || empty($struct['listener']))) {
+        if ((! isset($definition['listener'])
+            || ! is_string($definition['listener'])
+            || empty($definition['listener']))
+        ) {
             throw new Exception\InvalidArgumentException(
-                'Lazy listener struct is missing a valid "listener" member; cannot create LazyListener'
+                'Lazy listener definition is missing a valid "listener" member; cannot create LazyListener'
             );
         }
 
-        if ((! isset($struct['method']) || ! is_string($struct['method']) || empty($struct['method']))) {
+        if ((! isset($definition['method'])
+            || ! is_string($definition['method'])
+            || empty($definition['method']))
+        ) {
             throw new Exception\InvalidArgumentException(
-                'Lazy listener struct is missing a valid "method" member; cannot create LazyListener'
+                'Lazy listener definition is missing a valid "method" member; cannot create LazyListener'
             );
         }
 
-        $this->event     = $struct['event'];
-        $this->service   = $struct['listener'];
-        $this->method    = $struct['method'];
-        $this->priority  = isset($struct['priority']) ? (int) $struct['priority'] : null;
+        $this->event     = $definition['event'];
+        $this->service   = $definition['listener'];
+        $this->method    = $definition['method'];
+        $this->priority  = isset($definition['priority']) ? (int) $definition['priority'] : null;
         $this->container = $container;
         $this->env       = $env;
     }
 
+    /**
+     * Use the listener as an invokable, allowing direct attachment to an event manager.
+     *
+     * @param EventInterface $event
+     * @return callable
+     */
+    public function __invoke(EventInterface $event)
+    {
+        $listener = $this->fetchListener();
+        $method   = $this->method;
+        return $listener->{$method}($event);
+    }
+
+    /**
+     * @return string
+     */
     public function getEvent()
     {
         return $this->event;
     }
 
-    public function getListener()
-    {
-        if (! $this->listener) {
-            $this->listener = $this->createListenerClosure();
-        }
-
-        return $this->listener;
-    }
-
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    public function getPriority($default)
+    /**
+     * @return int
+     */
+    public function getPriority($default = 1)
     {
         return (null !== $this->priority) ? $this->priority : $default;
     }
 
     /**
-     * Create the closure around retrieval and invocation of the listener.
-     *
      * @return callable
      */
-    private function createListenerClosure()
+    private function fetchListener()
     {
-        return function ($e) {
-            if (method_exists($this->container, 'build') && ! empty($this->env)) {
-                $listener = $this->container->build($this->service, $this->env);
-            } else {
-                $listener = $this->container->get($this->service);
-            }
+        if ($this->listener) {
+            return $this->listener;
+        }
 
-            $method   = $this->method;
-            return $listener->{$method}($e);
-        };
+        // In the future, typehint against Zend\ServiceManager\ServiceLocatorInterface,
+        // which defines this message starting in v3.
+        if (method_exists($this->container, 'build') && ! empty($this->env)) {
+            $this->listener = $this->container->build($this->service, $this->env);
+            return $this->listener;
+        }
+
+        $this->listener = $this->container->get($this->service);
+        return $this->listener;
     }
 }

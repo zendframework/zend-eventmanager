@@ -112,7 +112,7 @@ class LazyListenerTest extends TestCase
         new LazyListener($struct, $this->container->reveal());
     }
 
-    public function testCanInstantiateLazyListenerWithValidStruct()
+    public function testCanInstantiateLazyListenerWithValidDefinition()
     {
         $struct = [
             'event'    => 'event',
@@ -127,7 +127,7 @@ class LazyListenerTest extends TestCase
     }
 
     /**
-     * @depends testCanInstantiateLazyListenerWithValidStruct
+     * @depends testCanInstantiateLazyListenerWithValidDefinition
      */
     public function testCanRetrieveEventFromListener($listener)
     {
@@ -135,19 +135,19 @@ class LazyListenerTest extends TestCase
     }
 
     /**
-     * @depends testCanInstantiateLazyListenerWithValidStruct
+     * @depends testCanInstantiateLazyListenerWithValidDefinition
      */
-    public function testCanRetrieveMethodFromListener($listener)
+    public function testInstatiationSetsListenerMethod($listener)
     {
-        $this->assertEquals('method', $listener->getMethod());
+        $this->assertAttributeEquals('method', 'method', $listener);
     }
 
     /**
-     * @depends testCanInstantiateLazyListenerWithValidStruct
+     * @depends testCanInstantiateLazyListenerWithValidDefinition
      */
     public function testCanRetrievePriorityFromListener($listener)
     {
-        $this->assertEquals(5, $listener->getPriority(1));
+        $this->assertEquals(5, $listener->getPriority());
     }
 
     public function testGetPriorityWillReturnProvidedPriorityIfNoneGivenAtInstantiation()
@@ -163,7 +163,7 @@ class LazyListenerTest extends TestCase
         $this->assertEquals(5, $listener->getPriority(5));
     }
 
-    public function testGetListenerReturnsClosureAroundListenerCreation()
+    public function testLazyListenerActsAsInvokableAroundListenerCreation()
     {
         $listener = $this->prophesize(TestAsset\BuilderInterface::class);
         $listener->build(Argument::type(EventInterface::class))->willReturn('RECEIVED');
@@ -184,13 +184,10 @@ class LazyListenerTest extends TestCase
         $lazyListener = new LazyListener($struct, $this->container->reveal());
         $this->assertInstanceOf(LazyListener::class, $lazyListener);
 
-        $test = $lazyListener->getListener();
-        $this->assertInternalType('callable', $test);
-
-        $this->assertEquals('RECEIVED', $test($event->reveal()));
+        $this->assertEquals('RECEIVED', $lazyListener($event->reveal()));
     }
 
-    public function testGetListenerWillDelegateToContainerBuildMethodWhenPresentAndEnvIsNonEmpty()
+    public function testInvocationWillDelegateToContainerBuildMethodWhenPresentAndEnvIsNonEmpty()
     {
         $listener = $this->prophesize(TestAsset\BuilderInterface::class);
         $listener->build(Argument::type(EventInterface::class))->willReturn('RECEIVED');
@@ -217,9 +214,6 @@ class LazyListenerTest extends TestCase
         $lazyListener = new LazyListener($struct, $container->reveal(), $env);
         $this->assertInstanceOf(LazyListener::class, $lazyListener);
 
-        $test = $lazyListener->getListener();
-        $this->assertInternalType('callable', $test);
-
-        $this->assertEquals('RECEIVED', $test($event->reveal()));
+        $this->assertEquals('RECEIVED', $lazyListener($event->reveal()));
     }
 }
