@@ -225,6 +225,7 @@ class EventManager implements EventManagerInterface
      * @param  callable $listener Event listener.
      * @param  int $priority If provided, the priority at which to register the
      *     listener.
+     * @return callable Returns the listener.
      * @throws Exception\InvalidArgumentException
      */
     public function attach($event, callable $listener, $priority = 1)
@@ -242,7 +243,7 @@ class EventManager implements EventManagerInterface
             foreach ($event as $name) {
                 $this->attach($name, $listener, $priority);
             }
-            return;
+            return $listener;
         }
 
         // Is this the wildcard event? If so, add the listener to the wildcard
@@ -259,7 +260,7 @@ class EventManager implements EventManagerInterface
                 $this->prepareWildcardListeners($this->getEvents(), [ $struct ]);
             }
 
-            return;
+            return $listener;
         }
 
         // If we don't have a priority queue for the event yet, create one
@@ -269,6 +270,8 @@ class EventManager implements EventManagerInterface
 
         // Inject the listener into the queue
         $this->events[$event]->insert($listener, $priority);
+
+        return $listener;
     }
 
     /**

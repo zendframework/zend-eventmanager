@@ -49,6 +49,24 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function eventArguments()
+    {
+        return [
+            'single-named-event' => ['test'],
+            'multiple-events'    => [['test', 'test2']],
+            'wildcard-event'     => ['*'],
+        ];
+    }
+
+    /**
+     * @dataProvider eventArguments
+     */
+    public function testAttachShouldAddReturnTheListener($event)
+    {
+        $listener  = [$this, __METHOD__];
+        $this->assertSame($listener, $this->events->attach($event, $listener));
+    }
+
     public function testAttachShouldAddEventIfItDoesNotExist()
     {
         $events = $this->events->getEvents();
