@@ -541,20 +541,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($shared, $this->events->getSharedManager());
     }
 
-    public function testSettingIdentifiersAfterFirstTriggerRaisesAnException()
-    {
-        $this->events->trigger('foo');
-        $this->setExpectedException(Exception\RuntimeException::class, 'cannot be called after');
-        $this->events->setIdentifiers(['foo', 'bar']);
-    }
-
-    public function testAddingIdentifiersAfterFirstTriggerRaisesAnException()
-    {
-        $this->events->trigger('foo');
-        $this->setExpectedException(Exception\RuntimeException::class, 'cannot be called after');
-        $this->events->addIdentifiers(['foo', 'bar']);
-    }
-
     public function testTriggerRaisesExceptionWithInvalidResponseCallback()
     {
         $event = new Event();

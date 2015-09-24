@@ -40,11 +40,10 @@ class EventManager implements EventManagerInterface
     protected $identifiers = [];
 
     /**
-     * Have shared/wildcard listeners been prepared already?
-     *
-     * @var bool
+     * Cached list of shared listeners already attached to this instance.
+     * @var array
      */
-    private $isPrepared = false;
+    protected $sharedListeners = [];
 
     /**
      * Shared event manager
@@ -125,15 +124,7 @@ class EventManager implements EventManagerInterface
      */
     public function setIdentifiers(array $identifiers)
     {
-        if ($this->isPrepared) {
-            throw new Exception\RuntimeException(sprintf(
-                '%s cannot be called after any events have been triggered',
-                __METHOD__
-            ));
-        }
-
         $this->identifiers = array_unique($identifiers);
-
         return $this;
     }
 
@@ -146,13 +137,6 @@ class EventManager implements EventManagerInterface
      */
     public function addIdentifiers(array $identifiers)
     {
-        if ($this->isPrepared) {
-            throw new Exception\RuntimeException(sprintf(
-                '%s cannot be called after any events have been triggered',
-                __METHOD__
-            ));
-        }
-
         $this->identifiers = array_unique(array_merge(
             $this->identifiers,
             $identifiers
@@ -173,10 +157,6 @@ class EventManager implements EventManagerInterface
      */
     public function trigger($event, $target = null, $argv = [], callable $callback = null)
     {
-        if (! $this->isPrepared) {
-            $this->prepareListeners();
-        }
-
         if ($event instanceof EventInterface) {
             $e        = $event;
             $event    = $e->getName();
@@ -245,12 +225,6 @@ class EventManager implements EventManagerInterface
                 'priority' => $priority,
             ];
             $this->wildcardListeners[] = $struct;
-
-            // Attaching after first trigger requires special handling.
-            if ($this->isPrepared) {
-                $this->prepareWildcardListeners($this->getEvents(), [ $struct ]);
-            }
-
             return $listener;
         }
 
@@ -385,9 +359,12 @@ class EventManager implements EventManagerInterface
      */
     protected function triggerListeners(EventInterface $event, callable $callback = null)
     {
+        $name = $event->getName();
+        $this->prepareListeners($name);
+
         $responses = new ResponseCollection;
 
-        foreach ($this->getListenersForEvent($event->getName()) as $listener) {
+        foreach ($this->getListenersForEvent($name) as $listener) {
             // Trigger the listener, and push its result onto the response collection
             $response = call_user_func($listener, $event);
             $responses->push($response);
@@ -424,15 +401,12 @@ class EventManager implements EventManagerInterface
      * is triggered; as such, all shared and wildcard listeners MUST be
      * injected BEFORE the first trigger.
      */
-    private function prepareListeners()
+    private function prepareListeners($event)
     {
         if ($this->sharedManager) {
-            $this->attachSharedListeners();
+            $this->attachSharedListeners($event);
         }
-
         $this->prepareWildcardListeners($this->getEvents(), $this->wildcardListeners);
-
-        $this->isPrepared = true;
     }
 
     /**
@@ -441,12 +415,10 @@ class EventManager implements EventManagerInterface
      * Attaches shared listeners for identifiers in the current instance, as
      * well as any on the wildcard listener.
      */
-    private function attachSharedListeners()
+    private function attachSharedListeners($event)
     {
         foreach ($this->identifiers as $identifier) {
-            foreach ($this->sharedManager->getListeners($identifier) as $event => $listeners) {
-                $this->attachListenerStructs($event, $listeners);
-            }
+            $this->attachListenerStructs($event, $this->fetchCurrentSharedListeners($identifier, $event));
         }
 
         foreach ($this->sharedManager->getListeners('*') as $event => $listeners) {
@@ -518,5 +490,54 @@ class EventManager implements EventManagerInterface
                 unset($this->wildcardListeners[$index]);
             }
         }
+    }
+
+    /**
+     * Get a current list of new shared listeners to attach.
+     *
+     * Retrieve the shared listeners for this identifier and event:
+     *
+     * - if they match what we've retrieved previously, we return an empty
+     *   array.
+     * - if there are differences, we return new listeners, and detach
+     *   any no longer present in the current list.
+     *
+     * @var string $identifier
+     * @var string $event
+     * @return array shared listener structs
+     */
+    private function fetchCurrentSharedListeners($identifier, $event)
+    {
+        $current = $this->sharedManager->getListeners($identifier, $event);
+        if (! isset($this->sharedListeners[$identifier][$event])) {
+            if (! empty($current)) {
+                $this->sharedListeners[$identifier][$event] = $current;
+            }
+            return $current;
+        }
+
+        $cached = $this->sharedListeners[$identifier][$event];
+        if ($cached === $current) {
+            return [];
+        }
+
+        $diff = array_udiff($cached, $current, function ($original, $current) {
+            if ($original['listener'] === $current['listener']
+                && $original['priority'] === $current['priority']
+            ) {
+                return 0;
+            }
+            return -1;
+        });
+
+        foreach ($diff as $index => $struct) {
+            if (in_array($struct, $cached, true)) {
+                $this->detach($struct['listener'], $event);
+                unset($diff[$index]);
+                continue;
+            }
+        }
+        $this->sharedListeners[$identifier][$event] = $current;
+        return $diff;
     }
 }
