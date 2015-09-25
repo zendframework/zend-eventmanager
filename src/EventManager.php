@@ -289,7 +289,7 @@ class EventManager implements EventManagerInterface
     {
         if (null === $event || '*' === $event) {
             $this->detachWildcardListener($listener);
-            foreach ($this->getEvents() as $event) {
+            foreach (array_keys($this->events) as $event) {
                 $this->detach($listener, $event);
             }
             return;
@@ -335,31 +335,6 @@ class EventManager implements EventManagerInterface
     public function detachAggregate(ListenerAggregateInterface $aggregate)
     {
         $aggregate->detach($this);
-    }
-
-    /**
-     * Retrieve all registered events
-     *
-     * @return array
-     */
-    public function getEvents()
-    {
-        return array_keys($this->events);
-    }
-
-    /**
-     * Retrieve all listeners for a given event
-     *
-     * @param  string $event
-     * @return FastPriorityQueue
-     */
-    public function getListeners($event)
-    {
-        if (! array_key_exists($event, $this->events)) {
-            return new FastPriorityQueue();
-        }
-
-        return $this->events[$event];
     }
 
     /**

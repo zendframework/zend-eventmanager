@@ -21,6 +21,7 @@ use Zend\EventManager\Exception;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\SharedEventManagerInterface;
+use Zend\Stdlib\FastPriorityQueue;
 
 class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,11 +33,40 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events = new EventManager;
     }
 
+    /**
+     * Retrieve list of registered event names from a manager.
+     *
+     * @param EventManager $manager
+     * @return string[]
+     */
+    public function getEventListFromManager(EventManager $manager)
+    {
+        $r = new ReflectionProperty($manager, 'events');
+        $r->setAccessible(true);
+        return array_keys($r->getValue($manager));
+    }
+
+    /**
+     * Return listeners for a given event.
+     *
+     * @param string $event
+     * @param EventManager $manager
+     * @return FastPriorityQueue
+     */
+    public function getListenersForEvent($event, EventManager $manager)
+    {
+        $r = new ReflectionProperty($manager, 'events');
+        $r->setAccessible(true);
+        $events = $r->getValue($manager);
+
+        return (isset($events[$event]) ? $events[$event] : new FastPriorityQueue());
+    }
+
     public function testAttachShouldAddListenerToEvent()
     {
         $listener  = [$this, __METHOD__];
         $this->events->attach('test', $listener);
-        $listeners = $this->events->getListeners('test');
+        $listeners = $this->getListenersForEvent('test', $this->events);
         $this->assertCount(1, $listeners);
         $this->assertTrue($listeners->contains($listener));
         return [
@@ -65,18 +95,11 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAttachShouldAddEventIfItDoesNotExist()
     {
-        $events = $this->events->getEvents();
-        $this->assertEmpty($events, var_export($events, 1));
+        $this->assertAttributeEmpty('events', $this->events);
         $listener = $this->events->attach('test', [$this, __METHOD__]);
-        $events = $this->events->getEvents();
+        $events = $this->getEventListFromManager($this->events);
         $this->assertNotEmpty($events);
         $this->assertContains('test', $events);
-    }
-
-    public function testRetrievingAttachedListenersShouldReturnEmptyArrayWhenEventDoesNotExist()
-    {
-        $listeners = $this->events->getListeners('test');
-        $this->assertEquals(0, count($listeners));
     }
 
     public function testTriggerShouldTriggerAttachedListeners()
@@ -206,7 +229,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $aggregate = new TestAsset\MockAggregate();
         $this->events->attachAggregate($aggregate);
-        $events = $this->events->getEvents();
+        $events = $this->getEventListFromManager($this->events);
         foreach (['foo.bar', 'foo.baz'] as $event) {
             $this->assertContains($event, $events);
         }
@@ -479,15 +502,23 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $this->events->attach($event, $listener);
         }
 
-        $this->assertEquals($events, $this->events->getEvents());
+        $this->assertEquals($events, $this->getEventListFromManager($this->events));
         $this->events->clearListeners('foo');
-        $this->assertCount(0, $this->events->getListeners('foo'), 'Event foo listeners were not cleared');
+        $this->assertCount(
+            0,
+            $this->getListenersForEvent('foo', $this->events),
+            'Event foo listeners were not cleared'
+        );
 
         foreach (['bar', 'baz'] as $event) {
-            $this->assertCount(1, $this->events->getListeners($event), sprintf(
-                'Event %s listeners were cleared and should not have been',
-                $event
-            ));
+            $this->assertCount(
+                1,
+                $this->getListenersForEvent($event, $this->events),
+                sprintf(
+                    'Event %s listeners were cleared and should not have been',
+                    $event
+                )
+            );
         }
     }
 
@@ -538,7 +569,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $events->detach($listener, $event);
 
-        $listeners = $events->getListeners($event);
+        $listeners = $this->getListenersForEvent($event, $events);
         $this->assertCount(0, $listeners);
         $this->assertFalse($listeners->contains($listener));
     }
@@ -549,7 +580,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         };
         $this->events->attach('foo', $callback);
         $this->events->detach($callback, 'bar');
-        $listeners = $this->events->getListeners('foo');
+        $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertTrue($listeners->contains($callback));
     }
 
@@ -571,7 +602,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->detach($wildcardListener, '*'); // Semantically the same as null
 
         foreach ($events as $event) {
-            $listeners = $this->events->getListeners($event);
+            $listeners = $this->getListenersForEvent($event, $this->events);
             $this->assertCount(1, $listeners);
             $this->assertFalse($listeners->contains($wildcardListener));
         }
@@ -610,7 +641,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $events->detach($listener);
 
         foreach ($eventNames as $event) {
-            $listeners = $events->getListeners($event);
+            $listeners = $this->getListenersForEvent($event, $events);
             $this->assertCount(0, $listeners);
             $this->assertFalse($listeners->contains($listener));
         }
@@ -625,7 +656,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->attach('foo', $listener);
         $this->events->attach('foo', $alternateListener);
 
-        $listeners = $this->events->getListeners('foo');
+        $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(
             2,
             $listeners,
@@ -636,7 +667,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->events->detach($listener, 'foo');
 
-        $listeners = $this->events->getListeners('foo');
+        $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(
             1,
             $listeners,
@@ -678,12 +709,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $this->events->attach('foo', $listener, $i);
         }
 
-        $listeners = $this->events->getListeners('foo');
+        $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(5, $listeners);
 
         $this->events->detach($listener, 'foo');
 
-        $listeners = $this->events->getListeners('foo');
+        $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(0, $listeners);
         $this->assertFalse($listeners->contains($listener));
     }
