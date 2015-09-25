@@ -10,15 +10,15 @@
 namespace Zend\EventManager;
 
 /**
- * Interface to automate setter injection for a SharedEventManagerInterface instance
+ * Interface indicating that an object composes or can compose a
+ * SharedEventManagerInterface instance.
  */
-interface SharedEventManagerAwareInterface
+interface SharedEventsCapableInterface
 {
     /**
-     * Inject a SharedEventManager instance
+     * Retrieve the shared event manager, if composed.
      *
-     * @param  SharedEventManagerInterface $sharedEventManager
-     * @return SharedEventManagerAwareInterface
+     * @return null|SharedEventManagerInterface
      */
-    public function setSharedManager(SharedEventManagerInterface $sharedEventManager);
+    public function getSharedManager();
 }

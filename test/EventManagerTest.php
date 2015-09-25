@@ -460,13 +460,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($shared, $events->getSharedManager());
     }
 
-    public function testCanInjectSharedManagerViaSetter()
-    {
-        $shared = $this->prophesize(SharedEventManagerInterface::class)->reveal();
-        $this->events->setSharedManager($shared);
-        $this->assertSame($shared, $this->events->getSharedManager());
-    }
-
     public function invalidEventsForAttach()
     {
         return [
@@ -533,10 +526,9 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $triggered = true;
         });
 
-        $this->events->setSharedManager($shared);
-        $this->events->addIdentifiers([__CLASS__]);
+        $events = new EventManager([__CLASS__], $shared);
 
-        $this->events->trigger(__FUNCTION__);
+        $events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
     }
 
@@ -551,10 +543,9 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $triggered = true;
         });
 
-        $this->events->setSharedManager($shared);
-        $this->events->addIdentifiers([__CLASS__]);
+        $events = new EventManager([__CLASS__], $shared);
 
-        $this->events->trigger(__FUNCTION__);
+        $events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
     }
 

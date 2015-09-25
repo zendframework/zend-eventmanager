@@ -88,19 +88,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Set shared event manager
+     * Retrieve the shared event manager, if composed.
      *
-     * @param SharedEventManagerInterface $sharedEventManager
-     * @return EventManager
-     */
-    public function setSharedManager(SharedEventManagerInterface $sharedEventManager)
-    {
-        $this->sharedManager = $sharedEventManager;
-        return $this;
-    }
-
-    /**
-     * @return null|SharedEventManagerInterface
+     * @return null|SharedEventManagerInterface $sharedEventManager
      */
     public function getSharedManager()
     {

@@ -14,7 +14,7 @@ use Traversable;
 /**
  * Interface for messengers
  */
-interface EventManagerInterface extends SharedEventManagerAwareInterface
+interface EventManagerInterface extends SharedEventsCapableInterface
 {
     /**
      * Create and trigger an event.
