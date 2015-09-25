@@ -543,6 +543,16 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($listeners->contains($listener));
     }
 
+    public function testDetachDoesNothingIfEventIsNotPresentInManager()
+    {
+        $callback = function ($e) {
+        };
+        $this->events->attach('foo', $callback);
+        $this->events->detach($callback, 'bar');
+        $listeners = $this->events->getListeners('foo');
+        $this->assertTrue($listeners->contains($callback));
+    }
+
     public function testCanDetachWildcardListeners()
     {
         $events   = ['foo', 'bar'];
@@ -696,5 +706,36 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $aggregate->attach(Argument::is($events), 5)->shouldBeCalled();
 
         $events->attachAggregate($aggregate->reveal(), 5);
+    }
+
+    public function eventsMissingNames()
+    {
+        $event = $this->prophesize(EventInterface::class);
+        $event->getName()->willReturn('');
+        $callback = function ($result) {
+        };
+
+        // @codingStandardsIgnoreStart
+        //                                      [ event,             method to trigger, callback ]
+        return [
+            'trigger-empty-string'           => ['',               'trigger',           null],
+            'trigger-until-empty-string'     => ['',               'triggerUntil',      $callback],
+            'trigger-event-empty-name'       => [$event->reveal(), 'triggerEvent',      null],
+            'trigger-event-until-empty-name' => [$event->reveal(), 'triggerEventUntil', $callback],
+        ];
+        // @codingStandardsIgnoreEnd
+    }
+
+    /**
+     * @dataProvider eventsMissingNames
+     */
+    public function testTriggeringAnEventWithAnEmptyNameRaisesAnException($event, $method, $callback)
+    {
+        $this->setExpectedException(Exception\RuntimeException::class, 'missing a name');
+        if ($callback) {
+            $this->events->$method($callback, $event);
+        } else {
+            $this->events->$method($event);
+        }
     }
 }

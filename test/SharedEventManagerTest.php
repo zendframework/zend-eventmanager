@@ -97,7 +97,6 @@ class SharedEventManagerTest extends TestCase
 
     /**
      * @dataProvider detachIdentifierAndEvent
-     * @group fail
      */
     public function testCanDetachFromSharedManagerUsingIdentifierAndEvent($identifier, $event)
     {

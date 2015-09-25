@@ -30,12 +30,12 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zend-stdlib": "~2.7",
+        "zendframework/zend-stdlib": "^2.7.3",
         "container-interop/container-interop": "dev-master"
     },
     "require-dev": {
         "phpunit/PHPUnit": "~4.0",
-        "athletic/athletic": "~0.1",
+        "athletic/athletic": "^0.1",
         "squizlabs/php_codesniffer": "^2.0@dev"
     }
 }

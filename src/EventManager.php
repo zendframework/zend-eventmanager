@@ -62,9 +62,10 @@ class EventManager implements EventManagerInterface
      * Allows optionally specifying identifier(s) to use to pull signals from a
      * SharedEventManagerInterface.
      *
-     * @param  null|string|int|array|Traversable $identifiers
+     * @param array $identifiers
+     * @param SharedEventManagerInterface $sharedEventManager
      */
-    public function __construct($identifiers = null, SharedEventManagerInterface $sharedEventManager = null)
+    public function __construct(array $identifiers = null, SharedEventManagerInterface $sharedEventManager = null)
     {
         if ($sharedEventManager) {
             $this->sharedManager = $sharedEventManager;
@@ -413,8 +414,12 @@ class EventManager implements EventManagerInterface
         $responses = new ResponseCollection;
 
         foreach ($this->getListenersForEvent($name) as $listener) {
+            if (! is_callable($listener)) {
+                return $responses;
+            }
+
             // Trigger the listener, and push its result onto the response collection
-            $response = call_user_func($listener, $event);
+            $response = $listener($event);
             $responses->push($response);
 
             // If the event was asked to stop propagating, do so
@@ -425,7 +430,7 @@ class EventManager implements EventManagerInterface
 
             // If the result causes our validation callback to return true,
             // stop propagation
-            if ($callback && call_user_func($callback, $response)) {
+            if ($callback && $callback($response)) {
                 $responses->setStopped(true);
                 break;
             }
@@ -454,7 +459,8 @@ class EventManager implements EventManagerInterface
         if ($this->sharedManager) {
             $this->attachSharedListeners($event);
         }
-        $this->prepareWildcardListeners($this->getEvents(), $this->wildcardListeners);
+
+        $this->attachListenerStructs($event, $this->wildcardListeners);
     }
 
     /**
@@ -469,9 +475,7 @@ class EventManager implements EventManagerInterface
             $this->attachListenerStructs($event, $this->fetchCurrentSharedListeners($identifier, $event));
         }
 
-        foreach ($this->sharedManager->getListeners('*') as $event => $listeners) {
-            $this->attachListenerStructs($event, $listeners);
-        }
+        $this->attachListenerStructs($event, $this->fetchCurrentSharedListeners('*', $event));
     }
 
     /**
@@ -496,21 +500,6 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Inject wildcard listeners.
-     *
-     * Loops through each event, injecting each wildcard listener available.
-     *
-     * @param array $events
-     * @param array $listeners
-     */
-    private function prepareWildcardListeners(array $events, array $listeners)
-    {
-        foreach ($events as $event) {
-            $this->attachListenerStructs($event, $listeners);
-        }
-    }
-
-    /**
      * Get listeners for the currently triggered event.
      *
      * If we have listeners defined for this specific event already, we can
@@ -527,7 +516,6 @@ class EventManager implements EventManagerInterface
         }
 
         $this->events[$event] = new FastPriorityQueue();
-        $this->prepareWildcardListeners([$event], $this->wildcardListeners);
         return $this->events[$event];
     }
 
@@ -574,25 +562,32 @@ class EventManager implements EventManagerInterface
             return [];
         }
 
-        // Leave the inline anonymous function. Caching it in an instance
-        // property degrades performance!
-        $diff = array_udiff($cached, $current, function ($original, $current) {
-            if ($original['listener'] === $current['listener']
-                && $original['priority'] === $current['priority']
-            ) {
-                return 0;
-            }
-            return -1;
-        });
-
-        foreach ($diff as $index => $struct) {
-            if (in_array($struct, $cached, true)) {
-                $this->detach($struct['listener'], $event);
-                unset($diff[$index]);
-                continue;
-            }
+        // Detach removed listeners
+        foreach (array_filter($cached, $this->getStructFilter($current)) as $struct) {
+            $this->detach($struct['listener'], $event);
         }
+
+        // Re-cache, and return new structs to attach
         $this->sharedListeners[$identifier][$event] = $current;
-        return $diff;
+        return array_filter($current, $this->getStructFilter($cached));
+    }
+
+    /**
+     * array_filter closing over a set of listeners.
+     *
+     * Returns a closure that will only return listeners that do not exactly
+     * match the current struct.
+     *
+     * @param array[] $listeners
+     * @return callable
+     */
+    private function getStructFilter(array $listeners)
+    {
+        return function ($struct) use ($listeners) {
+            if (in_array($struct, $listeners, true)) {
+                return false;
+            }
+            return true;
+        };
     }
 }
