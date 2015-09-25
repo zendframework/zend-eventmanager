@@ -1,0 +1,9 @@
+docs_dir: doc/book
+site_dir: doc/html
+pages:
+    - index.md
+    - { Migration: migration.md }
+site_name: zend-eventmanager
+site_description: 'zend-expressive: PSR-7 Middleware Microframework'
+repo_url: 'https://github.com/zendframework/zend-eventmanager'
+copyright: 'Copyright (c) 2015 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
