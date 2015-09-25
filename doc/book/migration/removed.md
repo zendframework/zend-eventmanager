@@ -135,4 +135,34 @@ To migrate, you have the following options:
   Alternately, if you control instantiation of the instance, consider injection
   at instantiation, or within the factory used to create your instance.
 
-## EventManagerInterface::
+## EventManagerInterface::setSharedManager()
+
+We have removed `EventManagerInterface::setSharedManager()`, and also removed it
+from the `EventManager` implementation. The `SharedEventManager` should be
+injected during instantiation now.
+
+## EventManagerInterface::getEvents() and getListeners()
+
+We have removed both `EventManagerInterface::getEvents()` and `getListeners()`,
+as we did not have a stated use case for the methods. The event manager should
+be something that aggregates listeners and triggers events; the details of what
+listeners or events are attached is largely irrelevant.
+
+The primary use case for `getListeners()` is often to determine if a listener is
+attached before detaching it. Since `detach()` acts as a no-op if the provided
+listener is not present, checking for presence first is not necessary.
+
+## EventManagerInterface::setEventClass()
+
+The method `EventManagerInterface::setEventClass()` was removed and replaced
+with `EventManagerInterface::setEventPrototype()`, which has the following
+signature:
+
+```php
+setEventPrototype(EventInterface $event);
+```
+
+This was done to prevent errors that occurred when invalid event class names
+were provided. Additionally, internally, event managers will clone the
+instance any time `trigger()` or `triggerUntil()` are called — which is
+typically faster and less resource intensive than instantiating a new instance.
