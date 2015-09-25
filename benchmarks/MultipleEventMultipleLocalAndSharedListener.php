@@ -25,9 +25,7 @@ class MultipleEventMultipleLocalAndSharedListener extends AthleticEvent
                 $this->sharedEvents->attach($identifier, $event, $this->generateCallback());
             }
         }
-        $this->events = new EventManager();
-        $this->events->setSharedManager($this->sharedEvents);
-        $this->events->setIdentifiers($identifiers);
+        $this->events = new EventManager($identifiers, $this->sharedEvents);
 
         $this->eventsToTrigger = array_filter($this->getEventList(), function ($value) {
             return ($value !== '*');

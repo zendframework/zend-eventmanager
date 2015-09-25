@@ -23,9 +23,7 @@ class MultipleEventIndividualSharedListener extends AthleticEvent
         foreach ($this->getEventList() as $event) {
             $this->sharedEvents->attach($identifiers[0], $event, $this->generateCallback());
         }
-        $this->events = new EventManager();
-        $this->events->setSharedManager($this->sharedEvents);
-        $this->events->setIdentifiers([$identifiers[0]]);
+        $this->events = new EventManager([$identifiers[0]], $this->sharedEvents);
 
         $this->eventsToTrigger = array_filter($this->getEventList(), function ($value) {
             return ($value !== '*');

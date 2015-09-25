@@ -21,9 +21,7 @@ class SingleEventMultipleSharedListener extends AthleticEvent
         for ($i = 0; $i < $this->numListeners; $i += 1) {
             $this->sharedEvents->attach($identifiers[0], 'dispatch', $this->generateCallback());
         }
-        $this->events = new EventManager();
-        $this->events->setSharedManager($this->sharedEvents);
-        $this->events->setIdentifiers([$identifiers[0]]);
+        $this->events = new EventManager([$identifiers[0]], $this->sharedEvents);
     }
 
     /**
