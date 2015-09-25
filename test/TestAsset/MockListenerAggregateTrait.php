@@ -10,12 +10,10 @@
 namespace ZendTest\EventManager\TestAsset;
 
 use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 
-/**
- * @group      Zend_EventManager
- */
-class MockListenerAggregateTrait
+class MockListenerAggregateTrait implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
