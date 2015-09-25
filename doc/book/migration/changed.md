@@ -324,3 +324,8 @@ it no longer needs to check if a filter is callable at runtime.
 The main migration change at this time is to know that an
 `InvalidArgumentException` will now be thrown when adding filters to a filter
 chain, vs at runtime.
+
+## ResponseCollection::setStopped()
+
+`Zend\EventManager\ResponseCollection::setStopped()` no longer implements a
+fluent interface.
