@@ -284,6 +284,7 @@ class EventManager implements EventManagerInterface
      *
      * @param  ListenerAggregateInterface $aggregate
      * @param  int $priority If provided, a suggested priority for the aggregate to use
+     * @return void
      */
     public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1)
     {
@@ -348,7 +349,7 @@ class EventManager implements EventManagerInterface
 
         $responses = new ResponseCollection();
 
-        foreach ($this->getListeners($name) as $listener) {
+        foreach ($this->getListenersByEventName($name) as $listener) {
             $response = $listener($event);
             $responses->push($response);
 
@@ -370,15 +371,15 @@ class EventManager implements EventManagerInterface
      * return them directly; however, if not, we need to attach wildcard
      * listeners, as we have an event with no dedicated listeners.
      *
-     * @param  string $event
+     * @param  string $eventName
      * @return callable[]
      */
-    private function getListeners($event)
+    private function getListenersByEventName($eventName)
     {
         $listeners = array_merge_recursive(
-            isset($this->events[$event]) ? $this->events[$event] : [],
+            isset($this->events[$eventName]) ? $this->events[$eventName] : [],
             isset($this->events['*']) ? $this->events['*'] : [],
-            $this->sharedManager ? $this->sharedManager->getListeners($this->identifiers, $event) : []
+            $this->sharedManager ? $this->sharedManager->getListenersByIdentifiers($this->identifiers, $eventName) : []
         );
 
         krsort($listeners, SORT_NUMERIC);

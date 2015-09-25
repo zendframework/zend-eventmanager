@@ -15,15 +15,6 @@ namespace Zend\EventManager;
 interface SharedEventManagerInterface
 {
     /**
-     * Retrieve all listeners for a given identifier and event
-     *
-     * @param  string $id
-     * @param  null|string $event
-     * @return array[]
-     */
-    public function getListeners($id, $event = null);
-
-    /**
      * Attach a listener to an event emitted by components with specific identifiers.
      *
      * @param  string $id Identifier for event emitting component
@@ -51,12 +42,13 @@ interface SharedEventManagerInterface
     public function detach(callable $listener, $id = null, $event = null);
 
     /**
-     * Retrieve all registered events for a given resource
+     * Retrieve all listeners for given identifiers
      *
-     * @param  string $id
-     * @return array
+     * @param  array $identifiers
+     * @param  null|string $event
+     * @return false|array
      */
-    public function getEvents($id);
+    public function getListenersByIdentifiers(array $identifiers, $event = null);
 
     /**
      * Clear all listeners for a given identifier, optionally for a specific event

@@ -9,8 +9,6 @@
 
 namespace Zend\EventManager;
 
-use Traversable;
-
 /**
  * Shared/contextual EventManager
  *
@@ -114,45 +112,37 @@ class SharedEventManager implements SharedEventManagerInterface
     }
 
     /**
-     * Retrieve all registered events for a given resource
-     *
-     * @param  string|int $id
-     * @return array
-     */
-    public function getEvents($id)
-    {
-        $events = array_merge(
-            $this->getEventsForIdentifier($id),
-            $this->getEventsForWildcardIdentifiers()
-        );
-        return array_unique($events);
-    }
-
-    /**
      * Retrieve all listeners for a given identifier and event
      *
-     * @param  string $id
+     * @param  array $identifiers
      * @param  string $event
      * @return array[]
      */
-    public function getListeners($id, $event = null)
+    public function getListenersByIdentifiers(array $identifiers, $event = null)
     {
-        if (! array_key_exists($id, $this->identifiers)) {
-            return [];
+        $listeners = [];
+
+        foreach ($identifiers as $identifier) {
+            $listenersByIdentifier = isset($this->identifiers[$identifier]) ? $this->identifiers[$identifier] : [];
+
+            $listeners = array_merge_recursive(
+                $listeners,
+                isset($listenersByIdentifier[$event]) ? $listenersByIdentifier[$event] : [],
+                isset($listenersByIdentifier['*']) ? $listenersByIdentifier['*'] : []
+            );
         }
 
-        if (! $event) {
-            return $this->identifiers[$id];
+        if (isset($this->identifiers['*'])) {
+            $wildcardIdentifier = $this->identifiers['*'];
+
+            $listeners = array_merge_recursive(
+                $listeners,
+                isset($wildcardIdentifier[$event]) ? $wildcardIdentifier[$event] : [],
+                isset($wildcardIdentifier['*']) ? $wildcardIdentifier['*'] : []
+            );
         }
 
-        if ('*' === $event) {
-            return $this->getListenersForEvent($id, '*');
-        }
-
-        return array_merge(
-            $this->getListenersForEvent($id, $event),
-            $this->getListenersForEvent($id, '*')
-        );
+        return $listeners;
     }
 
     /**
@@ -179,57 +169,5 @@ class SharedEventManager implements SharedEventManagerInterface
 
         unset($this->identifiers[$id][$event]);
         return true;
-    }
-
-    /**
-     * Retrieve unique events for a given identifier.
-     *
-     * Removes the wildcard event from the list, if present.
-     *
-     * @param string $id
-     * @return array
-     */
-    private function getEventsForIdentifier($id)
-    {
-        if (! isset($this->identifiers[$id])) {
-            return [];
-        }
-
-        $events = array_keys($this->identifiers[$id]);
-        $events = array_flip($events);
-        if (isset($events['*'])) {
-            unset($events['*']);
-        }
-        return array_keys($events);
-    }
-
-    /**
-     * Retrieves set of named events from wildcard identifiers.
-     *
-     * @return array
-     */
-    private function getEventsForWildcardIdentifiers()
-    {
-        if (! isset($this->identifiers['*'])) {
-            return [];
-        }
-
-        return $this->getEventsForIdentifier('*');
-    }
-
-    /**
-     * Retrieve all listeners for a given identifier and event.
-     *
-     * @param string $id
-     * @param string $event
-     * @return array
-     */
-    private function getListenersForEvent($id, $event)
-    {
-        if (! isset($this->identifiers[$id][$event])) {
-            return [];
-        }
-
-        return $this->identifiers[$id][$event];
     }
 }
