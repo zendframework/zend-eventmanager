@@ -2,6 +2,7 @@
   "title": "zend-eventmanager: Powerful event bus system for Zend Framework",
   "content": [
     {"Intro": "../README.md"},
+    "book/lazy-listeners/bookdown.json",
     "book/migration/bookdown.json"
   ],
   "target": "./html"
