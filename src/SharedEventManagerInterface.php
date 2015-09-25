@@ -19,7 +19,7 @@ interface SharedEventManagerInterface
      *
      * @param  string $id
      * @param  null|string $event
-     * @return false|array
+     * @return array[]
      */
     public function getListeners($id, $event = null);
 

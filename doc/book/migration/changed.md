@@ -187,3 +187,106 @@ signature change. In version 2, the `$identifiers` argument allowed any of
 
 Additionally, neither implements a fluent interface any longer; you cannot chain
 their calls.
+
+## SharedEventManagerInterface::getListeners()
+
+`Zend\EventManager\SharedEventManagerInterface::getListeners()` has changed. The
+previous signature was:
+
+```php
+getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue
+```
+
+In version 3, it now _requires_ the second argument ($event). Additionally, it
+is guaranteed to return an array.
+
+## SharedEventManagerInterface::attach()
+
+The v2 signature of `attach()` was:
+
+```php
+attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]
+```
+
+where:
+
+- `$id` could be a string identifier, or an array or `Traversable` of
+  identifiers.
+- `$event` was a string event name.
+- `$callback` could be either a `callable` listener, or a `CallbackHandler`
+  instance.
+- `$priority` was an integer.
+
+The v3 signature becomes:
+
+```php
+attach($id, $event, callable $listener, $priority = 1) : void
+```
+
+where:
+
+- `$id` *must* be a string *only*.
+- `$event` must be a string name.
+- `$listener` must be a callable *only*.
+- `$priority` is an integer.
+
+Migration concerns are thus:
+
+- If you are passing arrays of identifiers to which to attach, you must now do
+  so in a loop or using a construct such as `array_walk`:
+
+  ```php
+  foreach ($identifiers as $id) {
+      $sharedEvents->attach($id, $event, $listener);
+  }
+
+  array_walk($identifiers, function ($id) use ($listener) {
+      $this->sharedEvents->attach($id, 'foo', $listener);
+  });
+  ```
+
+- If you are passing `CallbackHandler` arguments, pass the callable listener
+  instead.
+
+- If you were relying on being returned the `CallbackHandler`, you may now
+  simply cache the `$listener` argument.
+
+## SharedEventManagerInterface::detach()
+
+The v2 signature of `detach()` was:
+
+```php
+detach($id, CallbackHandler $listener) : bool
+```
+
+where:
+
+- `$id` was a string identifier
+- `$listener` was a `CallbackHandler` instance
+- the method returned a boolean indicating whether or not it removed anything.
+
+The v3 signature becomes:
+
+```php
+detach(callable $listener, $id = null, $event = null) : void
+```
+
+where:
+
+- `$listener` is the callable listener you wish to remove
+- `$id`, if provided, is a specific identifier from which you want to remove the
+  `$listener`.
+- `$event`, if provided, is a specific event on the specified `$id` from
+  which to remove the `$listener`
+- the method no longer returns a value.
+
+When not specifying an identifier, the method contract indicates it should
+remove the listener from any identifier; similarly, in the absence of an event
+argument, it should remove the listener from any event on the identifier(s).
+This allows for mass removal!
+
+As the signatures differ, you will need to update any code calling `detach()`
+after upgrading to v3. At the minimum, you will need to swap the `$id` and
+`$listener` arguments, and pass the callable listener instead of a
+`CallbackHandler` instance. We also recommend auditing your code to determine if
+you want to be more or less specific when detaching the listener.
