@@ -9,6 +9,7 @@
 
 namespace ZendTest\EventManager;
 
+use Zend\EventManager\Exception\InvalidArgumentException;
 use Zend\EventManager\Filter\FilterIterator;
 
 /**
@@ -78,5 +79,31 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $chain = new FilterIterator();
 
         $this->assertNull($filterIterator->next([0, 1, 2], ['foo', 'bar'], $chain));
+    }
+
+    public function invalidFilters()
+    {
+        return [
+            'null'                 => [null],
+            'true'                 => [true],
+            'false'                => [false],
+            'zero'                 => [0],
+            'int'                  => [1],
+            'zero-float'           => [0.0],
+            'float'                => [1.1],
+            'non-callable-string'  => ['not a function'],
+            'non-callable-array'   => [['not a function']],
+            'non-invokable-object' => [(object) ['__invoke' => 'not a function']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidFilters
+     */
+    public function testInsertShouldRaiseExceptionOnNonCallableDatum($filter)
+    {
+        $iterator = new FilterIterator();
+        $this->setExpectedException(InvalidArgumentException::class, 'callables');
+        $iterator->insert($filter, 1);
     }
 }

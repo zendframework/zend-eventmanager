@@ -115,10 +115,6 @@ class FilterIterator extends FastPriorityQueue
         }
 
         $next = $this->extract();
-        if (! is_callable($next)) {
-            return;
-        }
-
         return $next($context, $params, $chain);
     }
 }
