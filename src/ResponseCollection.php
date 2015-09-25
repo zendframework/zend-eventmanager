@@ -32,12 +32,10 @@ class ResponseCollection extends SplStack
      * Mark the collection as stopped (or its opposite)
      *
      * @param  bool $flag
-     * @return ResponseCollection
      */
     public function setStopped($flag)
     {
         $this->stopped = (bool) $flag;
-        return $this;
     }
 
     /**

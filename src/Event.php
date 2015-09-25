@@ -91,7 +91,6 @@ class Event implements EventInterface
      * Overwrites parameters
      *
      * @param  array|ArrayAccess|object $params
-     * @return Event
      * @throws Exception\InvalidArgumentException
      */
     public function setParams($params)
@@ -103,7 +102,6 @@ class Event implements EventInterface
         }
 
         $this->params = $params;
-        return $this;
     }
 
     /**
@@ -147,24 +145,20 @@ class Event implements EventInterface
      * Set the event name
      *
      * @param  string $name
-     * @return Event
      */
     public function setName($name)
     {
         $this->name = (string) $name;
-        return $this;
     }
 
     /**
      * Set the event target/context
      *
      * @param  null|string|object $target
-     * @return Event
      */
     public function setTarget($target)
     {
         $this->target = $target;
-        return $this;
     }
 
     /**
@@ -172,25 +166,23 @@ class Event implements EventInterface
      *
      * @param  string|int $name
      * @param  mixed $value
-     * @return Event
      */
     public function setParam($name, $value)
     {
         if (is_array($this->params) || $this->params instanceof ArrayAccess) {
             // Arrays or objects implementing array access
             $this->params[$name] = $value;
-        } else {
-            // Objects
-            $this->params->{$name} = $value;
+            return;
         }
-        return $this;
+
+        // Objects
+        $this->params->{$name} = $value;
     }
 
     /**
      * Stop further event propagation
      *
      * @param  bool $flag
-     * @return void
      */
     public function stopPropagation($flag = true)
     {

@@ -84,7 +84,6 @@ class EventManager implements EventManagerInterface
     public function setEventPrototype(EventInterface $prototype)
     {
         $this->eventPrototype = $prototype;
-        return $this;
     }
 
     /**
@@ -111,19 +110,16 @@ class EventManager implements EventManagerInterface
      * Set the identifiers (overrides any currently set identifiers)
      *
      * @param string[] $identifiers
-     * @return EventManager Provides a fluent interface
      */
     public function setIdentifiers(array $identifiers)
     {
         $this->identifiers = array_unique($identifiers);
-        return $this;
     }
 
     /**
      * Add identifiers (merges to any currently set identifiers)
      *
      * @param string[] $identifiers
-     * @return EventManager Provides a fluent interface
      * @throws Exception\RuntimeException if called more than once.
      */
     public function addIdentifiers(array $identifiers)
@@ -132,8 +128,6 @@ class EventManager implements EventManagerInterface
             $this->identifiers,
             $identifiers
         ));
-
-        return $this;
     }
 
     /**

@@ -36,7 +36,6 @@ trait EventManagerAwareTrait
      * $this->eventIdentifier property.
      *
      * @param  EventManagerInterface $events
-     * @return mixed
      */
     public function setEventManager(EventManagerInterface $events)
     {
@@ -57,7 +56,6 @@ trait EventManagerAwareTrait
         if (method_exists($this, 'attachDefaultListeners')) {
             $this->attachDefaultListeners();
         }
-        return $this;
     }
 
     /**

@@ -349,12 +349,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testIdentifierGetterSetters()
     {
         $identifiers = ['foo', 'bar'];
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->setIdentifiers($identifiers));
+        $this->events->setIdentifiers($identifiers);
         $this->assertSame($this->events->getIdentifiers(), $identifiers);
         $identifiers[] = 'baz';
-        $this->assertInstanceOf('Zend\EventManager\EventManager', $this->events->addIdentifiers($identifiers));
+        $this->events->addIdentifiers($identifiers);
 
-        // This is done because the keys doesn't matter, just the values
+        // This is done because the keys do not matter, just the values
         $expectedIdentifiers = $this->events->getIdentifiers();
         sort($expectedIdentifiers);
         sort($identifiers);

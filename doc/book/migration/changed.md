@@ -184,3 +184,6 @@ for details.
 `EventManagerInterface::setIdentifiers()` and `addIdentifiers()` had a minor
 signature change. In version 2, the `$identifiers` argument allowed any of
 `string`, `array`, or `Traversable`. In version 3, only arrays are allowed.
+
+Additionally, neither implements a fluent interface any longer; you cannot chain
+their calls.
