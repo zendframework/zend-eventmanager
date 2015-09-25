@@ -1,4 +1,4 @@
-# Removed
+# Removed Functionality
 
 The following interfaces, classes, and methods have been removed for version 3.
 
@@ -135,3 +135,4 @@ To migrate, you have the following options:
   Alternately, if you control instantiation of the instance, consider injection
   at instantiation, or within the factory used to create your instance.
 
+## EventManagerInterface::

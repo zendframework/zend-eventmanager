@@ -2,7 +2,7 @@ docs_dir: doc/book
 site_dir: doc/html
 pages:
     - index.md
-    - { 'Migration Guide': [{ Introduction: migration/intro.md }, { 'Removed Functionality': migration/removed.md }] }
+    - { 'Migration Guide': [{ Introduction: migration/intro.md }, { 'Removed Functionality': migration/removed.md }, { 'Changed Functionality': migration/changed.md }] }
 site_name: zend-eventmanager
 site_description: 'zend-eventmanager: Powerful event bus system for Zend Framework'
 repo_url: 'https://github.com/zendframework/zend-eventmanager'
