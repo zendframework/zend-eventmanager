@@ -30,7 +30,6 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zend-stdlib": "^2.7.3",
         "container-interop/container-interop": "dev-master"
     },
     "require-dev": {

@@ -58,13 +58,13 @@ class EventManager implements EventManagerInterface
      * @param array $identifiers
      * @param SharedEventManagerInterface $sharedEventManager
      */
-    public function __construct(array $identifiers = null, SharedEventManagerInterface $sharedEventManager = null)
+    public function __construct(array $identifiers = [], SharedEventManagerInterface $sharedEventManager = null)
     {
         if ($sharedEventManager) {
             $this->sharedManager = $sharedEventManager;
         }
 
-        if ($identifiers !== null) {
+        if (! empty($identifiers)) {
             $this->setIdentifiers($identifiers);
         }
 
@@ -90,9 +90,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Get the identifier(s) for this EventManager
-     *
-     * @return array
+     * @inheritDoc
      */
     public function getIdentifiers()
     {
@@ -100,10 +98,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Set the identifiers (overrides any currently set identifiers)
-     *
-     * @param  string[] $identifiers
-     * @return void
+     * @inheritDoc
      */
     public function setIdentifiers(array $identifiers)
     {
@@ -111,11 +106,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Add identifiers (merges to any currently set identifiers)
-     *
-     * @param  string[] $identifiers
-     * @return void
-     * @throws Exception\RuntimeException if called more than once.
+     * @inheritDoc
      */
     public function addIdentifiers(array $identifiers)
     {
@@ -126,62 +117,33 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Trigger all listeners for a given event
-     *
-     * @param  string $event Name of event to trigger
-     * @param  null|string|object $target Object calling emit, or symbol
-     *     describing target (such as static method name)
-     * @param  array|ArrayAccess $argv Array of arguments; typically, should be
-     *     associative
-     * @return ResponseCollection All listener return values
+     * @inheritDoc
      */
-    public function trigger($event, $target = null, $argv = [])
+    public function trigger($eventName, $target = null, $argv = [])
     {
-        $e = clone $this->eventPrototype;
-        $e->setName($event);
-        $e->setTarget($target);
-        $e->setParams($argv);
+        $event = clone $this->eventPrototype;
+        $event->setName($eventName);
+        $event->setTarget($target);
+        $event->setParams($argv);
 
-        return $this->triggerListeners($e);
+        return $this->triggerListeners($event);
     }
 
     /**
-     * Create and trigger an event, applying a callback to each listener result.
-     *
-     * Use this method when you do not want to create an EventInterface
-     * instance prior to triggering. You will be required to pass:
-     *
-     * - the event name
-     * - the event target (can be null)
-     * - any event parameters you want to provide (empty array by default)
-     *
-     * It will create the Event instance for you, passing that and the
-     * $callback to `triggerEventUntil()`.
-     *
-     * @param  callable $callback
-     * @param  string $event
-     * @param  null|object|string $target
-     * @param  array|object $argv
-     * @return ResponseCollection
+     * @inheritDoc
      */
-    public function triggerUntil(callable $callback, $event, $target = null, $argv = [])
+    public function triggerUntil(callable $callback, $eventName, $target = null, $argv = [])
     {
-        $e = clone $this->eventPrototype;
-        $e->setName($event);
-        $e->setTarget($target);
-        $e->setParams($argv);
+        $event = clone $this->eventPrototype;
+        $event->setName($eventName);
+        $event->setTarget($target);
+        $event->setParams($argv);
 
-        return $this->triggerListeners($e, $callback);
+        return $this->triggerListeners($event, $callback);
     }
 
     /**
-     * Trigger an event
-     *
-     * Provided an EventInterface instance, this method will trigger listeners
-     * based on the event name, raising an exception if the event name is missing.
-     *
-     * @param  EventInterface $event
-     * @return ResponseCollection
+     * @inheritDoc
      */
     public function triggerEvent(EventInterface $event)
     {
@@ -189,18 +151,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Trigger an event, applying a callback to each listener result.
-     *
-     * Provided an EventInterface instance, this method will trigger listeners
-     * based on the event name, raising an exception if the event name is missing.
-     *
-     * Each result returned by a listener is passed to $callback; if $callback
-     * returns a boolean true value, the manager should short-circuit execution
-     * of the listener queue.
-     *
-     * @param  callable $callback
-     * @param  EventInterface $event
-     * @return ResponseCollection
+     * @inheritDoc
      */
     public function triggerEventUntil(callable $callback, EventInterface $event)
     {
@@ -208,37 +159,20 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Attach a listener to an event
-     *
-     * The first argument is the event, and the next argument is a
-     * callable that will respond to that event.
-     *
-     * The last argument indicates a priority at which the event should be
-     * executed; by default, this value is 1; however, you may set it for any
-     * integer value. Higher values have higher priority (i.e., execute first).
-     *
-     * You can specify "*" for the event name. In such cases, the listener will
-     * be triggered for every event *that has registered listeners at the time
-     * it is attached*. As such, register wildcard events last whenever possible!
-     *
-     * @param  string $event Event to which to attach.
-     * @param  callable $listener Event listener.
-     * @param  int $priority If provided, the priority at which to register the
-     *     listener.
-     * @return callable Returns the listener.
-     * @throws Exception\InvalidArgumentException
+     * @inheritDoc
      */
-    public function attach($event, callable $listener, $priority = 1)
+    public function attach($eventName, callable $listener, $priority = 1)
     {
-        if (! is_string($event)) {
+        if (! is_string($eventName)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects a string for the event; received %s',
                 __METHOD__,
-                (is_object($event) ? get_class($event) : gettype($event))
+                (is_object($eventName) ? get_class($eventName) : gettype($eventName))
             ));
         }
 
-        $this->events[$event][((int) $priority) . '.0'][] = $listener;
+        $this->events[$eventName][((int) $priority) . '.0'][] = $listener;
+
         return $listener;
     }
 
@@ -276,15 +210,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Attach a listener aggregate
-     *
-     * Listener aggregates accept an EventManagerInterface instance, and call attach()
-     * one or more times, typically to attach to multiple events using local
-     * methods.
-     *
-     * @param  ListenerAggregateInterface $aggregate
-     * @param  int $priority If provided, a suggested priority for the aggregate to use
-     * @return void
+     * @inheritDoc
      */
     public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1)
     {
@@ -300,10 +226,7 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * Clear all listeners for a given event
-     *
-     * @param  string $event
-     * @return void
+     * @inheritDoc
      */
     public function clearListeners($event)
     {
@@ -367,10 +290,6 @@ class EventManager implements EventManagerInterface
     /**
      * Get listeners for the currently triggered event.
      *
-     * If we have listeners defined for this specific event already, we can
-     * return them directly; however, if not, we need to attach wildcard
-     * listeners, as we have an event with no dedicated listeners.
-     *
      * @param  string $eventName
      * @return callable[]
      */
@@ -384,10 +303,16 @@ class EventManager implements EventManagerInterface
 
         krsort($listeners, SORT_NUMERIC);
 
+        $listenersForEvent = [];
+
         foreach ($listeners as $priority => $listenersByPriority) {
             foreach ($listenersByPriority as $listener) {
-                yield $listener;
+                // Performance note: after some testing, it appears that accumulating listeners and sending
+                // them at the end of the method is FASTER than using generators (ie. yielding)
+                $listenersForEvent[] = $listener;
             }
         }
+
+        return $listenersForEvent;
     }
 }
