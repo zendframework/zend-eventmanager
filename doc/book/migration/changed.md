@@ -290,3 +290,37 @@ after upgrading to v3. At the minimum, you will need to swap the `$id` and
 `$listener` arguments, and pass the callable listener instead of a
 `CallbackHandler` instance. We also recommend auditing your code to determine if
 you want to be more or less specific when detaching the listener.
+
+## FilterInterface::attach() and detach()
+
+`Zend\EventManager\Filter\FilterInterface::attach()` and `detach()` have changed
+signatures. The originals were:
+
+```php
+attach($callback) : CallbackHandler
+detach(CallbackHandler $callback) : bool
+```
+
+where `$callback` for `attach()` could be a callable or a `CallbackHandler`. The
+new signatures are:
+
+```php
+attach(callable $callback) : void
+detach(callable $filter) : bool
+```
+
+Typical usage in v2 was to capture the return value of `attach()` and pass it to
+`detach()`, as `attach()` would create a `CallbackHandler` for you to later pass
+to `detach()`. Since we can now pass the original callable argument to
+`detach()` now, you can cache that value instead.
+
+## FilterIterator
+
+`Zend\EventManager\Filter\FilterIterator` now defines/overrides the `insert()`
+method in order to validate the incoming value and ensure it is callable,
+raising an exception when it is not. This simplifies logic in `FilterChain`, as
+it no longer needs to check if a filter is callable at runtime.
+
+The main migration change at this time is to know that an
+`InvalidArgumentException` will now be thrown when adding filters to a filter
+chain, vs at runtime.
