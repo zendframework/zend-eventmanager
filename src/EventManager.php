@@ -11,8 +11,6 @@ namespace Zend\EventManager;
 
 use ArrayAccess;
 use ArrayObject;
-use Traversable;
-use Zend\Stdlib\FastPriorityQueue;
 
 /**
  * Event manager: notification system
@@ -24,7 +22,7 @@ class EventManager implements EventManagerInterface
 {
     /**
      * Subscribed events and their listeners
-     * @var FastPriorityQueue[]
+     * @var array[]
      */
     protected $events = [];
 
@@ -50,11 +48,6 @@ class EventManager implements EventManagerInterface
      * @var false|null|SharedEventManagerInterface
      */
     protected $sharedManager = null;
-
-    /**
-     * @var array List of wildcard listeners.
-     */
-    private $wildcardListeners = [];
 
     /**
      * Constructor
@@ -109,7 +102,8 @@ class EventManager implements EventManagerInterface
     /**
      * Set the identifiers (overrides any currently set identifiers)
      *
-     * @param string[] $identifiers
+     * @param  string[] $identifiers
+     * @return void
      */
     public function setIdentifiers(array $identifiers)
     {
@@ -119,7 +113,8 @@ class EventManager implements EventManagerInterface
     /**
      * Add identifiers (merges to any currently set identifiers)
      *
-     * @param string[] $identifiers
+     * @param  string[] $identifiers
+     * @return void
      * @throws Exception\RuntimeException if called more than once.
      */
     public function addIdentifiers(array $identifiers)
@@ -243,25 +238,7 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        // Is this the wildcard event? If so, add the listener to the wildcard
-        // list with its priority, to inject later.
-        if ('*' === $event) {
-            $struct = [
-                'listener' => $listener,
-                'priority' => $priority,
-            ];
-            $this->wildcardListeners[] = $struct;
-            return $listener;
-        }
-
-        // If we don't have a priority queue for the event yet, create one
-        if (! isset($this->events[$event])) {
-            $this->events[$event] = new FastPriorityQueue();
-        }
-
-        // Inject the listener into the queue
-        $this->events[$event]->insert($listener, $priority);
-
+        $this->events[$event][((int) $priority) . '.0'][] = $listener;
         return $listener;
     }
 
@@ -361,101 +338,29 @@ class EventManager implements EventManagerInterface
     protected function triggerListeners(EventInterface $event, callable $callback = null)
     {
         $name = $event->getName();
+
         if (empty($name)) {
             throw new Exception\RuntimeException('Event is missing a name; cannot trigger!');
         }
 
-        $this->prepareListeners($name);
-
         // Initial value of stop propagation flag should be false
         $event->stopPropagation(false);
 
-        $responses = new ResponseCollection;
+        $responses = new ResponseCollection();
 
-        foreach ($this->getListenersForEvent($name) as $listener) {
-            if (! is_callable($listener)) {
-                return $responses;
-            }
-
-            // Trigger the listener, and push its result onto the response collection
+        foreach ($this->getListeners($name) as $listener) {
             $response = $listener($event);
             $responses->push($response);
 
-            // If the event was asked to stop propagating, do so
-            if ($event->propagationIsStopped()) {
-                $responses->setStopped(true);
-                break;
-            }
-
-            // If the result causes our validation callback to return true,
-            // stop propagation
-            if ($callback && $callback($response)) {
+            // If the event was asked to stop propagating or causes our validation callback to
+            // return true, stop propagation
+            if ($event->propagationIsStopped() || ($callback && $callback($response))) {
                 $responses->setStopped(true);
                 break;
             }
         }
 
         return $responses;
-    }
-
-    /**
-     * Prepare listeners.
-     *
-     * Attaches all listeners from the shared event manager to the current
-     * instance by:
-     *
-     * - Looping through identifiers in this instance, and attaching any
-     *   listeners from the shared manager on the given identifier.
-     * - Looping through shared listeners on the wildcard identifier.
-     * - Looping through any listeners on wildcard events and attaching them.
-     *
-     * This method is only called once per instance, the first time any event
-     * is triggered; as such, all shared and wildcard listeners MUST be
-     * injected BEFORE the first trigger.
-     */
-    private function prepareListeners($event)
-    {
-        if ($this->sharedManager) {
-            $this->attachSharedListeners($event);
-        }
-
-        $this->attachListenerStructs($event, $this->wildcardListeners);
-    }
-
-    /**
-     * Attach shared listeners.
-     *
-     * Attaches shared listeners for identifiers in the current instance, as
-     * well as any on the wildcard listener.
-     */
-    private function attachSharedListeners($event)
-    {
-        foreach ($this->identifiers as $identifier) {
-            $this->attachListenerStructs($event, $this->fetchCurrentSharedListeners($identifier, $event));
-        }
-
-        $this->attachListenerStructs($event, $this->fetchCurrentSharedListeners('*', $event));
-    }
-
-    /**
-     * Attach listener structs to a given event.
-     *
-     * Loops through each listener struct, attaching the listener at the given
-     * priority to the specified event.
-     *
-     * @param string $event
-     * @param array $listeners
-     */
-    private function attachListenerStructs($event, array $listeners)
-    {
-        $queue = isset($this->events[$event]) ? $this->events[$event] : false;
-        foreach ($listeners as $struct) {
-            // Do not attach a listener if it's already been attached.
-            if ($queue && $queue->contains($struct['listener'])) {
-                continue;
-            }
-            $this->attach($event, $struct['listener'], $struct['priority']);
-        }
     }
 
     /**
@@ -466,87 +371,22 @@ class EventManager implements EventManagerInterface
      * listeners, as we have an event with no dedicated listeners.
      *
      * @param  string $event
-     * @return FastPriorityQueue
+     * @return callable[]
      */
-    private function getListenersForEvent($event)
+    private function getListeners($event)
     {
-        if (isset($this->events[$event])) {
-            return $this->events[$event];
-        }
+        $listeners = array_merge_recursive(
+            isset($this->events[$event]) ? $this->events[$event] : [],
+            isset($this->events['*']) ? $this->events['*'] : [],
+            $this->sharedManager ? $this->sharedManager->getListeners($this->identifiers, $event) : []
+        );
 
-        $this->events[$event] = new FastPriorityQueue();
-        return $this->events[$event];
-    }
+        krsort($listeners, SORT_NUMERIC);
 
-    /**
-     * Detach a wildcard listener
-     *
-     * @param callable $listener
-     */
-    private function detachWildcardListener(callable $listener)
-    {
-        foreach ($this->wildcardListeners as $index => $struct) {
-            if ($listener === $struct['listener']) {
-                unset($this->wildcardListeners[$index]);
+        foreach ($listeners as $priority => $listenersByPriority) {
+            foreach ($listenersByPriority as $listener) {
+                yield $listener;
             }
         }
-    }
-
-    /**
-     * Get a current list of new shared listeners to attach.
-     *
-     * Retrieve the shared listeners for this identifier and event:
-     *
-     * - if they match what we've retrieved previously, we return an empty
-     *   array.
-     * - if there are differences, we return new listeners, and detach
-     *   any no longer present in the current list.
-     *
-     * @var string $identifier
-     * @var string $event
-     * @return array shared listener structs
-     */
-    private function fetchCurrentSharedListeners($identifier, $event)
-    {
-        $current = $this->sharedManager->getListeners($identifier, $event);
-        if (! isset($this->sharedListeners[$identifier][$event])) {
-            if (! empty($current)) {
-                $this->sharedListeners[$identifier][$event] = $current;
-            }
-            return $current;
-        }
-
-        $cached = $this->sharedListeners[$identifier][$event];
-        if ($cached === $current) {
-            return [];
-        }
-
-        // Detach removed listeners
-        foreach (array_filter($cached, $this->getStructFilter($current)) as $struct) {
-            $this->detach($struct['listener'], $event);
-        }
-
-        // Re-cache, and return new structs to attach
-        $this->sharedListeners[$identifier][$event] = $current;
-        return array_filter($current, $this->getStructFilter($cached));
-    }
-
-    /**
-     * array_filter closing over a set of listeners.
-     *
-     * Returns a closure that will only return listeners that do not exactly
-     * match the current struct.
-     *
-     * @param array[] $listeners
-     * @return callable
-     */
-    private function getStructFilter(array $listeners)
-    {
-        return function ($struct) use ($listeners) {
-            if (in_array($struct, $listeners, true)) {
-                return false;
-            }
-            return true;
-        };
     }
 }
