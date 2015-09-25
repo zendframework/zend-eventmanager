@@ -1,8 +1,8 @@
 {
-  "title": "zend-expressive: PSR-7 Middleware Microframework",
+  "title": "zend-eventmanager: Powerful event bus system for Zend Framework",
   "content": [
     {"Intro": "../README.md"},
-    {"Migration": "book/migration.md"}
+    "book/migration/bookdown.json"
   ],
   "target": "./html"
 }
