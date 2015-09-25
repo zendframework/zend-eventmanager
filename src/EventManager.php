@@ -9,7 +9,6 @@
 
 namespace Zend\EventManager;
 
-use ArrayAccess;
 use ArrayObject;
 
 /**
@@ -22,6 +21,7 @@ class EventManager implements EventManagerInterface
 {
     /**
      * Subscribed events and their listeners
+     *
      * @var array[]
      */
     protected $events = [];
@@ -33,19 +33,15 @@ class EventManager implements EventManagerInterface
 
     /**
      * Identifiers, used to pull shared signals from SharedEventManagerInterface instance
+     *
      * @var array
      */
     protected $identifiers = [];
 
     /**
-     * Cached list of shared listeners already attached to this instance.
-     * @var array
-     */
-    protected $sharedListeners = [];
-
-    /**
      * Shared event manager
-     * @var false|null|SharedEventManagerInterface
+     *
+     * @var null|SharedEventManagerInterface
      */
     protected $sharedManager = null;
 
@@ -56,7 +52,7 @@ class EventManager implements EventManagerInterface
      * SharedEventManagerInterface.
      *
      * @param array $identifiers
-     * @param SharedEventManagerInterface $sharedEventManager
+     * @param null|SharedEventManagerInterface $sharedEventManager
      */
     public function __construct(array $identifiers = [], SharedEventManagerInterface $sharedEventManager = null)
     {
