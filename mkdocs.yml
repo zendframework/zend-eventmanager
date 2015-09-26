@@ -2,6 +2,7 @@ docs_dir: doc/book
 site_dir: doc/html
 pages:
     - index.md
+    - { Tutorial: tutorial.md }
     - { 'Lazy Listeners': [{ Introduction: lazy-listeners/intro.md }, { LazyListener: lazy-listeners/lazy-listener.md }, { LazyEventListener: lazy-listeners/lazy-event-listener.md }, { LazyListenerAggregate: lazy-listeners/lazy-listener-aggregate.md }] }
     - { 'Migration Guide': [{ Introduction: migration/intro.md }, { 'Removed Functionality': migration/removed.md }, { 'Changed Functionality': migration/changed.md }] }
 site_name: zend-eventmanager
