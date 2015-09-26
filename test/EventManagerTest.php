@@ -9,11 +9,9 @@
 
 namespace ZendTest\EventManager;
 
-use ArrayIterator;
 use Prophecy\Argument;
 use ReflectionProperty;
 use stdClass;
-use Traversable;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
@@ -21,7 +19,6 @@ use Zend\EventManager\Exception;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\SharedEventManagerInterface;
-use Zend\Stdlib\FastPriorityQueue;
 
 class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
@@ -51,7 +48,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
      *
      * @param string $event
      * @param EventManager $manager
-     * @return FastPriorityQueue
+     * @return array
      */
     public function getListenersForEvent($event, EventManager $manager)
     {
@@ -59,7 +56,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $r->setAccessible(true);
         $events = $r->getValue($manager);
 
-        return (isset($events[$event]) ? $events[$event] : new FastPriorityQueue());
+        return isset($events[$event]) ? $events[$event] : [];
     }
 
     public function testAttachShouldAddListenerToEvent()

@@ -22,13 +22,13 @@ class StaticEventsMock implements SharedEventManagerInterface
     /**
      * Attach a listener to an event
      *
-     * @param  string|array $id Identifier(s) for event emitting component(s)
+     * @param  string|array $identifier Identifier(s) for event emitting component(s)
      * @param  string $event
      * @param  callable $callback PHP Callback
      * @param  int $priority Priority at which listener should execute
      * @return void
      */
-    public function attach($id, $event, callable $listener, $priority = 1)
+    public function attach($identifier, $event, callable $listener, $priority = 1)
     {
 
     }

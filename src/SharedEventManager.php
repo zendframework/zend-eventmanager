@@ -50,7 +50,7 @@ class SharedEventManager implements SharedEventManagerInterface
      * }
      * </code>
      *
-     * @param  string $id Identifier for event emitting component.
+     * @param  string $identifier Identifier for event emitting component.
      * @param  string $event
      * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
@@ -58,12 +58,12 @@ class SharedEventManager implements SharedEventManagerInterface
      * @throws Exception\InvalidArgumentException for invalid identifier arguments.
      * @throws Exception\InvalidArgumentException for invalid event arguments.
      */
-    public function attach($id, $event, callable $listener, $priority = 1)
+    public function attach($identifier, $event, callable $listener, $priority = 1)
     {
-        if (! is_string($id) || empty($id)) {
+        if (! is_string($identifier) || empty($identifier)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid identifier provided; must be a string; received "%s"',
-                (is_object($id) ? get_class($id) : gettype($id))
+                (is_object($identifier) ? get_class($identifier) : gettype($identifier))
             ));
         }
 
@@ -74,41 +74,44 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $this->identifiers[$id][$event][((int) $priority) . '.0'][] = $listener;
+        $this->identifiers[$identifier][$event][((int) $priority) . '.0'][] = $listener;
     }
 
     /**
      * @inheritDoc
      */
-    public function detach(callable $listener, $id = null, $event = null)
+    public function detach(callable $listener, $identifier = null, $eventName = null)
     {
-        if (null === $id) {
-            foreach (array_keys($this->identifiers) as $id) {
-                $this->detach($listener, $id, $event);
+        // If event is wildcard, we need to iterate through each listeners
+        if ($eventName === null || $eventName === '*') {
+            foreach ($this->identifiers as $currentIdentifier => &$listenersByIdentifiers) {
+                if ($identifier !== null && $identifier !== '*' && $currentIdentifier !== $identifier) {
+                    continue;
+                }
+
+                foreach ($listenersByIdentifiers as &$listenersByEvent) {
+                    foreach ($listenersByEvent as &$listenersByPriority) {
+                        foreach ($listenersByPriority as $key => $currentListener) {
+                            if ($currentListener === $listener) {
+                                unset($listenersByPriority[$key]);
+                            }
+                        }
+                    }
+                }
             }
+
             return;
         }
 
-        if (! isset($this->identifiers[$id])) {
-            return;
+        if (! is_string($eventName)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s expects a string for the event; received %s',
+                __METHOD__,
+                (is_object($eventName) ? get_class($eventName) : gettype($eventName))
+            ));
         }
 
-        if (null === $event) {
-            foreach (array_keys($this->identifiers[$id]) as $event) {
-                $this->detach($listener, $id, $event);
-            }
-            return;
-        }
-
-        if (! isset($this->identifiers[$id][$event])) {
-            return;
-        }
-
-        foreach ($this->identifiers[$id][$event] as $index => $compare) {
-            if ($compare['listener'] === $listener) {
-                unset($this->identifiers[$id][$event][$index]);
-            }
-        }
+        // @TODO: do logic
     }
 
     /**
@@ -146,28 +149,25 @@ class SharedEventManager implements SharedEventManagerInterface
     }
 
     /**
-     * Clear all listeners for a given identifier, optionally for a specific event
-     *
-     * @param  string|int $id
-     * @param  null|string $event
-     * @return bool
+     * @inheritDoc
      */
-    public function clearListeners($id, $event = null)
+    public function clearListeners($identifier, $event = null)
     {
-        if (! array_key_exists($id, $this->identifiers)) {
+        if (! array_key_exists($identifier, $this->identifiers)) {
             return false;
         }
 
         if (null === $event) {
-            unset($this->identifiers[$id]);
+            unset($this->identifiers[$identifier]);
             return true;
         }
 
-        if (! isset($this->identifiers[$id][$event])) {
+        if (! isset($this->identifiers[$identifier][$event])) {
             return true;
         }
 
-        unset($this->identifiers[$id][$event]);
+        unset($this->identifiers[$identifier][$event]);
+
         return true;
     }
 }

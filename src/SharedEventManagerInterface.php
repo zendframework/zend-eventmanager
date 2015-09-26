@@ -17,12 +17,12 @@ interface SharedEventManagerInterface
     /**
      * Attach a listener to an event emitted by components with specific identifiers.
      *
-     * @param  string $id Identifier for event emitting component
-     * @param  string $event
+     * @param  string $identifier Identifier for event emitting component
+     * @param  string $eventName
      * @param  callable $listener Listener that will handle the event.
      * @param  int $priority Priority at which listener should execute
      */
-    public function attach($id, $event, callable $listener, $priority = 1);
+    public function attach($identifier, $eventName, callable $listener, $priority = 1);
 
     /**
      * Detach a shared listener.
@@ -31,31 +31,31 @@ interface SharedEventManagerInterface
      * attached.
      *
      * @param  callable $listener Listener to detach.
-     * @param  null|string $id Identifier from which to detach; null indicates
+     * @param  null|string $identifier Identifier from which to detach; null indicates
      *      all registered identifiers.
-     * @param  null|string $event Event from which to detach; null indicates
+     * @param  null|string $eventName Event from which to detach; null indicates
      *      all registered events.
      * @return void
      * @throws Exception\InvalidArgumentException for invalid identifier arguments.
      * @throws Exception\InvalidArgumentException for invalid event arguments.
      */
-    public function detach(callable $listener, $id = null, $event = null);
+    public function detach(callable $listener, $identifier = null, $eventName = null);
 
     /**
      * Retrieve all listeners for given identifiers
      *
      * @param  array $identifiers
-     * @param  null|string $event
+     * @param  null|string $eventName
      * @return false|array
      */
-    public function getListenersByIdentifiers(array $identifiers, $event = null);
+    public function getListenersByIdentifiers(array $identifiers, $eventName = null);
 
     /**
      * Clear all listeners for a given identifier, optionally for a specific event
      *
-     * @param  string $id
+     * @param  string $identifier
      * @param  null|string $event
      * @return bool
      */
-    public function clearListeners($id, $event = null);
+    public function clearListeners($identifier, $event = null);
 }

@@ -176,32 +176,39 @@ class EventManager implements EventManagerInterface
      * @inheritDoc
      * @throws Exception\InvalidArgumentException for invalid event types.
      */
-    public function detach(callable $listener, $event = null)
+    public function detach(callable $listener, $eventName = null)
     {
-        if (null === $event || '*' === $event) {
-            $this->detachWildcardListener($listener);
-            foreach (array_keys($this->events) as $event) {
-                $this->detach($listener, $event);
+        // If event is wildcard, we need to iterate through each listeners
+        if ($eventName === null || $eventName === '*') {
+            foreach ($this->events as &$listenersByEvent) {
+                foreach ($listenersByEvent as &$listenersByPriority) {
+                    foreach ($listenersByPriority as $key => $currentListener) {
+                        if ($currentListener === $listener) {
+                            unset($listenersByPriority[$key]);
+                        }
+                    }
+                }
             }
+
             return;
         }
 
-        if (! is_string($event)) {
+        if (! is_string($eventName)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s expects a string for the event; received %s',
                 __METHOD__,
-                (is_object($event) ? get_class($event) : gettype($event))
+                (is_object($eventName) ? get_class($eventName) : gettype($eventName))
             ));
         }
 
-        if (! isset($this->events[$event])) {
-            return;
-        }
-
-        // Remove all instances from queue.
-        $queue = $this->events[$event];
-        while ($queue->contains($listener)) {
-            $queue->remove($listener);
+        if (isset($this->events[$eventName])) {
+            foreach ($this->events[$eventName] as &$listenersByPriority) {
+                foreach ($listenersByPriority as $key => $currentListener) {
+                    if ($currentListener === $listener) {
+                        unset($listenersByPriority[$key]);
+                    }
+                }
+            }
         }
     }
 
