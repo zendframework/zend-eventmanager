@@ -332,9 +332,18 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($event, $responses->last());
     }
 
+    public function testIdentifiersAreNotInjectedWhenNoSharedManagerProvided()
+    {
+        $events = new EventManager(null, [__CLASS__, get_class($this)]);
+        $identifiers = $events->getIdentifiers();
+        $this->assertInternalType('array', $identifiers);
+        $this->assertEmpty($identifiers);
+    }
+
     public function testDuplicateIdentifiersAreNotRegistered()
     {
-        $events = new EventManager([__CLASS__, get_class($this)]);
+        $sharedEvents = $this->prophesize(SharedEventManagerInterface::class)->reveal();
+        $events = new EventManager($sharedEvents, [__CLASS__, get_class($this)]);
         $identifiers = $events->getIdentifiers();
         $this->assertSame(count($identifiers), 1);
         $this->assertSame($identifiers[0], __CLASS__);
@@ -453,7 +462,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testCanInjectSharedManagerDuringConstruction()
     {
         $shared = $this->prophesize(SharedEventManagerInterface::class)->reveal();
-        $events = new EventManager(null, $shared);
+        $events = new EventManager($shared);
         $this->assertSame($shared, $events->getSharedManager());
     }
 
@@ -523,7 +532,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $triggered = true;
         });
 
-        $events = new EventManager([__CLASS__], $shared);
+        $events = new EventManager($shared, [__CLASS__]);
 
         $events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');
@@ -540,7 +549,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $triggered = true;
         });
 
-        $events = new EventManager([__CLASS__], $shared);
+        $events = new EventManager($shared, [__CLASS__]);
 
         $events->trigger(__FUNCTION__);
         $this->assertTrue($triggered, 'Shared listener was not triggered');

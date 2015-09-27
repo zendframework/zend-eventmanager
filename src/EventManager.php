@@ -51,16 +51,13 @@ class EventManager implements EventManagerInterface
      * Allows optionally specifying identifier(s) to use to pull signals from a
      * SharedEventManagerInterface.
      *
+     * @param SharedEventManagerInterface $sharedEventManager
      * @param array $identifiers
-     * @param null|SharedEventManagerInterface $sharedEventManager
      */
-    public function __construct(array $identifiers = [], SharedEventManagerInterface $sharedEventManager = null)
+    public function __construct(SharedEventManagerInterface $sharedEventManager = null, array $identifiers = [])
     {
         if ($sharedEventManager) {
             $this->sharedManager = $sharedEventManager;
-        }
-
-        if (! empty($identifiers)) {
             $this->setIdentifiers($identifiers);
         }
 

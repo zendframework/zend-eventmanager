@@ -2,6 +2,31 @@
 
 The following methods had changes in signatures.
 
+## EventManager::__construct()
+
+In version 2, the signature of `__construct()` was:
+
+```php
+__construct($identifiers = null)
+```
+
+where `$identifiers` could be a string, array of strings, or `Traversable` of
+strings.
+
+Version 3 requires that the shared event manager be injected at instantiation,
+instead of via a setter. This also enforces the idea that identifiers have no
+semantic meaning without a shared event manager composed. As such, the
+constructor now has two arguments, with the first being the shared event
+manager:
+
+```php
+__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])
+```
+
+Finally, because we changed the signature of `setIdentifiers()` and
+`addIdentifiers()` to only accept arrays (see more below), we changed the
+`$identifiers` argument to only allow arrays.
+
 ## EventManagerInterface::trigger() and triggerUntil()
 
 In version 2, the signatures of `trigger()` and `triggerUntil()` are:

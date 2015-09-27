@@ -20,7 +20,7 @@ class SharedListenerIntegrationTest extends TestCase
     {
         $this->identifiers = ['Foo', 'Bar', 'Baz'];
         $this->sharedEvents = new SharedEventManager();
-        $this->events = new EventManager($this->identifiers, $this->sharedEvents);
+        $this->events = new EventManager($this->sharedEvents, $this->identifiers);
     }
 
     public function testCanTriggerTheSameSharedListenerMultipleTimes()
@@ -56,15 +56,12 @@ class SharedListenerIntegrationTest extends TestCase
         }
     }
 
-    /**
-     * @group fail
-     */
     public function testTriggeringSameEventMultipleTimesDoesNotTriggersDetachedSharedListeners()
     {
         $listeners = [];
         $identifiers = ['Foo', 'Bar', 'Baz'];
         $sharedEvents = new SharedEventManager();
-        $events = new EventManager($identifiers, $sharedEvents);
+        $events = new EventManager($sharedEvents, $identifiers);
 
         for ($i = 0; $i < 5; $i += 1) {
             $listeners[$i] = $listener = new TestAsset\CountingListener();
