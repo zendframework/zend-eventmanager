@@ -325,7 +325,7 @@ Why bother? For a couple of reasons:
 - Aggregates allow grouping related listeners in a single class, and attaching
   them at once.
 
-  # Introspecting results
+## Introspecting results
 
 Sometimes you'll want to know what your listeners returned. One thing to
 remember is that you may have multiple listeners on the same event; the
