@@ -6,9 +6,11 @@
     {"Quick Start": "book/quick-start.md"},
     {"Tutorial": "book/tutorial.md"},
     {"Wildcard Listeners": "book/wildcard-listeners.md"},
+    {"Listener Aggregates": "book/aggregates.md"},
     "book/lazy-listeners/bookdown.json",
     {"Examples": "book/examples.md"},
     {"EventManager API": "book/api.md"},
+    {"Intercepting Filters": "book/intercepting-filters.md"},
     "book/migration/bookdown.json"
   ],
   "target": "./html"
