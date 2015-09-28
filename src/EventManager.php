@@ -173,20 +173,14 @@ class EventManager implements EventManagerInterface
      * @inheritDoc
      * @throws Exception\InvalidArgumentException for invalid event types.
      */
-    public function detach(callable $listener, $eventName = null)
+    public function detach(callable $listener, $eventName = null, $force = false)
     {
-        // If event is wildcard, we need to iterate through each listeners
-        if ($eventName === null || $eventName === '*') {
-            foreach ($this->events as &$listenersByEvent) {
-                foreach ($listenersByEvent as &$listenersByPriority) {
-                    foreach ($listenersByPriority as $key => $currentListener) {
-                        if ($currentListener === $listener) {
-                            unset($listenersByPriority[$key]);
-                        }
-                    }
-                }
-            }
 
+        // If event is wildcard, we need to iterate through each listeners
+        if (null === $eventName || ('*' === $eventName && ! $force)) {
+            foreach (array_keys($this->events) as $eventName) {
+                $this->detach($listener, $eventName, true);
+            }
             return;
         }
 
@@ -198,13 +192,30 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        if (isset($this->events[$eventName])) {
-            foreach ($this->events[$eventName] as &$listenersByPriority) {
-                foreach ($listenersByPriority as $key => $currentListener) {
-                    if ($currentListener === $listener) {
-                        unset($listenersByPriority[$key]);
-                    }
+        if (! isset($this->events[$eventName])) {
+            return;
+        }
+
+        foreach ($this->events[$eventName] as $priority => $listeners) {
+            foreach ($listeners as $index => $evaluatedListener) {
+                if ($evaluatedListener !== $listener) {
+                    continue;
                 }
+
+                // Found the listener; remove it.
+                unset($this->events[$eventName][$priority][$index]);
+
+                // If the queue for the given priority is empty, remove it.
+                if (empty($this->events[$eventName][$priority])) {
+                    unset($this->events[$eventName][$priority]);
+                    break;
+                }
+            }
+
+            // If the queue for the given event is empty, remove it.
+            if (empty($this->events[$eventName])) {
+                unset($this->events[$eventName]);
+                break;
             }
         }
     }

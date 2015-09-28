@@ -80,67 +80,118 @@ class SharedEventManager implements SharedEventManagerInterface
     /**
      * @inheritDoc
      */
-    public function detach(callable $listener, $identifier = null, $eventName = null)
+    public function detach(callable $listener, $identifier = null, $eventName = null, $force = false)
     {
-        // If event is wildcard, we need to iterate through each listeners
-        if ($eventName === null || $eventName === '*') {
-            foreach ($this->identifiers as $currentIdentifier => &$listenersByIdentifiers) {
-                if ($identifier !== null && $identifier !== '*' && $currentIdentifier !== $identifier) {
-                    continue;
-                }
-
-                foreach ($listenersByIdentifiers as &$listenersByEvent) {
-                    foreach ($listenersByEvent as &$listenersByPriority) {
-                        foreach ($listenersByPriority as $key => $currentListener) {
-                            if ($currentListener === $listener) {
-                                unset($listenersByPriority[$key]);
-                            }
-                        }
-                    }
-                }
+        // No identifier or wildcard identifier: loop through all identifiers and detach
+        if (null === $identifier || ('*' === $identifier && ! $force)) {
+            foreach (array_keys($this->identifiers) as $identifier) {
+                $this->detach($listener, $identifier, $eventName, true);
             }
+            return;
+        }
 
+        if (! is_string($identifier)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Invalid identifier provided; must be a string, received %s',
+                (is_object($identifier) ? get_class($identifier) : gettype($identifier))
+            ));
+        }
+
+        // Do we have any listeners on the provided identifier?
+        if (! isset($this->identifiers[$identifier])) {
+            return;
+        }
+
+        if (null === $eventName || ('*' === $eventName && ! $force)) {
+            foreach (array_keys($this->identifiers[$identifier]) as $eventName) {
+                $this->detach($listener, $identifier, $eventName, true);
+            }
             return;
         }
 
         if (! is_string($eventName)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects a string for the event; received %s',
-                __METHOD__,
+                'Invalid event name provided; must be a string, received %s',
                 (is_object($eventName) ? get_class($eventName) : gettype($eventName))
             ));
         }
 
-        // @TODO: do logic
+        if (! isset($this->identifiers[$identifier][$eventName])) {
+            return;
+        }
+
+        foreach ($this->identifiers[$identifier][$eventName] as $priority => $listeners) {
+            foreach ($listeners as $index => $evaluatedListener) {
+                if ($evaluatedListener !== $listener) {
+                    continue;
+                }
+
+                // Found the listener; remove it.
+                unset($this->identifiers[$identifier][$eventName][$priority][$index]);
+
+                // Is the priority queue empty?
+                if (empty($this->identifiers[$identifier][$eventName][$priority])) {
+                    unset($this->identifiers[$identifier][$eventName][$priority]);
+                    break;
+                }
+            }
+
+            // Is the event queue empty?
+            if (empty($this->identifiers[$identifier][$eventName])) {
+                unset($this->identifiers[$identifier][$eventName]);
+                break;
+            }
+
+        }
+
+        // Is the identifier queue now empty? Remove it.
+        if (empty($this->identifiers[$identifier])) {
+            unset($this->identifiers[$identifier]);
+        }
     }
 
     /**
      * Retrieve all listeners for a given identifier and event
      *
      * @param  array $identifiers
-     * @param  string $event
+     * @param  string $eventName
      * @return array[]
+     * @throws Exception\InvalidArgumentException
      */
-    public function getListeners(array $identifiers, $event = null)
+    public function getListeners(array $identifiers, $eventName)
     {
+        if ('*' === $eventName || empty($eventName)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                'Event name passed to %s cannot be empty or a wildcard',
+                __METHOD__
+            ));
+        }
+
         $listeners = [];
 
         foreach ($identifiers as $identifier) {
+            if ('*' === $identifier) {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    '%s does not support passing the wildcard identifer',
+                    __METHOD__
+                ));
+            }
+
             $listenersByIdentifier = isset($this->identifiers[$identifier]) ? $this->identifiers[$identifier] : [];
 
             $listeners = array_merge_recursive(
                 $listeners,
-                isset($listenersByIdentifier[$event]) ? $listenersByIdentifier[$event] : [],
+                isset($listenersByIdentifier[$eventName]) ? $listenersByIdentifier[$eventName] : [],
                 isset($listenersByIdentifier['*']) ? $listenersByIdentifier['*'] : []
             );
         }
 
-        if (isset($this->identifiers['*'])) {
+        if (isset($this->identifiers['*']) && ! in_array('*', $identifiers)) {
             $wildcardIdentifier = $this->identifiers['*'];
 
             $listeners = array_merge_recursive(
                 $listeners,
-                isset($wildcardIdentifier[$event]) ? $wildcardIdentifier[$event] : [],
+                isset($wildcardIdentifier[$eventName]) ? $wildcardIdentifier[$eventName] : [],
                 isset($wildcardIdentifier['*']) ? $wildcardIdentifier['*'] : []
             );
         }
@@ -159,15 +210,13 @@ class SharedEventManager implements SharedEventManagerInterface
 
         if (null === $event) {
             unset($this->identifiers[$identifier]);
-            return true;
+            return;
         }
 
         if (! isset($this->identifiers[$identifier][$event])) {
-            return true;
+            return;
         }
 
         unset($this->identifiers[$identifier][$event]);
-
-        return true;
     }
 }

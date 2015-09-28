@@ -64,8 +64,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listener  = [$this, __METHOD__];
         $this->events->attach('test', $listener);
         $listeners = $this->getListenersForEvent('test', $this->events);
+        // Get first (and only) priority queue of listeners for event
+        $listeners = array_shift($listeners);
         $this->assertCount(1, $listeners);
-        $this->assertTrue($listeners->contains($listener));
+        $this->assertContains($listener, $listeners);
         return [
             'event'    => 'test',
             'events'   => $this->events,
@@ -568,7 +570,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $listeners = $this->getListenersForEvent($event, $events);
         $this->assertCount(0, $listeners);
-        $this->assertFalse($listeners->contains($listener));
+        $this->assertNotContains($listener, $listeners);
     }
 
     public function testDetachDoesNothingIfEventIsNotPresentInManager()
@@ -578,9 +580,14 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->attach('foo', $callback);
         $this->events->detach($callback, 'bar');
         $listeners = $this->getListenersForEvent('foo', $this->events);
-        $this->assertTrue($listeners->contains($callback));
+        // get first (and only) priority queue from listeners
+        $listeners = array_shift($listeners);
+        $this->assertContains($callback, $listeners);
     }
 
+    /**
+     * @group fail
+     */
     public function testCanDetachWildcardListeners()
     {
         $events   = ['foo', 'bar'];
@@ -598,10 +605,17 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->events->detach($wildcardListener, '*'); // Semantically the same as null
 
+        // First, check the wildcard event queue
+        $listeners = $this->getListenersForEvent('*', $this->events);
+        $this->assertEmpty($listeners);
+
+        // Next, verify it's not in any of the specific event queues
         foreach ($events as $event) {
             $listeners = $this->getListenersForEvent($event, $this->events);
+            // Get listeners for first and only priority queue
+            $listeners = array_shift($listeners);
             $this->assertCount(1, $listeners);
-            $this->assertFalse($listeners->contains($wildcardListener));
+            $this->assertNotContains($wildcardListener, $listeners);
         }
 
         return [
@@ -640,7 +654,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         foreach ($eventNames as $event) {
             $listeners = $this->getListenersForEvent($event, $events);
             $this->assertCount(0, $listeners);
-            $this->assertFalse($listeners->contains($listener));
+            $this->assertNotContains($listener, $listeners);
         }
     }
 
@@ -654,17 +668,25 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->events->attach('foo', $alternateListener);
 
         $listeners = $this->getListenersForEvent('foo', $this->events);
+        // Get the listeners for the first priority queue
+        $listeners = array_shift($listeners);
         $this->assertCount(
             2,
             $listeners,
-            sprintf('Listener count after attaching alternate listener for event %s was unexpected', 'foo')
+            sprintf(
+                'Listener count after attaching alternate listener for event %s was unexpected: %s',
+                'foo',
+                var_export($listeners, 1)
+            )
         );
-        $this->assertTrue($listeners->contains($listener));
-        $this->assertTrue($listeners->contains($alternateListener));
+        $this->assertContains($listener, $listeners);
+        $this->assertContains($alternateListener, $listeners);
 
         $this->events->detach($listener, 'foo');
 
         $listeners = $this->getListenersForEvent('foo', $this->events);
+        // Get the listeners for the first priority queue
+        $listeners = array_shift($listeners);
         $this->assertCount(
             1,
             $listeners,
@@ -674,8 +696,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
                 var_export($listeners, 1)
             )
         );
-        $this->assertFalse($listeners->contains($listener));
-        $this->assertTrue($listeners->contains($alternateListener));
+        $this->assertNotContains($listener, $listeners);
+        $this->assertContains($alternateListener, $listeners);
     }
 
     public function invalidEventsForDetach()
@@ -713,7 +735,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
         $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(0, $listeners);
-        $this->assertFalse($listeners->contains($listener));
+        $this->assertNotContains($listener, $listeners);
     }
 
     public function testCanDetachAnAggregate()

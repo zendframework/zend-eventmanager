@@ -35,7 +35,6 @@ interface SharedEventManagerInterface
      *      all registered identifiers.
      * @param  null|string $eventName Event from which to detach; null indicates
      *      all registered events.
-     * @return void
      * @throws Exception\InvalidArgumentException for invalid identifier arguments.
      * @throws Exception\InvalidArgumentException for invalid event arguments.
      */
@@ -45,17 +44,16 @@ interface SharedEventManagerInterface
      * Retrieve all listeners for given identifiers
      *
      * @param  array $identifiers
-     * @param  null|string $eventName
-     * @return false|array
+     * @param  string $eventName
+     * @return array
      */
-    public function getListeners(array $identifiers, $eventName = null);
+    public function getListeners(array $identifiers, $eventName);
 
     /**
      * Clear all listeners for a given identifier, optionally for a specific event
      *
      * @param  string $identifier
      * @param  null|string $event
-     * @return bool
      */
     public function clearListeners($identifier, $event = null);
 }
