@@ -251,4 +251,55 @@ class SharedEventManagerTest extends TestCase
             $this->callback,
         ]], $this->manager->getListeners([ 'IDENTIFIER' ], 'EVENT'));
     }
+
+    public function invalidIdentifiersAndEvents()
+    {
+        $types = $this->invalidIdentifiers();
+        unset($types['null']);
+        return $types;
+    }
+
+    /**
+     * @dataProvider invalidIdentifiersAndEvents
+     */
+    public function testDetachingWithInvalidIdentifierTypeRaisesException($identifier)
+    {
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Invalid identifier');
+        $this->manager->detach($this->callback, $identifier, 'test');
+    }
+
+    /**
+     * @dataProvider invalidIdentifiersAndEvents
+     */
+    public function testDetachingWithInvalidEventTypeRaisesException($eventName)
+    {
+        $this->manager->attach('IDENTIFIER', '*', $this->callback);
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Invalid event name');
+        $this->manager->detach($this->callback, 'IDENTIFIER', $eventName);
+    }
+
+    public function invalidListenersAndEventNamesForFetchingListeners()
+    {
+        $events = $this->invalidIdentifiers();
+        $events['wildcard'] = ['*'];
+        return $events;
+    }
+
+    /**
+     * @dataProvider invalidListenersAndEventNamesForFetchingListeners
+     */
+    public function testGetListenersRaisesExceptionForInvalidEventName($eventName)
+    {
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'non-empty, non-wildcard');
+        $this->manager->getListeners(['IDENTIFIER'], $eventName);
+    }
+
+    /**
+     * @dataProvider invalidListenersAndEventNamesForFetchingListeners
+     */
+    public function testGetListenersRaisesExceptionForInvalidIdentifier($identifier)
+    {
+        $this->setExpectedException(Exception\InvalidArgumentException::class, 'non-empty, non-wildcard');
+        $this->manager->getListeners([$identifier], 'EVENT');
+    }
 }

@@ -90,7 +90,7 @@ class SharedEventManager implements SharedEventManagerInterface
             return;
         }
 
-        if (! is_string($identifier)) {
+        if (! is_string($identifier) || empty($identifier)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid identifier provided; must be a string, received %s',
                 (is_object($identifier) ? get_class($identifier) : gettype($identifier))
@@ -109,7 +109,7 @@ class SharedEventManager implements SharedEventManagerInterface
             return;
         }
 
-        if (! is_string($eventName)) {
+        if (! is_string($eventName) || empty($eventName)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid event name provided; must be a string, received %s',
                 (is_object($eventName) ? get_class($eventName) : gettype($eventName))
@@ -160,9 +160,9 @@ class SharedEventManager implements SharedEventManagerInterface
      */
     public function getListeners(array $identifiers, $eventName)
     {
-        if ('*' === $eventName || empty($eventName)) {
+        if ('*' === $eventName || ! is_string($eventName) || empty($eventName)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Event name passed to %s cannot be empty or a wildcard',
+                'Event name passed to %s must be a non-empty, non-wildcard string',
                 __METHOD__
             ));
         }
@@ -170,9 +170,9 @@ class SharedEventManager implements SharedEventManagerInterface
         $listeners = [];
 
         foreach ($identifiers as $identifier) {
-            if ('*' === $identifier) {
+            if ('*' === $identifier || ! is_string($identifier) || empty($identifier)) {
                 throw new Exception\InvalidArgumentException(sprintf(
-                    '%s does not support passing the wildcard identifer',
+                    'Identifier names passed to %s must be non-empty, non-wildcard strings',
                     __METHOD__
                 ));
             }
