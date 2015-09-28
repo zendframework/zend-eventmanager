@@ -35,6 +35,10 @@
     "require-dev": {
         "phpunit/PHPUnit": "~4.0",
         "athletic/athletic": "^0.1",
-        "squizlabs/php_codesniffer": "^2.0@dev"
+        "squizlabs/php_codesniffer": "^2.0@dev",
+        "zendframework/zend-stdlib": "^2.7.3"
+    },
+    "suggest": {
+        "zendframework/zend-stdlib": "^2.7.3, if using the FilterChain feature"
     }
 }
