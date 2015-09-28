@@ -121,7 +121,7 @@ class SharedEventManager implements SharedEventManagerInterface
      * @param  string $event
      * @return array[]
      */
-    public function getListenersByIdentifiers(array $identifiers, $event = null)
+    public function getListeners(array $identifiers, $event = null)
     {
         $listeners = [];
 

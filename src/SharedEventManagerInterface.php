@@ -48,7 +48,7 @@ interface SharedEventManagerInterface
      * @param  null|string $eventName
      * @return false|array
      */
-    public function getListenersByIdentifiers(array $identifiers, $eventName = null);
+    public function getListeners(array $identifiers, $eventName = null);
 
     /**
      * Clear all listeners for a given identifier, optionally for a specific event

@@ -276,9 +276,15 @@ class EventManager implements EventManagerInterface
             $response = $listener($event);
             $responses->push($response);
 
-            // If the event was asked to stop propagating or causes our validation callback to
-            // return true, stop propagation
-            if ($event->propagationIsStopped() || ($callback && $callback($response))) {
+            // If the event was asked to stop propagating, do so
+            if ($event->propagationIsStopped()) {
+                $responses->setStopped(true);
+                break;
+            }
+
+            // If the result causes our validation callback to return true,
+            // stop propagation
+            if ($callback && $callback($response)) {
                 $responses->setStopped(true);
                 break;
             }
@@ -298,7 +304,7 @@ class EventManager implements EventManagerInterface
         $listeners = array_merge_recursive(
             isset($this->events[$eventName]) ? $this->events[$eventName] : [],
             isset($this->events['*']) ? $this->events['*'] : [],
-            $this->sharedManager ? $this->sharedManager->getListenersByIdentifiers($this->identifiers, $eventName) : []
+            $this->sharedManager ? $this->sharedManager->getListeners($this->identifiers, $eventName) : []
         );
 
         krsort($listeners, SORT_NUMERIC);
