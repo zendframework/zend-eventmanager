@@ -202,21 +202,21 @@ class SharedEventManager implements SharedEventManagerInterface
     /**
      * @inheritDoc
      */
-    public function clearListeners($identifier, $event = null)
+    public function clearListeners($identifier, $eventName = null)
     {
         if (! array_key_exists($identifier, $this->identifiers)) {
             return false;
         }
 
-        if (null === $event) {
+        if (null === $eventName) {
             unset($this->identifiers[$identifier]);
             return;
         }
 
-        if (! isset($this->identifiers[$identifier][$event])) {
+        if (! isset($this->identifiers[$identifier][$eventName])) {
             return;
         }
 
-        unset($this->identifiers[$identifier][$event]);
+        unset($this->identifiers[$identifier][$eventName]);
     }
 }

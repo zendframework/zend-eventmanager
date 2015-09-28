@@ -53,7 +53,7 @@ interface SharedEventManagerInterface
      * Clear all listeners for a given identifier, optionally for a specific event
      *
      * @param  string $identifier
-     * @param  null|string $event
+     * @param  null|string $eventName
      */
-    public function clearListeners($identifier, $event = null);
+    public function clearListeners($identifier, $eventName = null);
 }

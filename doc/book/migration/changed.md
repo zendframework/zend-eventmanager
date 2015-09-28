@@ -222,8 +222,22 @@ previous signature was:
 getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue
 ```
 
-In version 3, it now _requires_ the second argument ($event). Additionally, it
-is guaranteed to return an array.
+Version 3 has the following signature:
+
+```php
+getListeners(array $identifiers, $eventName) : array
+```
+
+The changes are:
+
+- The first argument now expects an *array* of identifiers. This is so an event
+  manager instance can retrieve shared listeners for all identifiers it defines
+  at once.
+- The second argument is now *required*. Since the event manager always knows
+  the event at the time it calls the method, it makes sense to require the
+  argument for all calls. It also reduces complexity in the implementation.
+- The method now *always* returns an array. The array will be of the structure
+  `[ 'priority' => callable[] ]`.
 
 ## SharedEventManagerInterface::attach()
 
@@ -245,13 +259,13 @@ where:
 The v3 signature becomes:
 
 ```php
-attach($id, $event, callable $listener, $priority = 1) : void
+attach($identifier, $eventName, callable $listener, $priority = 1) : void
 ```
 
 where:
 
-- `$id` *must* be a string *only*.
-- `$event` must be a string name.
+- `$identifier` *must* be a string *only*.
+- `$eventName` must be a string name.
 - `$listener` must be a callable *only*.
 - `$priority` is an integer.
 
@@ -293,15 +307,15 @@ where:
 The v3 signature becomes:
 
 ```php
-detach(callable $listener, $id = null, $event = null) : void
+detach(callable $listener, $identifier = null, $eventName = null) : void
 ```
 
 where:
 
 - `$listener` is the callable listener you wish to remove
-- `$id`, if provided, is a specific identifier from which you want to remove the
+- `$identifier`, if provided, is a specific identifier from which you want to remove the
   `$listener`.
-- `$event`, if provided, is a specific event on the specified `$id` from
+- `$eventName`, if provided, is a specific event on the specified `$id` from
   which to remove the `$listener`
 - the method no longer returns a value.
 
@@ -311,7 +325,7 @@ argument, it should remove the listener from any event on the identifier(s).
 This allows for mass removal!
 
 As the signatures differ, you will need to update any code calling `detach()`
-after upgrading to v3. At the minimum, you will need to swap the `$id` and
+after upgrading to v3. At the minimum, you will need to swap the `$identifier` and
 `$listener` arguments, and pass the callable listener instead of a
 `CallbackHandler` instance. We also recommend auditing your code to determine if
 you want to be more or less specific when detaching the listener.

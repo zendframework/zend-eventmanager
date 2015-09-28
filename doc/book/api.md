@@ -60,12 +60,12 @@ set, while `addIdentifiers()` will merge them.
 ### trigger()
 
 ```php
-trigger($event, $target = null, $argv = []) : ResponseCollection
+trigger($eventName, $target = null, $argv = []) : ResponseCollection
 ```
 
 where:
 
-- `$event` is a string event name.
+- `$eventName` is a string event name.
 - `$target` is the target of the event; usually the object composing the event
   manager instance.
 - `$argv` is an array or `ArrayAccess` instance of arguments that provide
@@ -79,7 +79,7 @@ When done triggering, the method returns a `ResponseCollection`.
 ### triggerUntil()
 
 ```php
-triggerUntil(callable $callback, $event, $target = null, $argv = []) : ResponseCollection
+triggerUntil(callable $callback, $eventName, $target = null, $argv = []) : ResponseCollection
 ```
 
 `triggerUntil()` is a sibling to `trigger()`, and prefixes the argument list
@@ -135,7 +135,7 @@ after all listeners have been triggered.
 ### triggerEventUntil()
 
 ```php
-triggerEventUntil(callable $callback, EventInterfce $event) : ResponseCollection
+triggerEventUntil(callable $callback, EventInterface $event) : ResponseCollection
 ```
 
 This method is a sibling to `triggerEvent()` and `triggerUntil()`. Like
@@ -146,7 +146,7 @@ Like `triggerEvent()`, the next argument is an `EventInterface` instance.
 ### attach()
 
 ```php
-attach($event, callable $listener, $priority = 1) : callable
+attach($eventName, callable $listener, $priority = 1) : callable
 ```
 
 Use `attach()` to attach a callable listener to a named event. `$priority` can
@@ -161,10 +161,10 @@ The method returns the listener attached.
 ### detach()
 
 ```php
-detach(callable $listener, $event = null) : void
+detach(callable $listener, $eventName = null) : void
 ```
 
-Use `detach()` to remove a listener. When a named `$event` is provided, the
+Use `detach()` to remove a listener. When a named `$eventName` is provided, the
 method will detach the listener from that event only (or, if the event does not
 exist in the event manager, nothing will occur). If no event is provided, or the
 wildcard event is provided, the listener will be detached from all events.
@@ -192,7 +192,7 @@ method, passing the event manager instance.  See the
 ### clearListeners()
 
 ```php
-clearListeners($event) : void
+clearListeners($eventName) : void
 ```
 
 Use this method to remove all listeners for a given named event.
@@ -250,47 +250,38 @@ $events->attach('foo', $this, $events->prepareArgs(compact('bar', 'baz')));
 ### attach()
 
 ```php
-attach($id, $event, callable $listener, $priority = 1) : void
+attach($identifier, $eventName, callable $listener, $priority = 1) : void
 ```
 
 Attach a listener to a named event triggered by an identified context, where:
 
-- `$id` is a string identifier that may be defined by an `EventManager`
-  instance; `$id` may be the wildcard `*`.
-- `$event` is a string event name (or the wildcard `*`).
+- `$identifier` is a string identifier that may be defined by an `EventManager`
+  instance; `$identifier` may be the wildcard `*`.
+- `$eventName` is a string event name (or the wildcard `*`).
 - `$listener` is a PHP callable that will listen for an event.
 - `$priority` is the priority to use when attaching the listener.
 
 ### detach()
 
 ```php
-detach(callable $listener, $id = null, $event = null) : void
+detach(callable $listener, $identifer = null, $eventName = null) : void
 ```
 
 Detach a listener, optionally from a single identifier, and optionally from a
 named event, where:
 
 - `$listener` is the PHP callable listener to detach.
-- `$id` is a string identifier from which to detach.
-- `$event` is a string event name from which to detach.
+- `$identifier` is a string identifier from which to detach.
+- `$eventName` is a string event name from which to detach.
 
-If no or a null `$id` is provided, the listener will be detached from all
-identified contexts. If no or a null `$event` is provided, the listener will be
+If no or a null `$identifier` is provided, the listener will be detached from all
+identified contexts. If no or a null `$eventName` is provided, the listener will be
 detached from all named events discovered.
-
-### getEvents()
-
-```php
-getEvents($id) : array
-```
-
-Retrieves all registered events for a given identifier. This is used by the
-`EventManager`.
 
 ### getListeners()
 
 ```php
-getListeners($id, $event = null) : array[]
+getListeners(array $identifiers, $eventName = null) : array[]
 ```
 
 Retrieves all registered listeners for a given identifier and named event; if
@@ -313,7 +304,7 @@ the event being triggered.
 ### clearListeners()
 
 ```php
-clearListeners($id, $event = null) : bool
+clearListeners($id, $eventName = null) : bool
 ```
 
 This event will clear all listeners for a given identifier, or, if specified,

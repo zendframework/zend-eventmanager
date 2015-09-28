@@ -166,3 +166,8 @@ This was done to prevent errors that occurred when invalid event class names
 were provided. Additionally, internally, event managers will clone the
 instance any time `trigger()` or `triggerUntil()` are called — which is
 typically faster and less resource intensive than instantiating a new instance.
+
+## SharedEventManagerInterface::getEvents()
+
+The method `SharedEventManagerInterface::getEvents()` was removed. The method
+was not consumed by the event manager, and served no real purpose.
