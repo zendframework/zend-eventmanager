@@ -330,6 +330,32 @@ after upgrading to v3. At the minimum, you will need to swap the `$identifier` a
 `CallbackHandler` instance. We also recommend auditing your code to determine if
 you want to be more or less specific when detaching the listener.
 
+## ListenerAggregateInterface::attach()
+
+`Zend\EventManager\ListenerAggregateInterface::attach()` was updated to add an
+optional argument, `$priority = 1`. This codifies how the `EventManager` was
+already implemented.
+
+Since PHP allows adding optional arguments to concrete implementations of
+abstract methods, you can forward-proof your existing
+`ListenerAggregateInterface` implementations by adding the argument.
+
+As an example, if you define your method like this:
+
+```php
+public function attach(EventManagerInterface $events)
+```
+
+Simply change it to this:
+
+```php
+public function attach(EventManagerInterface $events, $priority = 1)
+```
+
+You do not need to do anything with the `$priority` argument, though we
+recommend passing it as a default value if you are not specifying a priority for
+any listeners you attach.
+
 ## FilterInterface::attach() and detach()
 
 `Zend\EventManager\Filter\FilterInterface::attach()` and `detach()` have changed

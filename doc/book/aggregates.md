@@ -9,7 +9,7 @@ A listener aggregate is a class implementing
 `Zend\EventManager\ListenerAggregateInterface`, which defines two methods:
 
 ```php
-attach(EventManagerInterface $events);
+attach(EventManagerInterface $events, $priority = 1);
 detach(EventManagerInterface $events);
 ```
 

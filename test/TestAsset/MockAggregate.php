@@ -21,7 +21,7 @@ class MockAggregate implements ListenerAggregateInterface
     protected $listeners = [];
     public $priority;
 
-    public function attach(EventManagerInterface $events, $priority = null)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->priority = $priority;
 
