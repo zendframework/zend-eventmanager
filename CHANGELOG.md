@@ -2,15 +2,49 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 2.5.3 - TBD
+## 2.6.0 - 2015-09-29
 
 ### Added
 
-- Nothing.
+- Added `Zend\EventManager\SharedEventsCapableInterface`. This interface will
+  largely replace `Zend\EventManager\SharedEventManagerAwareInterface` in
+  version 3, and the latter was updated to extend it.
+- Added `EventManager::triggerEvent(EventInterface $event)` as a
+  forwards-compatibility feature.
+- Add `EventManager::triggerEventUntil(callable $callback, EventIterface $event)`
+  as a forwards-compatibility feature.
+- Adds [Athletic](https://github.com/polyfractal/athletic) benchmarks to aid in
+  gauging performanc impact of changes; these are a development change only.
 
 ### Deprecated
 
-- Nothing.
+- Marked `GlobalEventManager` as deprecated; this class will be removed in
+  version 3.
+- Marked `StaticEventManager` as deprecated; this class will be removed in
+  version 3.
+- Marked `SharedListenerAggregateInterface` as deprecated; this interface will
+  be removed in version 3.
+- Marked `SharedEventAggregateAwareInterface` as deprecated; this interface will
+  be removed in version 3.
+- Marked `SharedEventManagerAwareInterface` as deprecated; this interface will
+  be removed in version 3.
+- Marked `EventManager::setSharedManager()` as deprecated; this method will be
+  removed in version 3.
+- Marked `EventManager::unsetSharedManager()` as deprecated; this method will be
+  removed in version 3.
+- Marked `EventManagerInterface::` and `EventManager::getEvents()` as
+  deprecated; this method will be removed in version 3.
+- Marked `EventManagerInterface::` and `EventManager::getListeners()` as
+  deprecated; this method will be removed in version 3.
+- Marked `EventManagerInterface::` and `Eventmanager::setEventClass()` as
+  deprecated; this method is renamed to `setEventPrototype(EventInterface $event)`
+  in version 3.
+- Marked `EventManagerInterface::` and `EventManager::attachAggregate()` as
+  deprecated; this method will be removed in version 3.
+- Marked `EventManagerInterface::` and `EventManager::detachAggregate()` as
+  deprecated; this method will be removed in version 3.
+- Marked `SharedEventManagerInterface::` and `SharedEventManager::getEvents()`
+  as deprecated; this method will be removed in version 3.
 
 ### Removed
 
