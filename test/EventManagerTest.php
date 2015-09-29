@@ -201,10 +201,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerUntilShouldMarkResponseCollectionStoppedWhenConditionMet()
     {
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function () { return 'bogus'; }, 4);
         $this->events->attach('foo.bar', function () { return 'nada'; }, 3);
         $this->events->attach('foo.bar', function () { return 'found'; }, 2);
         $this->events->attach('foo.bar', function () { return 'zero'; }, 1);
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, [], function ($result) {
             return ($result === 'found');
         });
@@ -217,10 +220,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerUntilShouldMarkResponseCollectionStoppedWhenConditionMetByLastListener()
     {
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function () { return 'bogus'; });
         $this->events->attach('foo.bar', function () { return 'nada'; });
         $this->events->attach('foo.bar', function () { return 'zero'; });
         $this->events->attach('foo.bar', function () { return 'found'; });
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, [], function ($result) {
             return ($result === 'found');
         });
@@ -231,10 +237,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testResponseCollectionIsNotStoppedWhenNoCallbackMatchedByTriggerUntil()
     {
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function () { return 'bogus'; }, 4);
         $this->events->attach('foo.bar', function () { return 'nada'; }, 3);
         $this->events->attach('foo.bar', function () { return 'found'; }, 2);
         $this->events->attach('foo.bar', function () { return 'zero'; }, 1);
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, [], function ($result) {
             return ($result === 'never found');
         });
@@ -370,10 +379,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testCallingEventsStopPropagationMethodHaltsEventEmission()
     {
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function ($e) { return 'bogus'; }, 4);
         $this->events->attach('foo.bar', function ($e) { $e->stopPropagation(true); return 'nada'; }, 3);
         $this->events->attach('foo.bar', function ($e) { return 'found'; }, 2);
         $this->events->attach('foo.bar', function ($e) { return 'zero'; }, 1);
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, []);
         $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
         $this->assertTrue($responses->stopped());
@@ -385,6 +397,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanAlterParametersWithinAEvent()
     {
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function ($e) { $e->setParam('foo', 'bar'); });
         $this->events->attach('foo.bar', function ($e) { $e->setParam('bar', 'baz'); });
         $this->events->attach('foo.bar', function ($e) {
@@ -392,6 +405,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $bar = $e->getParam('bar', '__NO_BAR__');
             return $foo . ":" . $bar;
         });
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, []);
         $this->assertEquals('bar:baz', $responses->last());
     }
@@ -400,8 +415,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $params = [ 'foo' => 'bar', 'bar' => 'baz'];
         $args   = $this->events->prepareArgs($params);
+
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function ($e) { $e->setParam('foo', 'FOO'); });
         $this->events->attach('foo.bar', function ($e) { $e->setParam('bar', 'BAR'); });
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, $args);
         $this->assertEquals('FOO', $args['foo']);
         $this->assertEquals('BAR', $args['bar']);
@@ -410,8 +429,11 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testCanPassObjectForEventParameters()
     {
         $params = (object) [ 'foo' => 'bar', 'bar' => 'baz'];
+        // @codingStandardsIgnoreStart
         $this->events->attach('foo.bar', function ($e) { $e->setParam('foo', 'FOO'); });
         $this->events->attach('foo.bar', function ($e) { $e->setParam('bar', 'BAR'); });
+        // @codingStandardsIgnoreEnd
+
         $responses = $this->events->trigger('foo.bar', $this, $params);
         $this->assertEquals('FOO', $params->foo);
         $this->assertEquals('BAR', $params->bar);
@@ -678,7 +700,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $deprecated = true;
         }, E_USER_DEPRECATED);
 
-        $this->events->triggerUntil('foo.bar', $this, ['foo' => 'bar'], function () {});
+        $this->events->triggerUntil('foo.bar', $this, ['foo' => 'bar'], function () {
+        });
         restore_error_handler();
 
         $this->assertTrue($deprecated, 'EventManager::triggerUntil not marked as E_USER_DEPRECATED');
@@ -698,8 +721,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerThrowsInvalidCallbackExceptionForInvalidCallback()
     {
-        $this->setExpectedException('Zend\EventManager\Exception\InvalidCallbackException',
-        'Invalid callback provided');
+        $this->setExpectedException(
+            'Zend\EventManager\Exception\InvalidCallbackException',
+            'Invalid callback provided'
+        );
 
         $responses = $this->events->trigger(
             'foo.bar',
@@ -773,5 +798,53 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $responses = $this->events->trigger('string.transform', $this, ['string' => ' foo ']);
         $this->assertNull($responses->last());
+    }
+
+    public function testTriggerEventAcceptsEventInstanceAndTriggersListeners()
+    {
+        $event = $this->prophesize(EventInterface::class);
+        $event->getName()->willReturn('test');
+        $event->propagationIsStopped()->willReturn(false);
+
+        $triggered = false;
+        $this->events->attach('test', function ($e) use ($event, &$triggered) {
+            $this->assertSame($event->reveal(), $e);
+            $triggered = true;
+        });
+
+        $this->events->triggerEvent($event->reveal());
+        $this->assertTrue($triggered, 'Listener for event was not triggered');
+    }
+
+    public function testTriggerEventUntilAcceptsEventInstanceAndTriggersListenersUntilCallbackEvaluatesTrue()
+    {
+        $event = $this->prophesize(EventInterface::class);
+        $event->getName()->willReturn('test');
+        $event->propagationIsStopped()->willReturn(false);
+
+        $callback = function ($result) {
+            return ($result === true);
+        };
+
+        $triggeredOne = false;
+        $this->events->attach('test', function ($e) use ($event, &$triggeredOne) {
+            $this->assertSame($event->reveal(), $e);
+            $triggeredOne = true;
+        });
+
+        $triggeredTwo = false;
+        $this->events->attach('test', function ($e) use ($event, &$triggeredTwo) {
+            $this->assertSame($event->reveal(), $e);
+            $triggeredTwo = true;
+            return true;
+        });
+
+        $this->events->attach('test', function ($e) {
+            $this->fail('Third listener was triggered and should not have been');
+        });
+
+        $this->events->triggerEventUntil($callback, $event->reveal());
+        $this->assertTrue($triggeredOne, 'First Listener for event was not triggered');
+        $this->assertTrue($triggeredTwo, 'First Listener for event was not triggered');
     }
 }
