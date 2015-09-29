@@ -16,6 +16,10 @@ namespace Zend\EventManager;
  * with a SharedEventManager, without an event name. The {@link attach()} method will
  * then be called with the current SharedEventManager instance, allowing the class to
  * wire up one or more listeners.
+ *
+ * @deprecated This interface is deprecated with 2.6.0, and will be removed in 3.0.0.
+ *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+ *     for details.
  */
 interface SharedListenerAggregateInterface
 {

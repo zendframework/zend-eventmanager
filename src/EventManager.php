@@ -62,6 +62,9 @@ class EventManager implements EventManagerInterface
     /**
      * Set the event class to utilize
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @param  string $class
      * @return EventManager
      */
@@ -74,6 +77,9 @@ class EventManager implements EventManagerInterface
     /**
      * Set shared event manager
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @param SharedEventManagerInterface $sharedEventManager
      * @return EventManager
      */
@@ -87,6 +93,9 @@ class EventManager implements EventManagerInterface
     /**
      * Remove any shared event manager currently attached
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @return void
      */
     public function unsetSharedManager()
@@ -212,12 +221,14 @@ class EventManager implements EventManagerInterface
      * Triggers listeners until the provided callback evaluates the return
      * value of one as true, or until all listeners have been executed.
      *
+     * @deprecated The signature of this method will change in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/changed.md}
+     *     for details.
      * @param  string|EventInterface $event
      * @param  string|object $target Object calling emit, or symbol describing target (such as static method name)
      * @param  array|ArrayAccess $argv Array of arguments; typically, should be associative
      * @param  callable $callback
      * @return ResponseCollection
-     * @deprecated Please use trigger()
      * @throws Exception\InvalidCallbackException if invalid callable provided
      */
     public function triggerUntil($event, $target, $argv = null, $callback = null)
@@ -227,6 +238,29 @@ class EventManager implements EventManagerInterface
             E_USER_DEPRECATED
         );
         return $this->trigger($event, $target, $argv, $callback);
+    }
+
+    /**
+     * Trigger an event instance.
+     *
+     * @param EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEvent(EventInterface $event)
+    {
+        return $this->triggerListeners($event->getName(), $event);
+    }
+
+    /**
+     * Trigger an event instance, short-circuiting if a listener response evaluates true via the callback.
+     *
+     * @param callable $callback
+     * @param EventInterface $event
+     * @return ResponseCollection
+     */
+    public function triggerEventUntil(callable $callback, EventInterface $event)
+    {
+        return $this->triggerListeners($event->getName(), $event, $callback);
     }
 
     /**
@@ -293,6 +327,9 @@ class EventManager implements EventManagerInterface
      * one or more times, typically to attach to multiple events using local
      * methods.
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @param  ListenerAggregateInterface $aggregate
      * @param  int $priority If provided, a suggested priority for the aggregate to use
      * @return mixed return value of {@link ListenerAggregateInterface::attach()}
@@ -343,6 +380,9 @@ class EventManager implements EventManagerInterface
      * Listener aggregates accept an EventManagerInterface instance, and call detach()
      * of all previously attached listeners.
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @param  ListenerAggregateInterface $aggregate
      * @return mixed return value of {@link ListenerAggregateInterface::detach()}
      */
@@ -354,6 +394,9 @@ class EventManager implements EventManagerInterface
     /**
      * Retrieve all registered events
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @return array
      */
     public function getEvents()
@@ -364,6 +407,9 @@ class EventManager implements EventManagerInterface
     /**
      * Retrieve all listeners for a given event
      *
+     * @deprecated This method is deprecated with 2.6.0, and will be removed in 3.0.0.
+     *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+     *     for details.
      * @param  string $event
      * @return PriorityQueue
      */

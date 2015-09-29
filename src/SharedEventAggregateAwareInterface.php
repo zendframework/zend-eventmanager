@@ -11,6 +11,10 @@ namespace Zend\EventManager;
 
 /**
  * Interface for allowing attachment of shared aggregate listeners.
+ *
+ * @deprecated This interface is deprecated with 2.6.0, and will be removed in 3.0.0.
+ *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+ *     for details.
  */
 interface SharedEventAggregateAwareInterface
 {

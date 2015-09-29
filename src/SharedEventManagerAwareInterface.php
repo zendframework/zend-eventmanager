@@ -11,8 +11,12 @@ namespace Zend\EventManager;
 
 /**
  * Interface to automate setter injection for a SharedEventManagerInterface instance
+ *
+ * @deprecated This interface is deprecated with 2.6.0, and will be removed in 3.0.0.
+ *     See {@link https://github.com/zendframework/zend-eventmanager/blob/develop/doc/book/migration/removed.md}
+ *     for details.
  */
-interface SharedEventManagerAwareInterface
+interface SharedEventManagerAwareInterface extends SharedEventsCapableInterface
 {
     /**
      * Inject a SharedEventManager instance
@@ -21,13 +25,6 @@ interface SharedEventManagerAwareInterface
      * @return SharedEventManagerAwareInterface
      */
     public function setSharedManager(SharedEventManagerInterface $sharedEventManager);
-
-    /**
-     * Get shared collections container
-     *
-     * @return SharedEventManagerInterface
-     */
-    public function getSharedManager();
 
     /**
      * Remove any shared collections
