@@ -2,6 +2,86 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 3.0.0 - TBD
+
+### Added
+
+- [Migration documentation](doc/book/migration/) was added.
+- [Automated benchmarks](benchmarks/) were added.
+- `EventManager::__construct()` now accepts an optional
+  `SharedEventManagerInterface` instance as the first argument, and an optional
+  array of identifiers as the second. As identifiers have no meaning without a
+  shared manager present, they are secondary to providing the shared manager.
+- `EventManagerInterface::trigger()` changes its signature to
+  `trigger($eventName, $target = null, $argv = [])`; each argument has exactly
+  one possible meaning; the `$eventName` can only be a string event name. The
+  fourth `$callback` argument is removed.
+- `EventManagerInterface::triggerUntil()` changes its signature to
+  `triggerUntil(callable $callback, $eventName, $target = null, $argv = null)`.
+  Each argument has exactly one meaning.
+- `EventManagerInterface` adds two new methods for triggering provided
+  `EventInterface` arguments: `triggerEvent(EventInterface $event)` and
+  `triggerEventUntil(callable $callback, EventInterface $event)`.
+- `EventManagerInterface::attach()` and `detach()` change their signatures to
+  `attach($eventName, callable $listener, $priority = 1)` and `detach(callable
+  $listener, $eventName = null)`, respectively. Note that `$eventName` can now
+  only be a string event name, not an array or `Traversable`.
+- `EventManagerInterface::setIdentifiers()` and `addIdentifiers()` change their
+  signatures to each only accept an *array* of identifiers.
+- `SharedEventManagerInterface::getListeners()` changes signature to
+  `getListeners(array $identifiers, $eventName)` and now guarantees return of an
+  array. Note that the second argument is now *required*.
+- `SharedEventManagerInterface::attach()` changes signature to
+  `attach($identifier, $eventName, callable $listener, $priority = 1)`. The
+  `$identifier` and `$eventName` **must** be strings.
+- `SharedEventManagerInterface::detach()` changes signature to `detach(callable
+  $listener, $identifier = null, $eventName = null)`; `$identifier` and
+  `$eventName` **must** be strings if passed.
+- `ListenerAggregateInterface::attach()` adds an optional `$priority = 1`
+  argument. This was used already in v2, but not dictated by the interface.
+- `FilterInterface::attach()` and `detach()` have changed signature to
+  `attach(callable $callback)` and `detach(callable $ilter)`, respectively.
+- `LazyListener` allows wrapping:
+  - fetching a listener service from a container-interop container, and
+  - invoking a designated listener method with the provided event.
+- `LazyEventListener` extends `LazyListener`, and provides metadata for
+  discovering the intended event name and priority at which to attach the lazy
+  listener; these are consumed by:
+- `LazyListenerAggregate`, which, provided a list of `LazyEventListeners` and/or
+  definitions to use to create them, acts as an aggregate for attaching a number
+  of such listeners at once.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- `GlobalEventManager` and `StaticEventManager` are removed (with prejudice!).
+- `ProvidesEvents`, which was previously deprecated, is removed.
+- `EventManagerInterface::setSharedManager()` is removed. Shared managers are
+  now expected to be injected during instantiation.
+- `EventManagerInterface::getEvents()` and `getListeners()` are removed; they
+  had now purpose within the implementation.
+- `EventManagerInterface::setEventClass()` was renamed to `setEventPrototype()`,
+  which now expects an `EventInterface` instance. That instance will be cloned
+  whenever a new event is created.
+- `EventManagerInterface::attachAggregate()` and `detachAggregate()` are
+  removed. Users should use the `attach()` and `detach()` methods of the
+  aggregates themselves.
+- `SharedEventAggregateAwareInterface` and `SharedListenerAggregateInterface`
+  are removed. This was an undocumented and largely unused feature.
+- `SharedEventManagerAwareInterface` is removed. A new interface,
+  `SharedEventsCapableInterface` defines the `getSharedManager()` method from
+  the interface, and `EventManagerInterface` extends that new interface.
+- `SharedEventManagerInterface::getEvents()` is removed, as it had no purpose in
+  the implementation.
+- `ResponseCollection::setStopped()` no longer implements a fluent interface.
+
+### Fixed
+
+- `FilterIterator::insert()` has been modified to raise an exception if the value provided is not a callable.
+
 ## 2.6.0 - TBD
 
 ### Added
