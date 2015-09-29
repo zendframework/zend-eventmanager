@@ -2,13 +2,14 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager;
 
+use Zend\EventManager\Exception\InvalidArgumentException;
 use Zend\EventManager\Filter\FilterIterator;
 
 /**
@@ -29,13 +30,6 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($filterIterator->next([0, 1, 2]));
     }
 
-    public function testNextReturnsNullOnInvalidCallback()
-    {
-        $filterIterator = new FilterIterator();
-        $filterIterator->insert(null, 1);
-        $this->assertNull($filterIterator->next([0, 1, 2]));
-    }
-
     public function testContainsReturnsFalseForInvalidElement()
     {
         $filterIterator = new FilterIterator();
@@ -44,9 +38,11 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
 
     public function testContainsReturnsTrueForValidElement()
     {
+        $callback = function () {
+        };
         $filterIterator = new FilterIterator();
-        $filterIterator->insert('foo', 1);
-        $this->assertTrue($filterIterator->contains('foo'));
+        $filterIterator->insert($callback, 1);
+        $this->assertTrue($filterIterator->contains($callback));
     }
 
     public function testRemoveFromEmptyQueueReturnsFalse()
@@ -56,13 +52,24 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($filterIterator->remove('foo'));
     }
 
-    public function testRemoveInvalidItemFromQueueReturnsFalse()
+    public function testRemoveUnrecognizedItemFromQueueReturnsFalse()
     {
+        $callback = function () {
+        };
         $filterIterator = new FilterIterator();
-        $filterIterator->insert('foo', 1);
-        $filterIterator->insert('bar', 2);
+        $filterIterator->insert($callback, 1);
 
-        $this->assertTrue($filterIterator->remove('foo'));
+        $this->assertFalse($filterIterator->remove(clone $callback));
+    }
+
+    public function testRemoveValidItemFromQueueReturnsTrue()
+    {
+        $callback = function () {
+        };
+        $filterIterator = new FilterIterator();
+        $filterIterator->insert($callback, 1);
+
+        $this->assertTrue($filterIterator->remove($callback));
     }
 
     public function testNextReturnsNullWhenFilterChainIsEmpty()
@@ -72,5 +79,31 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
         $chain = new FilterIterator();
 
         $this->assertNull($filterIterator->next([0, 1, 2], ['foo', 'bar'], $chain));
+    }
+
+    public function invalidFilters()
+    {
+        return [
+            'null'                 => [null],
+            'true'                 => [true],
+            'false'                => [false],
+            'zero'                 => [0],
+            'int'                  => [1],
+            'zero-float'           => [0.0],
+            'float'                => [1.1],
+            'non-callable-string'  => ['not a function'],
+            'non-callable-array'   => [['not a function']],
+            'non-invokable-object' => [(object) ['__invoke' => 'not a function']],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidFilters
+     */
+    public function testInsertShouldRaiseExceptionOnNonCallableDatum($filter)
+    {
+        $iterator = new FilterIterator();
+        $this->setExpectedException(InvalidArgumentException::class, 'callables');
+        $iterator->insert($filter, 1);
     }
 }

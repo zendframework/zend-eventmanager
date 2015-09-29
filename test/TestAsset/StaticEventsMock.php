@@ -2,9 +2,9 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager\TestAsset;
@@ -12,40 +12,25 @@ namespace ZendTest\EventManager\TestAsset;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\Stdlib\CallbackHandler;
 
-/**
- * @group      Zend_EventManager
- */
 class StaticEventsMock implements SharedEventManagerInterface
 {
-    public function getListeners($id, $event)
+    public function getListeners($id, $event = null)
     {
-        return array();
+        return [];
     }
 
     /**
      * Attach a listener to an event
      *
-     * @param  string|array $id Identifier(s) for event emitting component(s)
+     * @param  string|array $identifier Identifier(s) for event emitting component(s)
      * @param  string $event
      * @param  callable $callback PHP Callback
      * @param  int $priority Priority at which listener should execute
      * @return void
      */
-    public function attach($id, $event, $callback, $priority = 1)
+    public function attach($identifier, $event, callable $listener, $priority = 1)
     {
 
-    }
-
-    /**
-     * Detach a listener from an event offered by a given resource
-     *
-     * @param  string|int $id
-     * @param  CallbackHandler $listener
-     * @return bool Returns true if event and listener found, and unsubscribed; returns false if either event or listener not found
-     */
-    public function detach($id, CallbackHandler $listener)
-    {
-        return true;
     }
 
     /**
@@ -56,7 +41,7 @@ class StaticEventsMock implements SharedEventManagerInterface
      */
     public function getEvents($id)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -70,6 +55,4 @@ class StaticEventsMock implements SharedEventManagerInterface
     {
         return true;
     }
-
-
 }

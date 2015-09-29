@@ -1,0 +1,10 @@
+{
+    "title": "Lazy Listeners",
+    "content": [
+        {"Introduction": "intro.md"},
+        {"LazyListener": "lazy-listener.md"},
+        {"LazyEventListener": "lazy-event-listener.md"},
+        {"LazyListenerAggregate": "lazy-listener-aggregate.md"}
+    ]
+}
+

@@ -2,9 +2,9 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace Zend\EventManager;
@@ -16,7 +16,7 @@ namespace Zend\EventManager;
 trait ListenerAggregateTrait
 {
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var callable[]
      */
     protected $listeners = [];
 
@@ -26,9 +26,8 @@ trait ListenerAggregateTrait
     public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $callback) {
-            if ($events->detach($callback)) {
-                unset($this->listeners[$index]);
-            }
+            $events->detach($callback);
+            unset($this->listeners[$index]);
         }
     }
 }

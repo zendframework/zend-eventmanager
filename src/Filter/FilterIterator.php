@@ -2,15 +2,15 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace Zend\EventManager\Filter;
 
-use Zend\Stdlib\CallbackHandler;
-use Zend\Stdlib\SplPriorityQueue;
+use Zend\EventManager\Exception;
+use Zend\Stdlib\FastPriorityQueue;
 
 /**
  * Specialized priority queue implementation for use with an intercepting
@@ -18,7 +18,7 @@ use Zend\Stdlib\SplPriorityQueue;
  *
  * Allows removal
  */
-class FilterIterator extends SplPriorityQueue
+class FilterIterator extends FastPriorityQueue
 {
     /**
      * Does the queue contain a given value?
@@ -28,13 +28,34 @@ class FilterIterator extends SplPriorityQueue
      */
     public function contains($datum)
     {
-        $chain = clone $this;
-        foreach ($chain as $item) {
+        foreach ($this as $item) {
             if ($item === $datum) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * Insert a value into the queue.
+     *
+     * Requires a callable.
+     *
+     * @param callable $value
+     * @param mixed $priority
+     * @return void
+     * @throws Exception\InvalidArgumentException for non-callable $value.
+     */
+    public function insert($value, $priority)
+    {
+        if (! is_callable($value)) {
+            throw new Exception\InvalidArgumentException(sprintf(
+                '%s can only aggregate callables; received %s',
+                __CLASS__,
+                (is_object($value) ? get_class($value) : gettype($value))
+            ));
+        }
+        parent::insert($value, $priority);
     }
 
     /**
@@ -54,7 +75,7 @@ class FilterIterator extends SplPriorityQueue
         $removed = false;
         $items   = [];
         $this->rewind();
-        while (!$this->isEmpty()) {
+        while (! $this->isEmpty()) {
             $item = $this->extract();
             if ($item['data'] === $datum) {
                 $removed = true;
@@ -94,11 +115,6 @@ class FilterIterator extends SplPriorityQueue
         }
 
         $next = $this->extract();
-        if (!$next instanceof CallbackHandler) {
-            return;
-        }
-
-        $return = call_user_func($next->getCallback(), $context, $params, $chain);
-        return $return;
+        return $next($context, $params, $chain);
     }
 }
