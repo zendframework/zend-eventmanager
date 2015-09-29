@@ -44,7 +44,7 @@ $aggregate = new LazyListenerAggregate(
     $definitions,
     $container
 );
-$events->attachAggregate($aggregate);
+$aggregate->attach($events);
 ```
 
 Internally, the `LazyListenerAggregate` will create `LazyEventListener`
@@ -81,7 +81,7 @@ $aggregate = new LazyListenerAggregate(
     $definitions,
     $container
 );
-$events->attachAggregate($aggregate);
+$aggregate->attach($events);
 ```
 
 ## Recommendations

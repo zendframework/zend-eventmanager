@@ -173,9 +173,11 @@ In order to migrate to version 3, you will need to make a few changes to your
 application.
 
 First, if you are attaching or detaching aggregate listeners using `attach()`
-and `detach()`, you should change them to use `attachAggregate()` and
-`detachAggregate()` instead. These methods already exist in version 2, giving
-clear forwards compatibility.
+and `detach()`, you should change such calls to instead pass the event manager
+to the relevant `ListenerAggregateInterface` method, as detailed in the
+[removed functionality](removed.md#eventmanagerinterfaceattachaggregate-and-detachaggregate)
+documentation. These methods have existed in all released versions, giving
+perfect forwards compatibility.
 
 Second, if you are manually creating `CallbackHandler` instances to attach to an
 event manager, stop doing so, and attach the callable listener itself instead.

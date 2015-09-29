@@ -169,26 +169,6 @@ method will detach the listener from that event only (or, if the event does not
 exist in the event manager, nothing will occur). If no event is provided, or the
 wildcard event is provided, the listener will be detached from all events.
 
-### attachAggregate()
-
-```php
-attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1) : void
-```
-
-Provided an aggregate, this method will then call the aggregate's `attach()`
-method, passing the event manager instance and the provided priority (if any).
-See the [section on aggregates](aggregates.md) for more information.
-
-### detachAggregate()
-
-```php
-detachAggregate(ListenerAggregateInterface $aggregate) : void
-```
-
-Provided an aggregate, this method will then call the aggregate's `detach()`
-method, passing the event manager instance.  See the
-[section on aggregates](aggregates.md) for more information.
-
 ### clearListeners()
 
 ```php

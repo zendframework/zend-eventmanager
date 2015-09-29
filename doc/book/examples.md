@@ -204,12 +204,12 @@ class CacheListener implements ListenerAggregateInterface
 }
 ```
 
-We can then attach the aggregate to an instance.
+We can then attach the aggregate to an event manager instance.
 
 ```
 $value         = new SomeValueObject();
 $cacheListener = new CacheListener($cache);
-$value->getEventManager()->attachAggregate($cacheListener);
+$cacheListener->attach($value->getEventManager());
 ```
 
 Now, as we call `get()`, if we have a cached entry, it will be returned

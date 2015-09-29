@@ -308,11 +308,12 @@ class LogEvents implements ListenerAggregateInterface
 > implement `ListenerAggregateInterface`; it defines the `$listeners` property,
 > and the `detach()` logic as demostrated above.
 
-You can attach this using the event manager's `attachAggregate()` method:
+You can attach this by passing the event manager to the aggregate's `attach()`
+method:
 
 ```php
 $logListener = new LogEvents($logger);
-$events->attachAggregate($logListener);
+$logListener->attach($events);
 ```
 
 Any events the aggregate attaches to will then be notified when triggered.

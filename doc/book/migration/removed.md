@@ -15,6 +15,75 @@ option from the framework entirely.
 The trait `Zend\EventManager\ProvidesEvents` has been deprecated for most of
 the 2.0 series; use `Zend\EventManager\EventManagerAwareTrait` instead.
 
+## EventManagerInterface::setSharedManager()
+
+We have removed `EventManagerInterface::setSharedManager()`, and also removed it
+from the `EventManager` implementation. The `SharedEventManager` should be
+injected during instantiation now.
+
+## EventManagerInterface::getEvents() and getListeners()
+
+We have removed both `EventManagerInterface::getEvents()` and `getListeners()`,
+as we did not have a stated use case for the methods. The event manager should
+be something that aggregates listeners and triggers events; the details of what
+listeners or events are attached is largely irrelevant.
+
+The primary use case for `getListeners()` is often to determine if a listener is
+attached before detaching it. Since `detach()` acts as a no-op if the provided
+listener is not present, checking for presence first is not necessary.
+
+## EventManagerInterface::setEventClass()
+
+The method `EventManagerInterface::setEventClass()` was removed and replaced
+with `EventManagerInterface::setEventPrototype()`, which has the following
+signature:
+
+```php
+setEventPrototype(EventInterface $event);
+```
+
+This was done to prevent errors that occurred when invalid event class names
+were provided. Additionally, internally, event managers will clone the
+instance any time `trigger()` or `triggerUntil()` are called — which is
+typically faster and less resource intensive than instantiating a new instance.
+
+## EventManagerInterface::attachAggregate() and detachAggregate()
+
+The methods `attachAggregate()` and `detachAggregate()` were removed from the
+`EventManagerInterface` and concrete `EventManager` implementation. Furthermore,
+`attach()` and `detach()` no longer handle aggregates.
+
+The reason they were removed is because they simply proxied to the `attach()`
+and `detach()` methods of the `ListenerAggregateInterface`. As such, to
+forward-proof your applications, you can alter statements that attach aggregates
+to an event manager reading as follows:
+
+```php
+$events->attach($aggregate); // or
+$events->attachAggregate($aggregate);
+```
+
+to:
+
+```php
+$aggregate->attach($events);
+```
+
+Similarly, for detaching an aggregate, migrate from:
+
+```php
+$events->detach($aggregate); // or
+$events->detachAggregate($aggregate);
+```
+
+to:
+
+```php
+$aggregate->detach($events);
+```
+
+The above works in all released versions of the component.
+
 ## SharedEventAggregateAwareInterface, SharedListenerAggregateInterface
 
 The interfaces `Zend\EventManager\SharedEventAggregateAwareInterface` and
@@ -134,38 +203,6 @@ To migrate, you have the following options:
 
   Alternately, if you control instantiation of the instance, consider injection
   at instantiation, or within the factory used to create your instance.
-
-## EventManagerInterface::setSharedManager()
-
-We have removed `EventManagerInterface::setSharedManager()`, and also removed it
-from the `EventManager` implementation. The `SharedEventManager` should be
-injected during instantiation now.
-
-## EventManagerInterface::getEvents() and getListeners()
-
-We have removed both `EventManagerInterface::getEvents()` and `getListeners()`,
-as we did not have a stated use case for the methods. The event manager should
-be something that aggregates listeners and triggers events; the details of what
-listeners or events are attached is largely irrelevant.
-
-The primary use case for `getListeners()` is often to determine if a listener is
-attached before detaching it. Since `detach()` acts as a no-op if the provided
-listener is not present, checking for presence first is not necessary.
-
-## EventManagerInterface::setEventClass()
-
-The method `EventManagerInterface::setEventClass()` was removed and replaced
-with `EventManagerInterface::setEventPrototype()`, which has the following
-signature:
-
-```php
-setEventPrototype(EventInterface $event);
-```
-
-This was done to prevent errors that occurred when invalid event class names
-were provided. Additionally, internally, event managers will clone the
-instance any time `trigger()` or `triggerUntil()` are called — which is
-typically faster and less resource intensive than instantiating a new instance.
 
 ## SharedEventManagerInterface::getEvents()
 

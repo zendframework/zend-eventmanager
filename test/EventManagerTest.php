@@ -224,30 +224,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('zero', $responses->last());
     }
 
-    public function testCanAttachListenerAggregate()
-    {
-        $aggregate = new TestAsset\MockAggregate();
-        $this->events->attachAggregate($aggregate);
-        $events = $this->getEventListFromManager($this->events);
-        foreach (['foo.bar', 'foo.baz'] as $event) {
-            $this->assertContains($event, $events);
-        }
-    }
-
-    public function testAttachAggregateAcceptsOptionalPriorityValue()
-    {
-        $aggregate = new TestAsset\MockAggregate();
-        $this->events->attachAggregate($aggregate, 1);
-        $this->assertEquals(1, $aggregate->priority);
-    }
-
-    public function testAttachAggregateAcceptsOptionalPriorityValueViaAttachCallbackArgument()
-    {
-        $aggregate = new TestAsset\MockAggregate();
-        $this->events->attachAggregate($aggregate, 1);
-        $this->assertEquals(1, $aggregate->priority);
-    }
-
     public function testCallingEventsStopPropagationMethodHaltsEventEmission()
     {
         // @codingStandardsIgnoreStart
@@ -736,26 +712,6 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listeners = $this->getListenersForEvent('foo', $this->events);
         $this->assertCount(0, $listeners);
         $this->assertNotContains($listener, $listeners);
-    }
-
-    public function testCanDetachAnAggregate()
-    {
-        $events    = $this->events;
-        $aggregate = $this->prophesize(ListenerAggregateInterface::class);
-        $aggregate->attach(Argument::is($events), 1)->shouldBeCalled();
-        $aggregate->detach(Argument::is($events))->shouldBeCalled();
-
-        $events->attachAggregate($aggregate->reveal());
-        $events->detachAggregate($aggregate->reveal());
-    }
-
-    public function testCanAttachAggregateWithPriority()
-    {
-        $events    = $this->events;
-        $aggregate = $this->prophesize(ListenerAggregateInterface::class);
-        $aggregate->attach(Argument::is($events), 5)->shouldBeCalled();
-
-        $events->attachAggregate($aggregate->reveal(), 5);
     }
 
     public function eventsMissingNames()

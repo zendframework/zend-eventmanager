@@ -161,22 +161,4 @@ interface EventManagerInterface extends SharedEventsCapableInterface
      * @return void
      */
     public function addIdentifiers(array $identifiers);
-
-    /**
-     * Attach a listener aggregate
-     *
-     * @param  ListenerAggregateInterface $aggregate
-     * @param  int $priority If provided, a suggested priority for the aggregate to use
-     * @return mixed return value of {@link ListenerAggregateInterface::attach()}
-     */
-    public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1);
-
-    /**
-     * Detach a listener aggregate.
-     *
-     * Should delegate to the aggregate's detach() method.
-     *
-     * @param  ListenerAggregateInterface $aggregate
-     */
-    public function detachAggregate(ListenerAggregateInterface $aggregate);
 }

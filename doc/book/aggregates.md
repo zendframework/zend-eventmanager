@@ -13,14 +13,9 @@ attach(EventManagerInterface $events, $priority = 1);
 detach(EventManagerInterface $events);
 ```
 
-You can attach them to the event manager in one of two ways:
-
-- By passing an instance of `Zend\EventManager\EventManager` to your listener's
-  `attach()` method.
-- By passing the aggregate to `Zend\EventManager\EventManager::attachAggregate()`
-
-The latter essentially passes the event manager instance to the aggregate's
-`attach()` method.
+To attach an aggregate to an event manager, you pass the event manager to the
+aggregate's `attach()` method; in that method, you will then attach listeners to
+the events you are interested in.
 
 ## Implementation
 
@@ -82,22 +77,14 @@ we provide two facilities for implementing this:
 ## Usage
 
 To use an aggregate listener, you need to attach it to the event manager. As
-noted in the intro to this section, you can either pass it to the event
-manager's `attachAggregate()` method, or pass the event manager to the
-aggregate's `attach()` method.
+noted in the intro to this section, you do so by passing the event
+manager to the aggregate's `attach()` method:
 
 ```php
 // Assume $events is an EventManager instance, and $aggregate is an instance of
 // the Aggregate class defined earlier.
-
-// Passing the aggregate to the EventManager:
-$events->attachAggregate($aggregate);
-
-// Passing the EventManager to the aggregate:
 $aggregate->attach($events);
 ```
-
-Both approaches accomplish the same thing.
 
 ## Recommendations
 

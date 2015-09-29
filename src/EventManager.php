@@ -223,22 +223,6 @@ class EventManager implements EventManagerInterface
     /**
      * @inheritDoc
      */
-    public function attachAggregate(ListenerAggregateInterface $aggregate, $priority = 1)
-    {
-        $aggregate->attach($this, $priority);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function detachAggregate(ListenerAggregateInterface $aggregate)
-    {
-        $aggregate->detach($this);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function clearListeners($event)
     {
         if (isset($this->events[$event])) {
