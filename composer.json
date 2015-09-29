@@ -14,7 +14,8 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zend-stdlib": "~2.5"
+        "zendframework/zend-stdlib": "~2.5",
+        "athletic/athletic": "dev-master"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -26,7 +27,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ZendTest\\EventManager\\": "test/"
+            "ZendTest\\EventManager\\": "test/",
+            "ZendBench\\EventManager\\": "benchmarks/"
         }
     },
     "require-dev": {
