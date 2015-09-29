@@ -9,6 +9,15 @@ take the incoming arguments in order to alter the workflow.
 zend-eventmanager provides an intercepting filter implementation via
 `Zend\EventManager\FilterChain`.
 
+## Preparation
+
+To use the `FilterChain` implementation, you will need to install zend-stdlib,
+if you have not already:
+
+```bash
+$ composer require zendframework/zend-stdlib
+```
+
 ## FilterChainInterface
 
 `Zend\EventManager\FilterChain` is a concrete implementation of

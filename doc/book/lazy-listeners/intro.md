@@ -14,3 +14,12 @@ The feature consists of three classes:
 - `Zend\EventManager\LazyListenerAggregate`, which can take a list of
   `LazyEventListeners` and/or their definitions, and be used as an aggregate
   listener for attaching the lazy listeners to an event manager.
+
+## Preparation
+
+In order to use the lazy listeners feature, you will need to install
+container-interop, if you haven't already:
+
+```bash
+$ composer require container-interop/container-interop
+```
