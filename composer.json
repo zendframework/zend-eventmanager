@@ -27,7 +27,7 @@
     "autoload-dev": {
         "psr-4": {
             "ZendTest\\EventManager\\": "test/",
-            "ZendBench\\EventManager\\": "benchmarks/"
+            "ZendBench\\EventManager\\": "benchmark/"
         }
     },
     "require-dev": {

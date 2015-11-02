@@ -21,10 +21,10 @@ and interrupt execution of listeners.
 
 We provide scripts for benchmarking zend-eventmanager using the
 [Athletic](https://github.com/polyfractal/athletic) framework; these can be
-found in the `benchmarks/` directory.
+found in the `benchmark/` directory.
 
 To execute the benchmarks you can run the following command:
 
 ```bash
-$ vendor/bin/athletic -p benchmarks
+$ vendor/bin/athletic -p benchmark
 ```
