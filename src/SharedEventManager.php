@@ -74,7 +74,7 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $this->identifiers[$identifier][$event][((int) $priority) . '.0'][] = $listener;
+        $this->identifiers[$identifier][$event][((int) $priority) . '.'][] = $listener;
     }
 
     /**
