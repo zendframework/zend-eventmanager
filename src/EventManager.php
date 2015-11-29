@@ -164,7 +164,7 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        $this->events[$eventName][((int) $priority) . '.0'][] = $listener;
+        $this->events[$eventName][((int) $priority) . '.'][] = $listener;
 
         return $listener;
     }
