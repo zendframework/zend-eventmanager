@@ -164,7 +164,7 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        $this->events[$eventName][((int) $priority) . '.0'][] = $listener;
+        $this->events[$eventName][(int) $priority][] = $listener;
 
         return $listener;
     }
@@ -296,13 +296,19 @@ class EventManager implements EventManagerInterface
      */
     private function getListenersByEventName($eventName)
     {
-        $listeners = array_merge_recursive(
-            isset($this->events[$eventName]) ? $this->events[$eventName] : [],
-            isset($this->events['*']) ? $this->events['*'] : [],
-            $this->sharedManager ? $this->sharedManager->getListeners($this->identifiers, $eventName) : []
-        );
+        $listeners = isset($this->events[$eventName]) ? $this->events[$eventName] : [];
+        if (isset($this->events['*'])) {
+            foreach ($this->events['*'] as $p => $l) {
+                $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+            }
+        }
+        if ($this->sharedManager) {
+            foreach ($this->sharedManager->getListeners($this->identifiers, $eventName) as $p => $l) {
+                $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+            }
+        }
 
-        krsort($listeners, SORT_NUMERIC);
+        krsort($listeners);
 
         $listenersForEvent = [];
 

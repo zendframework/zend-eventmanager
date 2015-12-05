@@ -74,7 +74,7 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $this->identifiers[$identifier][$event][((int) $priority) . '.0'][] = $listener;
+        $this->identifiers[$identifier][$event][(int) $priority][] = $listener;
     }
 
     /**
@@ -178,22 +178,30 @@ class SharedEventManager implements SharedEventManagerInterface
             }
 
             $listenersByIdentifier = isset($this->identifiers[$identifier]) ? $this->identifiers[$identifier] : [];
-
-            $listeners = array_merge_recursive(
-                $listeners,
-                isset($listenersByIdentifier[$eventName]) ? $listenersByIdentifier[$eventName] : [],
-                isset($listenersByIdentifier['*']) ? $listenersByIdentifier['*'] : []
-            );
+            if (isset($listenersByIdentifier[$eventName])) {
+                foreach ($listenersByIdentifier[$eventName] as $p => $l) {
+                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                }
+            }
+            if (isset($listenersByIdentifier['*'])) {
+                foreach ($listenersByIdentifier['*'] as $p => $l) {
+                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                }
+            }
         }
 
-        if (isset($this->identifiers['*']) && ! in_array('*', $identifiers)) {
+        if (isset($this->identifiers['*']) && ! in_array('*', $identifiers, true)) {
             $wildcardIdentifier = $this->identifiers['*'];
-
-            $listeners = array_merge_recursive(
-                $listeners,
-                isset($wildcardIdentifier[$eventName]) ? $wildcardIdentifier[$eventName] : [],
-                isset($wildcardIdentifier['*']) ? $wildcardIdentifier['*'] : []
-            );
+            if (isset($wildcardIdentifier[$eventName])) {
+                foreach ($wildcardIdentifier[$eventName] as $p => $l) {
+                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                }
+            }
+            if (isset($wildcardIdentifier['*'])) {
+                foreach ($wildcardIdentifier['*'] as $p => $l) {
+                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                }
+            }
         }
 
         return $listeners;
