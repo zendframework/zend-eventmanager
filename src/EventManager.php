@@ -283,15 +283,15 @@ class EventManager implements EventManagerInterface
      * @return CallbackHandler|mixed CallbackHandler if attaching callable (to allow later unsubscribe); mixed if attaching aggregate
      * @throws Exception\InvalidArgumentException
      */
-    public function attach($event, $callback = null, $priority = 1)
+    public function attach($event, $callback, $priority = 1)
     {
         // Proxy ListenerAggregateInterface arguments to attachAggregate()
         if ($event instanceof ListenerAggregateInterface) {
             return $this->attachAggregate($event, $callback);
         }
 
-        // Null callback is invalid
-        if (null === $callback) {
+        // Check if callback is valid
+        if ( ! is_callable($callback)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 '%s: expects a callback; none provided',
                 __METHOD__
