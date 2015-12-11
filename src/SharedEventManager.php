@@ -190,7 +190,7 @@ class SharedEventManager implements SharedEventManagerInterface
             }
         }
 
-        if (isset($this->identifiers['*']) && ! in_array('*', $identifiers, true)) {
+        if (isset($this->identifiers['*'])) {
             $wildcardIdentifier = $this->identifiers['*'];
             if (isset($wildcardIdentifier[$eventName])) {
                 foreach ($wildcardIdentifier[$eventName] as $p => $l) {
