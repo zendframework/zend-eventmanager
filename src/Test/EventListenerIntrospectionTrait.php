@@ -12,7 +12,6 @@ namespace Zend\EventManager\Test;
 use PHPUnit_Framework_TestCase as TestCase;
 use ReflectionProperty;
 use Zend\EventManager\EventManager;
-use Zend\Stdlib\PriorityQueue;
 
 /**
  * Trait providing utility methods and assertions for use in PHPUnit test cases.
@@ -24,10 +23,7 @@ use Zend\Stdlib\PriorityQueue;
  *
  * Some functionality in this trait duplicates functionality present in the
  * version 2 EventManagerInterface and/or EventManager implementation, but
- * abstracts that functionality for use in v3. As such, components or code
- * that is testing for listener registration should use the methods in this
- * trait to ensure tests are forwards-compatible between zend-eventmanager
- * versions.
+ * abstracts that functionality for use in v3.
  */
 trait EventListenerIntrospectionTrait
 {
@@ -39,7 +35,10 @@ trait EventListenerIntrospectionTrait
      */
     private function getEventsFromEventManager(EventManager $events)
     {
-        return $events->getEvents();
+        $r = new ReflectionProperty($events, 'events');
+        $r->setAccessible(true);
+        $listeners = $r->getValue($events);
+        return array_keys($listeners);
     }
 
     /**
@@ -62,8 +61,15 @@ trait EventListenerIntrospectionTrait
      */
     private function getListenersForEvent($event, EventManager $events, $withPriority = false)
     {
-        $listeners = $events->getListeners($event);
-        return $this->traverseListeners($listeners, $withPriority);
+        $r = new ReflectionProperty($events, 'events');
+        $r->setAccessible(true);
+        $listeners = $r->getValue($events);
+
+        if (! isset($listeners[$event])) {
+            return $this->traverseListeners([]);
+        }
+
+        return $this->traverseListeners($listeners[$event], $withPriority);
     }
 
     /**
@@ -82,7 +88,7 @@ trait EventListenerIntrospectionTrait
         EventManager $events,
         $message = ''
     ) {
-        $message = $message ?: sprintf(
+        $message   = $message ?: sprintf(
             'Listener not found for event "%s" and priority %d',
             $event,
             $expectedPriority
@@ -119,18 +125,21 @@ trait EventListenerIntrospectionTrait
     /**
      * Generator for traversing listeners in priority order.
      *
-     * @param PriorityQueue $listeners
+     * @param array $listeners
      * @param bool $withPriority When true, yields priority as key.
      */
-    public function traverseListeners(PriorityQueue $queue, $withPriority = false)
+    public function traverseListeners(array $queue, $withPriority = false)
     {
-        foreach ($queue as $handler) {
-            $listener = $handler->getCallback();
-            if ($withPriority) {
-                $priority = (int) $handler->getMetadatum('priority');
-                yield $priority => $listener;
-            } else {
-                yield $listener;
+        krsort($queue, SORT_NUMERIC);
+
+        foreach ($queue as $priority => $listeners) {
+            $priority = (int) $priority;
+            foreach ($listeners as $listener) {
+                if ($withPriority) {
+                    yield $priority => $listener;
+                } else {
+                    yield $listener;
+                }
             }
         }
     }
