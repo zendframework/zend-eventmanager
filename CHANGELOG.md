@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.6.2 - 2016-01-12
+
+### Added
+
+- [#19](https://github.com/zendframework/zend-eventmanager/pull/19) adds a new
+  trait, `Zend\EventManager\Test\EventListenerIntrospectionTrait`, intended for
+  composition in unit tests. It provides a number of methods that can be used
+  to retrieve listeners with or without associated priority, and the assertion
+  `assertListenerAtPriority(callable $listener, $priority, $event, EventManager $events, $message = '')`,
+  which can be used for testing that a listener was registered at the specified
+  priority with the specified event.
+
+  The features in this patch are intended to facilitate testing against both
+  version 2 and version 3 of zend-eventmanager, as it provides a consistent API
+  for retrieving lists of events and listeners between the two versions.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
+
 ## 2.6.0 - 2015-09-29
 
 ### Added
