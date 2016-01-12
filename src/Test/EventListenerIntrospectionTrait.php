@@ -10,7 +10,6 @@
 namespace Zend\EventManager\Test;
 
 use PHPUnit_Framework_TestCase as TestCase;
-use ReflectionProperty;
 use Zend\EventManager\EventManager;
 use Zend\Stdlib\PriorityQueue;
 
