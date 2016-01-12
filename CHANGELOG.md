@@ -50,6 +50,11 @@ All notable changes to this project will be documented in this file, in reverse 
 - `LazyListenerAggregate`, which, provided a list of `LazyEventListeners` and/or
   definitions to use to create them, acts as an aggregate for attaching a number
   of such listeners at once.
+- [#20](https://github.com/zendframework/zend-eventmanager/pull/20) updates the
+  trait `Zend\EventManager\Test\EventListenerIntrospectionTrait` so that the
+  implementation will work with the v3 changes; the tests written for v2
+  continue to pass, allowing this trait to be used to provide compatibility
+  testing between v2 and v3.
 
 ### Deprecated
 
@@ -81,6 +86,34 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Fixed
 
 - `FilterIterator::insert()` has been modified to raise an exception if the value provided is not a callable.
+
+## 2.6.2 - 2016-01-12
+
+### Added
+
+- [#19](https://github.com/zendframework/zend-eventmanager/pull/19) adds a new
+  trait, `Zend\EventManager\Test\EventListenerIntrospectionTrait`, intended for
+  composition in unit tests. It provides a number of methods that can be used
+  to retrieve listeners with or without associated priority, and the assertion
+  `assertListenerAtPriority(callable $listener, $priority, $event, EventManager $events, $message = '')`,
+  which can be used for testing that a listener was registered at the specified
+  priority with the specified event.
+
+  The features in this patch are intended to facilitate testing against both
+  version 2 and version 3 of zend-eventmanager, as it provides a consistent API
+  for retrieving lists of events and listeners between the two versions.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- Nothing.
 
 ## 2.6.0 - 2015-09-29
 
