@@ -13,9 +13,11 @@ The basic architecture allows you to attach and detach listeners to named events
 both on a per-instance basis as well as via shared collections; trigger events;
 and interrupt execution of listeners.
 
-
 - File issues at https://github.com/zendframework/zend-eventmanager/issues
-- Documentation is at http://framework.zend.com/manual/current/en/index.html#zend-eventmanager
+- Documentation is at http://zend-eventmanager.rtfd.org
+
+For migration from version 2 to version 3, please [read the migration
+documentation](http://zend-eventmanager.readthedocs.org/en/latest/migration/intro/).
 
 ## Benchmarks
 
