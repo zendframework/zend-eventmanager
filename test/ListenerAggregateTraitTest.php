@@ -2,51 +2,48 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager;
 
-use ZendTest\EventManager\TestAsset\MockListenerAggregateTrait;
+use PHPUnit_Framework_TestCase as TestCase;
+use Prophecy\Argument;
+use Zend\EventManager\EventManagerInterface;
 
-class ListenerAggregateTraitTest extends \PHPUnit_Framework_TestCase
+class ListenerAggregateTraitTest extends TestCase
 {
-    /**
-     * @covers \Zend\EventManager\ListenerAggregateTrait::detach
-     */
-    public function testDetach()
+    public $aggregateClass = TestAsset\MockListenerAggregateTrait::class;
+
+    public function testDetachRemovesAttachedListeners()
     {
-        $listener              = new MockListenerAggregateTrait();
-        $eventManager          = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $unrelatedEventManager = $this->getMock('Zend\\EventManager\\EventManagerInterface');
-        $callbackHandlers      = [];
-        $test                  = $this;
+        $class     = $this->aggregateClass;
+        $aggregate = new $class();
 
-        $eventManager
-            ->expects($this->exactly(2))
-            ->method('attach')
-            ->will($this->returnCallback(function () use (&$callbackHandlers, $test) {
-                return $callbackHandlers[] = $test->getMock('Zend\\Stdlib\\CallbackHandler', [], [], '', false);
-            }));
+        $prophecy = $this->prophesize(EventManagerInterface::class);
+        $prophecy->attach('foo.bar', [$aggregate, 'doFoo'])->will(function ($args) {
+            return $args[1];
+        });
+        $prophecy->attach('foo.baz', [$aggregate, 'doFoo'])->will(function ($args) {
+            return $args[1];
+        });
+        $prophecy->detach([$aggregate, 'doFoo'])->shouldBeCalledTimes(2);
+        $events = $prophecy->reveal();
 
-        $listener->attach($eventManager);
-        $this->assertSame($callbackHandlers, $listener->getCallbacks());
+        $aggregate->attach($events);
 
-        $listener->detach($unrelatedEventManager);
+        $listeners = $aggregate->getCallbacks();
+        $this->assertInternalType('array', $listeners);
+        $this->assertCount(2, $listeners);
 
-        $this->assertSame($callbackHandlers, $listener->getCallbacks());
+        foreach ($listeners as $listener) {
+            $this->assertSame([$aggregate, 'doFoo'], $listener);
+        }
 
-        $eventManager
-            ->expects($this->exactly(2))
-            ->method('detach')
-            ->with($this->callback(function ($callbackHandler) use ($callbackHandlers) {
-                return in_array($callbackHandler, $callbackHandlers, true);
-            }))
-            ->will($this->returnValue(true));
+        $aggregate->detach($events);
 
-        $listener->detach($eventManager);
-        $this->assertEmpty($listener->getCallbacks());
+        $this->assertAttributeSame([], 'listeners', $aggregate);
     }
 }

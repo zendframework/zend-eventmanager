@@ -2,27 +2,25 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager\TestAsset;
 
 use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
 
-/**
- * @group      Zend_EventManager
- */
-class MockListenerAggregateTrait
+class MockListenerAggregateTrait implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
-    public function attach(EventManagerInterface $events)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach('foo.bar', array($this, 'doFoo'));
-        $this->listeners[] = $events->attach('foo.baz', array($this, 'doFoo'));
+        $this->listeners[] = $events->attach('foo.bar', [$this, 'doFoo']);
+        $this->listeners[] = $events->attach('foo.baz', [$this, 'doFoo']);
     }
 
     public function getCallbacks()

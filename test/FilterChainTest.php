@@ -2,9 +2,9 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager;
@@ -32,7 +32,7 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
     public function testSubscribeShouldReturnCallbackHandler()
     {
         $handle = $this->filterchain->attach([ $this, __METHOD__ ]);
-        $this->assertInstanceOf('Zend\Stdlib\CallbackHandler', $handle);
+        $this->assertSame([ $this, __METHOD__ ], $handle);
     }
 
     public function testSubscribeShouldAddCallbackHandlerToFilters()
@@ -145,24 +145,9 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($filterChain->run(null));
     }
 
-    public function testAttachThrowsInvalidCallbackException()
-    {
-        $filterChain = new FilterChain();
-
-        $this->setExpectedException('Zend\EventManager\Exception\InvalidCallbackException', 'No callback provided');
-        $filterChain->attach([]);
-    }
-
     public function testGetResponses()
     {
         $filterChain = new FilterChain();
         $this->assertNull($filterChain->getResponses());
-    }
-
-    public function testRunWithNullCallback()
-    {
-        $filterChain = new FilterChain();
-        $filterChain->getFilters()->insert(null, 1);
-        $this->assertNull($filterChain->run(null));
     }
 }

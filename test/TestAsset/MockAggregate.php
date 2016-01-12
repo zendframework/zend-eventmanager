@@ -2,9 +2,9 @@
 /**
  * Zend Framework (http://framework.zend.com/)
  *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
+ * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
  * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
  */
 
 namespace ZendTest\EventManager\TestAsset;
@@ -18,16 +18,16 @@ use Zend\EventManager\ListenerAggregateInterface;
 class MockAggregate implements ListenerAggregateInterface
 {
 
-    protected $listeners = array();
+    protected $listeners = [];
     public $priority;
 
-    public function attach(EventManagerInterface $events, $priority = null)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->priority = $priority;
 
-        $listeners = array();
-        $listeners[] = $events->attach('foo.bar', array( $this, 'fooBar' ));
-        $listeners[] = $events->attach('foo.baz', array( $this, 'fooBaz' ));
+        $listeners = [];
+        $listeners[] = $events->attach('foo.bar', [ $this, 'fooBar' ]);
+        $listeners[] = $events->attach('foo.baz', [ $this, 'fooBaz' ]);
 
         $this->listeners[ \spl_object_hash($events) ] = $listeners;
 
