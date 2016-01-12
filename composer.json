@@ -13,8 +13,8 @@
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev",
-            "dev-develop": "3.0-dev"
+            "dev-master": "3.0-dev",
+            "dev-develop": "3.1-dev"
         }
     },
     "autoload": {
@@ -29,12 +29,12 @@
         }
     },
     "require": {
-        "php": ">=5.5"
+        "php": "^5.5 || ^7.0"
     },
     "require-dev": {
         "phpunit/PHPUnit": "~4.0",
         "athletic/athletic": "^0.1",
-        "squizlabs/php_codesniffer": "^2.0@dev",
+        "squizlabs/php_codesniffer": "^2.0",
         "zendframework/zend-stdlib": "^2.7.3",
         "container-interop/container-interop": "^1.1.0"
     },
