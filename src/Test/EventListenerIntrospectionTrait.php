@@ -9,7 +9,7 @@
 
 namespace Zend\EventManager\Test;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit_Framework_Assert as Assert;
 use ReflectionProperty;
 use Zend\EventManager\EventManager;
 
@@ -103,7 +103,7 @@ trait EventListenerIntrospectionTrait
                 break;
             }
         }
-        TestCase::assertTrue($found, $message);
+        Assert::assertTrue($found, $message);
     }
 
     /**
