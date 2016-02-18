@@ -35,11 +35,11 @@
         "phpunit/PHPUnit": "~4.0",
         "athletic/athletic": "^0.1",
         "squizlabs/php_codesniffer": "^2.0",
-        "zendframework/zend-stdlib": "^2.7.3",
+        "zendframework/zend-stdlib": "^2.7.3 || ^3.0",
         "container-interop/container-interop": "^1.1.0"
     },
     "suggest": {
         "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
-        "zendframework/zend-stdlib": "^2.7.3, to use the FilterChain feature"
+        "zendframework/zend-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
     }
 }
