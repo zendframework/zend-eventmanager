@@ -13,15 +13,16 @@
         }
     },
     "require": {
-        "php": ">=5.5",
-        "zendframework/zend-stdlib": "~2.5"
+        "php": "^5.5 || ^7.0",
+        "zendframework/zend-stdlib": "^2.7"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "2.6-dev",
-            "dev-develop": "3.0-dev"
+            "dev-release-2.6": "2.6-dev",
+            "dev-master": "3.0-dev",
+            "dev-develop": "3.1-dev"
         }
     },
     "autoload-dev": {

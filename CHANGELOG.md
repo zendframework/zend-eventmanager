@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.6.3 - 2016-02-18
+
+### Added
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#23](https://github.com/zendframework/zend-eventmanager/pull/23) updates the
+  requirements to allow usage with PHP 7, bumps zend-stdlib to `^2.7`, and
+  requires PHP 7 builds to pass continuous integration.
+
 ## 2.6.2 - 2016-01-12
 
 ### Added
