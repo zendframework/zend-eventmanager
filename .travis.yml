@@ -10,6 +10,16 @@ branches:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.local
+    - zf-mkdoc-theme
+
+env:
+  global:
+    - SITE_URL: https://zendframework.github.io/zend-eventmanager
+    - GH_USER_NAME: "Matthew Weier O'Phinney"
+    - GH_USER_EMAIL: matthew@weierophinney.net
+    - GH_REF: github.com/zendframework/zend-eventmanager.git
+    - secure: ""
 
 matrix:
   fast_finish: true
@@ -21,6 +31,8 @@ matrix:
     - php: 5.6
       env:
         - EXECUTE_TEST_COVERALLS=true
+        - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
+        - PATH="$HOME/.local/bin:$PATH"
     - php: 7
     - php: hhvm 
   allow_failures:
@@ -33,21 +45,20 @@ notifications:
 before_install:
   - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
   - composer self-update
-  - if [[ $EXECUTE_DOC_CHECK == 'true' ]]; then composer require --dev --no-update phly/bookdown2mkdocs ; fi
   - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --dev --no-update satooshi/php-coveralls ; fi
 
 install:
   - travis_retry composer install --no-interaction --ignore-platform-reqs --prefer-source
   - composer info -i
 
-before_script:
-  - if [[ $EXECUTE_DOC_CHECK == 'true' ]]; then cp mkdocs.yml mkdocs.yml.orig ; fi
-
 script:
   - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit --coverage-clover clover.xml ; fi
   - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit ; fi
   - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/phpcs ; fi
-  - if [[ $EXECUTE_DOC_CHECK == 'true' ]]; then make mkdocs ; diff mkdocs.yml mkdocs.yml.orig ; return $? ; fi
+  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then wget -O theme-installer.sh "https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh" ; chmod 755 theme-installer.sh ; ./theme-installer.sh ; fi
+
+after_success:
+  - if [[ $DEPLOY_DOCS == "true" ]]; then echo "Preparing to build and deploy documentation" ; ./zf-mkdoc-theme/deploy.sh ; echo "Completed deploying documentation" ; fi
 
 after_script:
   - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
