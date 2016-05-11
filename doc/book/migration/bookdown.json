@@ -1,8 +1,0 @@
-{
-    "title": "Migration Guide",
-    "content": [
-        {"Introduction": "intro.md"},
-        {"Removed Functionality": "removed.md"},
-        {"Changed Functionality": "changed.md"}
-    ]
-}

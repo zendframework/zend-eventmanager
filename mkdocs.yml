@@ -2,17 +2,25 @@ docs_dir: doc/book
 site_dir: doc/html
 pages:
     - index.md
-    - { Overview: intro.md }
-    - { 'Quick Start': quick-start.md }
-    - { Tutorial: tutorial.md }
-    - { 'Wildcard Listeners': wildcard-listeners.md }
-    - { 'Listener Aggregates': aggregates.md }
-    - { 'Lazy Listeners': [{ Introduction: lazy-listeners/intro.md }, { LazyListener: lazy-listeners/lazy-listener.md }, { LazyEventListener: lazy-listeners/lazy-event-listener.md }, { LazyListenerAggregate: lazy-listeners/lazy-listener-aggregate.md }] }
-    - { Examples: examples.md }
-    - { 'EventManager API': api.md }
-    - { 'Intercepting Filters': intercepting-filters.md }
-    - { 'Migration Guide': [{ Introduction: migration/intro.md }, { 'Removed Functionality': migration/removed.md }, { 'Changed Functionality': migration/changed.md }] }
+    - Intro: intro.md
+    - "Quick Start": quick-start.md
+    - Tutorial: tutorial.md
+    - Reference:
+        - "Wildcard Listeners": wildcard-listeners.md
+        - "Listener Aggregates": aggregates.md
+        - "Lazy Listeners":
+            - Intro: lazy-listeners/intro.md
+            - LazyListener: lazy-listeners/lazy-listener.md
+            - LazyEventListener: lazy-listeners/lazy-event-listener.md
+            - LazyListenerAggregate: lazy-listeners/lazy-listener-aggregate.md
+        - Examples: examples.md
+        - "EventManager API": api.md
+        - "Intercepting Filters": intercepting-filters.md
+        - "Migration Guide":
+            - Intro: migration/intro.md
+            - "Removed Functionality": migration/removed.md
+            - "Changed Functionality": migration/changed.md
 site_name: zend-eventmanager
-site_description: 'zend-eventmanager: Powerful event bus system for Zend Framework'
+site_description: "zend-eventmanager: Powerful event bus system for Zend Framework"
 repo_url: 'https://github.com/zendframework/zend-eventmanager'
 copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
