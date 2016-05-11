@@ -7,10 +7,11 @@
 .*.un~
 nbproject
 tmp/
+doc/html/
+zf-mkdoc-theme/
 
 clover.xml
 composer.lock
 coveralls-upload.json
 phpunit.xml
-doc/html/
 vendor/
