@@ -114,7 +114,7 @@ $events->triggerUntil(function ($result) {
 In the above example, the event loop will short-circuit after the second
 listener executes, resulting in the following output:
 
-```
+```text
 Triggered first
 Triggered second
 ```

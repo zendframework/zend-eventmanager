@@ -24,7 +24,8 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#26](https://github.com/zendframework/zend-eventmanager/pull/26) publishes
+  the documentation to https://zendframework.github.io/zend-eventmanager/
 
 ### Deprecated
 

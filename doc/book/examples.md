@@ -206,7 +206,7 @@ class CacheListener implements ListenerAggregateInterface
 
 We can then attach the aggregate to an event manager instance.
 
-```
+```php
 $value         = new SomeValueObject();
 $cacheListener = new CacheListener($cache);
 $cacheListener->attach($value->getEventManager());
