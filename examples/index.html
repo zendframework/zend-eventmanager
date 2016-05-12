@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    <title>Examples - zend-eventmanager</title>
+
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/zf.css" rel="stylesheet">
+    <link href="../css/prism-zf.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <span class="navbar-brand">
+              <a class="logo-link" href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Zend Framework"><img src="../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
+              <a href="..">zend-eventmanager</a>
+            </span>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../intro/">Intro</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../quick-start/">Quick Start</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../tutorial/">Tutorial</a>
+                    </li>
+                
+                
+                
+                    <li class="active">
+                        <a href="./">Examples</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reference <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../wildcard-listeners/">Wildcard Listeners</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../aggregates/">Listener Aggregates</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Lazy Listeners</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../lazy-listeners/intro/">Intro</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-listener/">LazyListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-event-listener/">LazyEventListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-listener-aggregate/">LazyListenerAggregate</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                            
+<li >
+    <a href="../api/">EventManager API</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../intercepting-filters/">Intercepting Filters</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Migration Guide</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../migration/intro/">Intro</a>
+</li>
+
+        
+            
+<li >
+    <a href="../migration/removed/">Removed Functionality</a>
+</li>
+
+        
+            
+<li >
+    <a href="../migration/changed/">Changed Functionality</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" class="component-toggle" data-toggle="tooltip" data-placement="bottom" title="Show component list">
+                        <i class="fa fa-book"></i> Components
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li>
+                        <a href="https://github.com/zendframework/zend-eventmanager">
+                            
+                                <i class="fa fa-github"></i>
+                            
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- content:begin -->
+    <div class="container">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#examples">Examples</a></li>
+        
+            <li><a href="#modifying-arguments">Modifying Arguments</a></li>
+        
+            <li><a href="#short-circuiting">Short Circuiting</a></li>
+        
+            <li><a href="#assigning-priority-to-listeners">Assigning Priority to Listeners</a></li>
+        
+    
+    </ul>
+
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../tutorial/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../wildcard-listeners/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
+    
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="..">Docs</a> &raquo;</li>
+  
+    
+  
+  <li class="active">Examples</li>
+</ol>
+
+<h1 id="examples">Examples</h1>
+<h2 id="modifying-arguments">Modifying Arguments</h2>
+<p>Occasionally it can be useful to allow listeners to modify the arguments they
+receive so that later listeners or the calling method will receive those changed
+values.</p>
+<p>As an example, you might want to pre-filter a date that you know will arrive as
+a string and convert it to a <code>DateTime</code> argument.</p>
+<p>To do this, you can pass your arguments to <code>prepareArgs()</code>, and pass this new
+object when triggering an event. You will then pull that value back into your
+method.</p>
+<pre class="codehilite"><code class="language-php">use DateTime;
+
+class ValueObject
+{
+    // assume a composed event manager
+
+    function inject(array $values)
+    {
+        $argv = compact('values');
+        $argv = $this-&gt;getEventManager()-&gt;prepareArgs($argv);
+        $this-&gt;getEventManager()-&gt;trigger(__FUNCTION__, $this, $argv);
+        $date = isset($argv['values']['date'])
+            ? $argv['values']['date']
+            : new DateTime('now');
+
+        // ...
+    }
+}
+
+$v = new ValueObject();
+
+$v-&gt;getEventManager()-&gt;attach('inject', function($e) {
+    $values = $e-&gt;getParam('values');
+    if (! $values) {
+        return;
+    }
+
+    $values['date'] = isset($values['date'])
+        ? new DateTime($values['date'])
+        : new DateTime('now');
+
+    $e-&gt;setParam('values', $values);
+});
+
+$v-&gt;inject([
+    'date' =&gt; '2011-08-10 15:30:29',
+]);</code></pre>
+
+
+<h2 id="short-circuiting">Short Circuiting</h2>
+<p>One common use case for events is to trigger listeners until either one
+indicates no further processing should be done, or until a return value meets
+specific criteria.</p>
+<p>As an example, a request listener might be able to return a response object, and
+would signal to the target to stop event propagation.</p>
+<pre class="codehilite"><code class="language-php">$listener = function($e) {
+    // do some work
+
+    // Stop propagation and return a response
+    $e-&gt;stopPropagation(true);
+    return $response;
+};</code></pre>
+
+
+<p>Alternately, the request handler could halt execution at the first listener that
+returns a response.</p>
+<pre class="codehilite"><code class="language-php">class Foo implements DispatchableInterface
+{
+    // assume composed event manager
+
+    public function dispatch(Request $request, Response $response = null)
+    {
+        $argv = compact('request', 'response');
+        $results = $this-&gt;getEventManager()-&gt;triggerUntil(function($v) {
+            return ($v instanceof Response);
+        }, __FUNCTION__, $this, $argv);
+    }
+}</code></pre>
+
+
+<p>Typically, you may want to return the value that stopped execution, or use it
+some way. All <code>trigger*()</code> methods return a <code>ResponseCollection</code> instance; call
+its <code>stopped()</code> method to test if execution was stopped, and the <code>last()</code> method
+to retrieve the return value from the last executed listener:</p>
+<pre class="codehilite"><code class="language-php">class Foo implements DispatchableInterface
+{
+    // assume composed event manager
+
+    public function dispatch(Request $request, Response $response = null)
+    {
+        $argv = compact('request', 'response');
+        $results = $this-&gt;getEventManager()-&gt;triggerUntil(function($v) {
+            return ($v instanceof Response);
+        }, __FUNCTION__, $this, $argv);
+
+        // Test if execution was halted, and return last result:
+        if ($results-&gt;stopped()) {
+            return $results-&gt;last();
+        }
+
+        // continue...
+    }
+}</code></pre>
+
+
+<h2 id="assigning-priority-to-listeners">Assigning Priority to Listeners</h2>
+<p>One use case for the <code>EventManager</code> is for implementing caching systems. As
+such, you often want to check the cache early, and save to it late.</p>
+<p>The third argument to <code>attach()</code> is a priority value. The higher this number,
+the earlier that listener will execute; the lower it is, the later it executes.
+The value defaults to 1, and values will trigger in the order registered within
+a given priority.</p>
+<p>To implement a caching system, our method will need to trigger an event at
+method start as well as at method end. At method start, we want an event that
+will trigger early; at method end, an event should trigger late.</p>
+<p>Here is the class in which we want caching:</p>
+<pre class="codehilite"><code class="language-php">class SomeValueObject
+{
+    // assume it composes an event manager
+
+    public function get($id)
+    {
+        $params = compact('id');
+        $results = $this-&gt;getEventManager()-&gt;trigger('get.pre', $this, $params);
+
+        // If an event stopped propagation, return the value
+        if ($results-&gt;stopped()) {
+            return $results-&gt;last();
+        }
+
+        // do some work...
+
+        $params['__RESULT__'] = $someComputedContent;
+        $this-&gt;getEventManager()-&gt;trigger('get.post', $this, $params);
+    }
+}</code></pre>
+
+
+<p>Now, let's create a <code>ListenerAggregateInterface</code> implementation that can handle
+caching for us:</p>
+<pre class="codehilite"><code class="language-php">use Zend\Cache\Cache;
+use Zend\EventManager\EventManagerInterface;
+use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ListenerAggregateTrait;
+use Zend\EventManager\EventInterface;
+
+class CacheListener implements ListenerAggregateInterface
+{
+    use ListenerAggregateTrait;
+
+    private $cache;
+
+    public function __construct(Cache $cache)
+    {
+        $this-&gt;cache = $cache;
+    }
+
+    public function attach(EventManagerInterface $events)
+    {
+        $this-&gt;listeners[] = $events-&gt;attach('get.pre', [$this, 'load'], 100);
+        $this-&gt;listeners[] = $events-&gt;attach('get.post', [$this, 'save'], -100);
+    }
+
+    public function load(EventInterface $e)
+    {
+        $id = get_class($e-&gt;getTarget()) . '-' . json_encode($e-&gt;getParams());
+        if (false !== ($content = $this-&gt;cache-&gt;load($id))) {
+            $e-&gt;stopPropagation(true);
+            return $content;
+        }
+    }
+
+    public function save(EventInterface $e)
+    {
+        $params  = $e-&gt;getParams();
+        $content = $params['__RESULT__'];
+        unset($params['__RESULT__']);
+
+        $id = get_class($e-&gt;getTarget()) . '-' . json_encode($params);
+        $this-&gt;cache-&gt;save($content, $id);
+    }
+}</code></pre>
+
+
+<p>We can then attach the aggregate to an event manager instance.</p>
+<pre class="codehilite"><code class="language-php">$value         = new SomeValueObject();
+$cacheListener = new CacheListener($cache);
+$cacheListener-&gt;attach($value-&gt;getEventManager());</code></pre>
+
+
+<p>Now, as we call <code>get()</code>, if we have a cached entry, it will be returned
+immediately; if not, a computed entry will be cached when we complete the
+method.</p>
+
+<hr />
+
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../tutorial/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../wildcard-listeners/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+</div>
+        
+    </div>
+    <!-- content:end -->
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
+        </p>
+        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
+    </footer>
+
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../js/prism-zf.js"></script>
+
+    <script>var base_url = '..';</script>
+    <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+    <script src="../js/base.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="zf-components">
+  <div class="zf-components-grid">
+    <div class="zf-logo">
+      <a href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../img/zf-logo-mark.png" alt="Zend Framework" width="250" /></a>
+    </div>
+
+    <div class="component-list"></div>
+
+    <p class="zf-components-rollup"><a href="#">Hide list</a></p>
+  </div>
+</div>
+
+    <script>
+  // Prepare the component list dropdown for display
+  $(function () {
+    var components = $(".zf-components"),
+        componentList = components.find(".component-list"),
+        sidebar = $(".bs-sidebar.affix"),
+        sidebarInitialPos = sidebar.css("position"),
+        hidden,
+        componentToggle = $(".component-toggle"),
+        navbar = $(".navbar-fixed-top"),
+        rollUpLink = $(".zf-components-rollup a");
+
+    // Initial setup on document load
+    components.insertBefore(navbar);
+    $(".zf-logo a").tooltip();
+    componentToggle.tooltip();
+    rollUpLink.attr({ href: "#", alt: "Hide component list" });
+
+    // Cast initial sidebar position value
+    if (undefined === sidebarInitialPos) {
+      sidebarInitialPos = "fixed";
+    }
+
+    // Setup onclick events to toggle list
+    componentToggle.click(toggleComponentList);
+    rollUpLink.click(toggleComponentList);
+
+    // Toggle the component list display
+    function toggleComponentList(event) {
+      event.preventDefault();
+
+      if (hidden === undefined) {
+        // Not loaded yet; load and display.
+        loadComponentList();
+        return;
+      }
+
+      if (hidden) {
+        // Hidden; display.
+        showComponentList();
+        return;
+      }
+
+      // Currently visible; hide
+      hideComponentList();
+    }
+
+    // Show the component list
+    function showComponentList() {
+      navbar.css({position: "relative"});
+      sidebar.css({position: "relative"});
+      components
+        .css({"margin-top": "-" + components.outerHeight() + "px"})
+        .show()
+        .animate({"margin-top": 0}, {
+          complete: function () {
+            componentToggle
+              .data("placement", "top")
+              .attr("data-original-title", "Hide component list");
+            hidden = false;
+          },
+          queue: false
+        });
+    }
+
+    // Hide the component list
+    function hideComponentList() {
+      components.animate({"margin-top": "-" + components.outerHeight() + "px"}, {
+        complete: function () {
+          navbar.css({position: "fixed"});
+          sidebar.css({position: sidebarInitialPos});
+          componentToggle
+            .data("placement", "bottom")
+            .attr("data-original-title", "Show component list");
+          components.hide();
+          hidden = true;
+        },
+        queue: false
+      });
+      sidebar.animate({ top: sidebarInitialTop + "px" }, { queue: false});
+    }
+
+    // Inject a component into the componet list DOM.
+    function injectComponent(index, component) {
+      componentList.append('<div class="component"><h4><a href="' + component.url + '">' + component.name + '</a></h4><p>' + component.description + '</p></div>');
+    }
+
+    // Parse the component list, build the DOM, and display it.
+    function parseComponentList(components) {
+      $.each(components, injectComponent);
+      showComponentList();
+    }
+
+    // Fetch the component list and display it.
+    function loadComponentList () {
+      $.ajax({
+        url: "//zendframework.github.io/zf-mkdoc-theme/scripts/zf-component-list.json",
+        dataType: "text json",
+        success: parseComponentList,
+        error: function (e) {
+          console.log("Error occurred with XHR call", e);
+        }
+      });
+    }
+  });
+</script>
+    </body>
+
+</html>

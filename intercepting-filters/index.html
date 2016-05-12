@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../img/favicon.ico">
+
+    <title>Intercepting Filters - zend-eventmanager</title>
+
+    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="../css/base.css" rel="stylesheet">
+    <link href="../css/zf.css" rel="stylesheet">
+    <link href="../css/prism-zf.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <span class="navbar-brand">
+              <a class="logo-link" href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Zend Framework"><img src="../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
+              <a href="..">zend-eventmanager</a>
+            </span>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../intro/">Intro</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../quick-start/">Quick Start</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../tutorial/">Tutorial</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../examples/">Examples</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reference <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../wildcard-listeners/">Wildcard Listeners</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../aggregates/">Listener Aggregates</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Lazy Listeners</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../lazy-listeners/intro/">Intro</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-listener/">LazyListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-event-listener/">LazyEventListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../lazy-listeners/lazy-listener-aggregate/">LazyListenerAggregate</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                            
+<li >
+    <a href="../api/">EventManager API</a>
+</li>
+
+                        
+                            
+<li class="active">
+    <a href="./">Intercepting Filters</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Migration Guide</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../migration/intro/">Intro</a>
+</li>
+
+        
+            
+<li >
+    <a href="../migration/removed/">Removed Functionality</a>
+</li>
+
+        
+            
+<li >
+    <a href="../migration/changed/">Changed Functionality</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" class="component-toggle" data-toggle="tooltip" data-placement="bottom" title="Show component list">
+                        <i class="fa fa-book"></i> Components
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li>
+                        <a href="https://github.com/zendframework/zend-eventmanager">
+                            
+                                <i class="fa fa-github"></i>
+                            
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- content:begin -->
+    <div class="container">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#intercepting-filters">Intercepting Filters</a></li>
+        
+            <li><a href="#preparation">Preparation</a></li>
+        
+            <li><a href="#filterchaininterface">FilterChainInterface</a></li>
+        
+            <li><a href="#filteriterator">FilterIterator</a></li>
+        
+            <li><a href="#filters">Filters</a></li>
+        
+            <li><a href="#execution">Execution</a></li>
+        
+            <li><a href="#notes">Notes</a></li>
+        
+    
+    </ul>
+
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../api/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../migration/intro/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
+    
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="..">Docs</a> &raquo;</li>
+  
+    
+      
+        <li>Reference &raquo;</li>
+      
+    
+  
+  <li class="active">Intercepting Filters</li>
+</ol>
+
+<h1 id="intercepting-filters">Intercepting Filters</h1>
+<p><a href="https://en.wikipedia.org/wiki/Interceptor_pattern">Intercepting filters</a> are a
+design pattern used for providing mechanisms to alter the workflow of an
+application. Implementing them provides a way to have a standard public
+interface, with the ability to attach arbitrary numbers of filters that will
+take the incoming arguments in order to alter the workflow.</p>
+<p>zend-eventmanager provides an intercepting filter implementation via
+<code>Zend\EventManager\FilterChain</code>.</p>
+<h2 id="preparation">Preparation</h2>
+<p>To use the <code>FilterChain</code> implementation, you will need to install zend-stdlib,
+if you have not already:</p>
+<pre class="codehilite"><code class="language-bash">$ composer require zendframework/zend-stdlib</code></pre>
+
+
+<h2 id="filterchaininterface">FilterChainInterface</h2>
+<p><code>Zend\EventManager\FilterChain</code> is a concrete implementation of
+<code>Zend\EventManager\Filter\FilterInterface</code>, which defines a workflow for
+intercepting filters. This includes the following methods:</p>
+<pre class="codehilite"><code class="language-php">interface FilterInterface
+{
+    public function run($context, array $params = []);
+
+    public function attach(callable $callback);
+    public function detach(callable $callback);
+
+    public function getFilters();
+    public function clearFilters();
+    public function getResponses();
+}</code></pre>
+
+
+<p>In many ways, it's very similar to the <code>EventManagerInterface</code>, but with a few
+key differences:</p>
+<ul>
+<li>A filter essentially defines a single event, which obviates the need for
+  attaching to multiple events. As such, you pass the target and parameters only
+  when "triggering" (<code>run()</code>) a filter.</li>
+<li>Instead of passing an <code>EventInterface</code> to each attached filter, a
+  <code>FilterInterface</code> implementation will pass:</li>
+<li>The <code>$context</code></li>
+<li>The <code>$params</code></li>
+<li>A <code>FilterIterator</code>, to allow the listener to call on the next filter.</li>
+</ul>
+<h2 id="filteriterator">FilterIterator</h2>
+<p>When executing <code>run()</code>, a <code>FilterInterface</code> implementation is expected to
+provide the stack of attached filters to each listener. This stack will
+typically be a <code>Zend\EventManager\Filter\FilterIterator</code> instance.</p>
+<p><code>FilterIterator</code> extends <code>Zend\Stdlib\FastPriorityQueue</code>, and, as such, is
+iterable, and provides the method <code>next()</code> for advancing the queue. </p>
+<p>As such, a listener should decide if more processing is necessary, and, if so,
+call on <code>$chain-&gt;next()</code>, passing the same set of arguments.</p>
+<h2 id="filters">Filters</h2>
+<p>A filter attached to a <code>FilterChain</code> instance can be any callable. However,
+these callables should expect the following arguments:</p>
+<pre class="codehilite"><code class="language-php">function ($context, array $argv, FilterIterator $chain)</code></pre>
+
+
+<p>A filter can therefore act on the provided <code>$context</code>, using the provided
+arguments.</p>
+<p>Part of that execution can also be deciding that other filters should be called.
+To do so, it will call <code>$chain-&gt;next()</code>, providing it the same arguments:</p>
+<pre class="codehilite"><code class="language-php">function ($context, array $argv, FilterIterator $chain)
+{
+    $message = isset($argv['message']) ? $argv['message'] : '';
+
+    $message = str_rot13($message);
+
+    $filtered = $chain-&gt;next($context, ['message' =&gt; $message], $chain);
+
+    return str_rot13($filtered);
+}</code></pre>
+
+
+<p>You can choose to call <code>$chain-&gt;next()</code> at any point in the filter, allowing you
+to:</p>
+<ul>
+<li>pre-process arguments and/or alter the state of the <code>$context</code>.</li>
+<li>post-process results and/or alter the state of the <code>$context</code> based on the
+  results.</li>
+<li>skip processing entirely if criteria is not met (e.g., missing arguments,
+  invalid <code>$context</code> state).</li>
+<li>short-circuit the chain if no processing is necessary (e.g., a cache hit is
+  detected).</li>
+</ul>
+<h2 id="execution">Execution</h2>
+<p>When executing a filter chain, you will provide the <code>$context</code>, which is usually
+the object under observation, and arguments, which are typically the arguments
+passed to the method triggering the filter chain.</p>
+<p>As an example, consider the following filter-enabled class:</p>
+<pre class="codehilite"><code class="language-php">use Zend\EventManager\FilterChain;
+
+class ObservedTarget
+{
+    private $filters = [];
+
+    public function attachFilter($method, callable $listener)
+    {
+        if (! method_exists($this, $method)) {
+            throw new \InvalidArgumentException('Invalid method');
+        }
+        $this-&gt;getFilters($method)-&gt;attach($listener);
+    }
+
+    public function execute($message)
+    {
+        return $this-&gt;getFilters(__FUNCTION__)
+            -&gt;run($this, compact('message'));
+    }
+
+    private function getFilters($method)
+    {
+        if (! isset($this-&gt;filters[$method])) {
+            $this-&gt;filters[$method] = new FilterChain();
+        }
+        return $this-&gt;filters[$method];
+    }
+}</code></pre>
+
+
+<p>Now, let's create an instance of the class, and attach some filters to it.</p>
+<pre class="codehilite"><code class="language-php">$observed = new ObservedTarget();
+
+$observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
+    $args['message'] = isset($args['message'])
+        ? strtoupper($args['message'])
+        : '';
+
+    return $chain-&gt;next($context, $args, $chain);
+});
+
+$observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
+    return (isset($args['message'])
+        ? str_rot13($args['message'])
+        : '');
+});
+
+$observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
+    return (isset($args['message'])
+        ? strtolower($args['message'])
+        : '');
+});</code></pre>
+
+
+<p>Finally, we'll call the method, and see what results we get:</p>
+<pre class="codehilite"><code class="language-php">$observed-&gt;execute('Hello, world!');</code></pre>
+
+
+<p>Since filters are run in the order in which they are attached, the following
+will occur:</p>
+<ul>
+<li>The first filter will transform our message into <code>HELLO, WORLD!</code>, and then
+  call on the next filter.</li>
+<li>The second filter will apply a ROT13 transformation on the string and <em>return</em>
+  it: <code>!DLROW ,OLLEH</code>.</li>
+</ul>
+<p>Because the second filter does not call <code>$chain-&gt;next()</code>, the third filter never
+executes.</p>
+<h2 id="notes">Notes</h2>
+<p>We recommend using the construct <code>run($this, compact(method argument names)</code>
+when invoking a <code>FilterChain</code>. This makes the argument keys predictable inside
+filters.</p>
+<p>We also recommend putting the default logic for the method invoking the filter
+chain in a filter itself, and attaching it at invocation. This allows
+intercepting filters to replace the main logic, while still providing a default
+path. This might look like:</p>
+<pre class="codehilite"><code class="language-php">// Assume that the class contains the `attachFilter()` implementation from above.
+class ObservedTarget
+{
+    private $attached = [];
+
+    public function execute($message)
+    {
+        if (! isset($this-&gt;attached[__FUNCTION__])) {
+            $this-&gt;attachFilter(__FUNCTION__, $this-&gt;getExecuteFilter();
+        }
+
+        return $this-&gt;getFilters(__FUNCTION__)
+            -&gt;run($this, compact('message'));
+    }
+
+    private function getExecuteFilter()
+    {
+        $this-&gt;attached['execute'] = true;
+        return function ($context, array $args, FilterIterator $chain) {
+            return $args['message'];
+        };
+    }
+}</code></pre>
+
+
+<p>Intercepting filters are a powerful way to introduce aspect-oriented programming
+paradigms into your code, as well as general-purpose mechanisms for introducing
+plugins.</p>
+
+<hr />
+
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../api/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../migration/intro/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+</div>
+        
+    </div>
+    <!-- content:end -->
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
+        </p>
+        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
+    </footer>
+
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../js/prism-zf.js"></script>
+
+    <script>var base_url = '..';</script>
+    <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
+    <script src="../js/base.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="zf-components">
+  <div class="zf-components-grid">
+    <div class="zf-logo">
+      <a href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../img/zf-logo-mark.png" alt="Zend Framework" width="250" /></a>
+    </div>
+
+    <div class="component-list"></div>
+
+    <p class="zf-components-rollup"><a href="#">Hide list</a></p>
+  </div>
+</div>
+
+    <script>
+  // Prepare the component list dropdown for display
+  $(function () {
+    var components = $(".zf-components"),
+        componentList = components.find(".component-list"),
+        sidebar = $(".bs-sidebar.affix"),
+        sidebarInitialPos = sidebar.css("position"),
+        hidden,
+        componentToggle = $(".component-toggle"),
+        navbar = $(".navbar-fixed-top"),
+        rollUpLink = $(".zf-components-rollup a");
+
+    // Initial setup on document load
+    components.insertBefore(navbar);
+    $(".zf-logo a").tooltip();
+    componentToggle.tooltip();
+    rollUpLink.attr({ href: "#", alt: "Hide component list" });
+
+    // Cast initial sidebar position value
+    if (undefined === sidebarInitialPos) {
+      sidebarInitialPos = "fixed";
+    }
+
+    // Setup onclick events to toggle list
+    componentToggle.click(toggleComponentList);
+    rollUpLink.click(toggleComponentList);
+
+    // Toggle the component list display
+    function toggleComponentList(event) {
+      event.preventDefault();
+
+      if (hidden === undefined) {
+        // Not loaded yet; load and display.
+        loadComponentList();
+        return;
+      }
+
+      if (hidden) {
+        // Hidden; display.
+        showComponentList();
+        return;
+      }
+
+      // Currently visible; hide
+      hideComponentList();
+    }
+
+    // Show the component list
+    function showComponentList() {
+      navbar.css({position: "relative"});
+      sidebar.css({position: "relative"});
+      components
+        .css({"margin-top": "-" + components.outerHeight() + "px"})
+        .show()
+        .animate({"margin-top": 0}, {
+          complete: function () {
+            componentToggle
+              .data("placement", "top")
+              .attr("data-original-title", "Hide component list");
+            hidden = false;
+          },
+          queue: false
+        });
+    }
+
+    // Hide the component list
+    function hideComponentList() {
+      components.animate({"margin-top": "-" + components.outerHeight() + "px"}, {
+        complete: function () {
+          navbar.css({position: "fixed"});
+          sidebar.css({position: sidebarInitialPos});
+          componentToggle
+            .data("placement", "bottom")
+            .attr("data-original-title", "Show component list");
+          components.hide();
+          hidden = true;
+        },
+        queue: false
+      });
+      sidebar.animate({ top: sidebarInitialTop + "px" }, { queue: false});
+    }
+
+    // Inject a component into the componet list DOM.
+    function injectComponent(index, component) {
+      componentList.append('<div class="component"><h4><a href="' + component.url + '">' + component.name + '</a></h4><p>' + component.description + '</p></div>');
+    }
+
+    // Parse the component list, build the DOM, and display it.
+    function parseComponentList(components) {
+      $.each(components, injectComponent);
+      showComponentList();
+    }
+
+    // Fetch the component list and display it.
+    function loadComponentList () {
+      $.ajax({
+        url: "//zendframework.github.io/zf-mkdoc-theme/scripts/zf-component-list.json",
+        dataType: "text json",
+        success: parseComponentList,
+        error: function (e) {
+          console.log("Error occurred with XHR call", e);
+        }
+      });
+    }
+  });
+</script>
+    </body>
+
+</html>

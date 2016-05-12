@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    <title>Removed Functionality - zend-eventmanager</title>
+
+    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/zf.css" rel="stylesheet">
+    <link href="../../css/prism-zf.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+    <script>
+    WebFont.load({
+        google: {
+            families: ['Open Sans', 'PT Sans']
+        }
+    });
+    </script>
+
+    
+</head>
+
+<body>
+
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            
+
+            <!-- Main title -->
+            <span class="navbar-brand">
+              <a class="logo-link" href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Zend Framework"><img src="../../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
+              <a href="../..">zend-eventmanager</a>
+            </span>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            
+                <!-- Main navigation -->
+                <ul class="nav navbar-nav">
+                
+                
+                    <li >
+                        <a href="../..">Home</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../intro/">Intro</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../quick-start/">Quick Start</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../tutorial/">Tutorial</a>
+                    </li>
+                
+                
+                
+                    <li >
+                        <a href="../../examples/">Examples</a>
+                    </li>
+                
+                
+                
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reference <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        
+                            
+<li >
+    <a href="../../wildcard-listeners/">Wildcard Listeners</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../aggregates/">Listener Aggregates</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Lazy Listeners</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../../lazy-listeners/intro/">Intro</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../lazy-listeners/lazy-listener/">LazyListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../lazy-listeners/lazy-event-listener/">LazyEventListener</a>
+</li>
+
+        
+            
+<li >
+    <a href="../../lazy-listeners/lazy-listener-aggregate/">LazyListenerAggregate</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                            
+<li >
+    <a href="../../api/">EventManager API</a>
+</li>
+
+                        
+                            
+<li >
+    <a href="../../intercepting-filters/">Intercepting Filters</a>
+</li>
+
+                        
+                            
+  <li class="dropdown-submenu">
+    <a tabindex="-1" href="">Migration Guide</a>
+    <ul class="dropdown-menu">
+        
+            
+<li >
+    <a href="../intro/">Intro</a>
+</li>
+
+        
+            
+<li class="active">
+    <a href="./">Removed Functionality</a>
+</li>
+
+        
+            
+<li >
+    <a href="../changed/">Changed Functionality</a>
+</li>
+
+        
+    </ul>
+  </li>
+
+                        
+                        </ul>
+                    </li>
+                
+                
+                </ul>
+            
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#" class="component-toggle" data-toggle="tooltip" data-placement="bottom" title="Show component list">
+                        <i class="fa fa-book"></i> Components
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                
+                    <li>
+                        <a href="https://github.com/zendframework/zend-eventmanager">
+                            
+                                <i class="fa fa-github"></i>
+                            
+                            GitHub
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- content:begin -->
+    <div class="container">
+        
+        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#removed-functionality">Removed Functionality</a></li>
+        
+            <li><a href="#globaleventmanager-and-staticeventmanager">GlobalEventManager and StaticEventManager</a></li>
+        
+            <li><a href="#providesevents">ProvidesEvents</a></li>
+        
+            <li><a href="#eventmanagerinterfacesetsharedmanager">EventManagerInterface::setSharedManager()</a></li>
+        
+            <li><a href="#eventmanagerinterfacegetevents-and-getlisteners">EventManagerInterface::getEvents() and getListeners()</a></li>
+        
+            <li><a href="#eventmanagerinterfaceseteventclass">EventManagerInterface::setEventClass()</a></li>
+        
+            <li><a href="#eventmanagerinterfaceattachaggregate-and-detachaggregate">EventManagerInterface::attachAggregate() and detachAggregate()</a></li>
+        
+            <li><a href="#sharedeventaggregateawareinterface-sharedlisteneraggregateinterface">SharedEventAggregateAwareInterface, SharedListenerAggregateInterface</a></li>
+        
+            <li><a href="#sharedeventmanagerinterfacegetevents">SharedEventManagerInterface::getEvents()</a></li>
+        
+    
+    </ul>
+
+    
+    <ul class="pager hidden-print">
+      <li class="previous">
+        <a rel="prev" href="../intro/"><i class="fa fa-arrow-left"></i> Previous</a>
+      </li>
+      <li class="next">
+        <a rel="next" href="../changed/">Next <i class="fa fa-arrow-right"></i></a>
+      </li>
+    </ul>
+    
+</div></div>
+        <div class="col-md-9" role="main">
+
+<ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+  <li><a href="../..">Docs</a> &raquo;</li>
+  
+    
+      
+        <li>Reference &raquo;</li>
+      
+    
+      
+        <li>Migration Guide &raquo;</li>
+      
+    
+  
+  <li class="active">Removed Functionality</li>
+</ol>
+
+<h1 id="removed-functionality">Removed Functionality</h1>
+<p>The following interfaces, classes, and methods have been removed for version 3.</p>
+<h2 id="globaleventmanager-and-staticeventmanager">GlobalEventManager and StaticEventManager</h2>
+<p><code>Zend\EventManager\GlobalEventManager</code> and
+<code>Zend\EventManager\StaticEventManager</code> were removed, and there are no
+replacements.  Global static state is generally considered a dangerous practice
+due to the side effects it can create, and we felt it was better to remove the
+option from the framework entirely.</p>
+<h2 id="providesevents">ProvidesEvents</h2>
+<p>The trait <code>Zend\EventManager\ProvidesEvents</code> has been deprecated for most of
+the 2.0 series; use <code>Zend\EventManager\EventManagerAwareTrait</code> instead.</p>
+<h2 id="eventmanagerinterfacesetsharedmanager">EventManagerInterface::setSharedManager()</h2>
+<p>We have removed <code>EventManagerInterface::setSharedManager()</code>, and also removed it
+from the <code>EventManager</code> implementation. The <code>SharedEventManager</code> should be
+injected during instantiation now.</p>
+<h2 id="eventmanagerinterfacegetevents-and-getlisteners">EventManagerInterface::getEvents() and getListeners()</h2>
+<p>We have removed both <code>EventManagerInterface::getEvents()</code> and <code>getListeners()</code>,
+as we did not have a stated use case for the methods. The event manager should
+be something that aggregates listeners and triggers events; the details of what
+listeners or events are attached is largely irrelevant.</p>
+<p>The primary use case for <code>getListeners()</code> is often to determine if a listener is
+attached before detaching it. Since <code>detach()</code> acts as a no-op if the provided
+listener is not present, checking for presence first is not necessary.</p>
+<h2 id="eventmanagerinterfaceseteventclass">EventManagerInterface::setEventClass()</h2>
+<p>The method <code>EventManagerInterface::setEventClass()</code> was removed and replaced
+with <code>EventManagerInterface::setEventPrototype()</code>, which has the following
+signature:</p>
+<pre class="codehilite"><code class="language-php">setEventPrototype(EventInterface $event);</code></pre>
+
+
+<p>This was done to prevent errors that occurred when invalid event class names
+were provided. Additionally, internally, event managers will clone the
+instance any time <code>trigger()</code> or <code>triggerUntil()</code> are called — which is
+typically faster and less resource intensive than instantiating a new instance.</p>
+<h2 id="eventmanagerinterfaceattachaggregate-and-detachaggregate">EventManagerInterface::attachAggregate() and detachAggregate()</h2>
+<p>The methods <code>attachAggregate()</code> and <code>detachAggregate()</code> were removed from the
+<code>EventManagerInterface</code> and concrete <code>EventManager</code> implementation. Furthermore,
+<code>attach()</code> and <code>detach()</code> no longer handle aggregates.</p>
+<p>The reason they were removed is because they simply proxied to the <code>attach()</code>
+and <code>detach()</code> methods of the <code>ListenerAggregateInterface</code>. As such, to
+forward-proof your applications, you can alter statements that attach aggregates
+to an event manager reading as follows:</p>
+<pre class="codehilite"><code class="language-php">$events-&gt;attach($aggregate); // or
+$events-&gt;attachAggregate($aggregate);</code></pre>
+
+
+<p>to:</p>
+<pre class="codehilite"><code class="language-php">$aggregate-&gt;attach($events);</code></pre>
+
+
+<p>Similarly, for detaching an aggregate, migrate from:</p>
+<pre class="codehilite"><code class="language-php">$events-&gt;detach($aggregate); // or
+$events-&gt;detachAggregate($aggregate);</code></pre>
+
+
+<p>to:</p>
+<pre class="codehilite"><code class="language-php">$aggregate-&gt;detach($events);</code></pre>
+
+
+<p>The above works in all released versions of the component.</p>
+<h2 id="sharedeventaggregateawareinterface-sharedlisteneraggregateinterface">SharedEventAggregateAwareInterface, SharedListenerAggregateInterface</h2>
+<p>The interfaces <code>Zend\EventManager\SharedEventAggregateAwareInterface</code> and
+<code>SharedListenerAggregateInterface</code> were removed, as the concept of shared
+listener aggregates was removed from version 3.</p>
+<p>Migration will depend on what you have done in your application: extending
+the <code>SharedEventManager</code> and/or implementing <code>SharedEventAggregateAwareInterface</code>,
+or implementing <code>SharedListenerAggregateInterface</code>.</p>
+<h3 id="sharedeventaggregateawareinterface">SharedEventAggregateAwareInterface</h3>
+<p><code>Zend\EventManager\SharedEventAggregateAwareInterface</code> was added mid-way through
+the v2 lifecycle to allow adding shared listener aggregates to the
+<code>SharedEventManager</code>. If you were extending the <code>SharedEventManager</code> and
+overriding the methods defined in <code>SharedEventAggregateAwareInterface</code>, you
+should remove them.</p>
+<p>If you were implementing <code>SharedEventAggregateAwareInterface</code>, the interface no
+longer exists, and you should likely remove your implementation.</p>
+<h3 id="sharedlisteneraggregateinterface">SharedListenerAggregateInterface</h3>
+<p>For those implementing shared listener aggregates, you can continue to use them,
+but will need to change how you do so.</p>
+<p>To migrate, you have two steps to take: remove the
+<code>SharedListenerAggregateInterface</code> implementation declaration from your
+aggregate class, and swap attachment of the aggregate.</p>
+<p>To accomplish the first step, keep the <code>attachShared()</code> and <code>detachShared()</code>
+methods in your class, but remove the <code>implements
+SharedListenerAggregateInterface</code> from the class declaration. For instance, if
+you had the following:</p>
+<pre class="codehilite"><code class="language-php">namespace Foo;
+
+use Zend\EventManager\SharedEventManagerInterface;
+use Zend\EventManager\SharedListenerAggregateInterface;
+
+class MySharedAggregate implements SharedListenerAggregateInterface
+{
+    public function attachShared(SharedEventManagerInterface $manager)
+    {
+        // ...
+    }
+
+    public function detachShared(SharedEventManagerInterface $manager)
+    {
+        // ...
+    }
+}</code></pre>
+
+
+<p>then modify it to instead read:</p>
+<pre class="codehilite"><code class="language-php">namespace Foo;
+
+use Zend\EventManager\SharedEventManagerInterface;
+
+class MySharedAggregate
+{
+    public function attachShared(SharedEventManagerInterface $manager)
+    {
+        // ...
+    }
+
+    public function detachShared(SharedEventManagerInterface $manager)
+    {
+        // ...
+    }
+}</code></pre>
+
+
+<p>For the second step, instead of attaching the aggregate to the shared event
+manager, you will pass the shared event manager to your aggregate. For example,
+if you had the following in your code:</p>
+<pre class="codehilite"><code class="language-php">$sharedEvents-&gt;attachAggregate($mySharedAggregate);</code></pre>
+
+
+<p>then you can change it to:</p>
+<pre class="codehilite"><code class="language-php">$mySharedAggregate-&gt;attachShared($sharedEvents);</code></pre>
+
+
+<p>This has exactly the same effect, and makes your code forward-compatible with
+v3.</p>
+<h4 id="sharedeventmanagerawareinterface">SharedEventManagerAwareInterface</h4>
+<p>The interface <code>Zend\EventManager\SharedEventManagerAwareInterface</code> was removed,
+as version 3 now requires tha the <code>SharedEventManagerInterface</code> instance be
+injected into the <code>EventManager</code> instance at instantiation.</p>
+<p>A new interface, <code>Zend\EventManager\SharedEventsCapableInterface</code>, provides the
+<code>getSharedManager()</code> method, and <code>EventManagerInterface</code> extends it.</p>
+<p>To migrate, you have the following options:</p>
+<ul>
+<li>If you are only interested in the <code>getSharedManager()</code> method, you can
+  implement <code>SharedEventsCapableInterface</code> starting with version 2.6.0. If you
+  do this, you can also safely remove the <code>setSharedManager()</code> method from your
+  implementation.</li>
+<li>If you will require injecting the shared manager, use duck typing to determine
+  if a class has the <code>setSharedManager()</code> method:</li>
+</ul>
+<pre class="codehilite"><code class="language-php">if (method_exists($instance, 'setSharedManager')) {
+    $instance-&gt;setSharedManager($sharedEvents);
+}</code></pre>
+
+
+<p>Alternately, if you control instantiation of the instance, consider injection
+  at instantiation, or within the factory used to create your instance.</p>
+<h2 id="sharedeventmanagerinterfacegetevents">SharedEventManagerInterface::getEvents()</h2>
+<p>The method <code>SharedEventManagerInterface::getEvents()</code> was removed. The method
+was not consumed by the event manager, and served no real purpose.</p>
+
+<hr />
+
+
+<nav>
+  <ul class="pager hidden-print">
+    <li class="previous">
+      <a rel="prev" href="../intro/"><i class="fa fa-arrow-left"></i> Previous</a>
+    </li>
+    <li class="next">
+      <a rel="next" href="../changed/">Next <i class="fa fa-arrow-right"></i></a>
+    </li>
+  </ul>
+</nav>
+</div>
+        
+    </div>
+    <!-- content:end -->
+
+    <footer class="col-md-12 text-center">
+        <hr>
+        <p>
+        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
+        </p>
+        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
+    </footer>
+
+    <script src="../../js/jquery-1.10.2.min.js"></script>
+    <script src="../../js/bootstrap-3.0.3.min.js"></script>
+    <script src="../../js/prism-zf.js"></script>
+
+    <script>var base_url = '../..';</script>
+    <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+    <script src="../../js/base.js"></script>
+
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="zf-components">
+  <div class="zf-components-grid">
+    <div class="zf-logo">
+      <a href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../../img/zf-logo-mark.png" alt="Zend Framework" width="250" /></a>
+    </div>
+
+    <div class="component-list"></div>
+
+    <p class="zf-components-rollup"><a href="#">Hide list</a></p>
+  </div>
+</div>
+
+    <script>
+  // Prepare the component list dropdown for display
+  $(function () {
+    var components = $(".zf-components"),
+        componentList = components.find(".component-list"),
+        sidebar = $(".bs-sidebar.affix"),
+        sidebarInitialPos = sidebar.css("position"),
+        hidden,
+        componentToggle = $(".component-toggle"),
+        navbar = $(".navbar-fixed-top"),
+        rollUpLink = $(".zf-components-rollup a");
+
+    // Initial setup on document load
+    components.insertBefore(navbar);
+    $(".zf-logo a").tooltip();
+    componentToggle.tooltip();
+    rollUpLink.attr({ href: "#", alt: "Hide component list" });
+
+    // Cast initial sidebar position value
+    if (undefined === sidebarInitialPos) {
+      sidebarInitialPos = "fixed";
+    }
+
+    // Setup onclick events to toggle list
+    componentToggle.click(toggleComponentList);
+    rollUpLink.click(toggleComponentList);
+
+    // Toggle the component list display
+    function toggleComponentList(event) {
+      event.preventDefault();
+
+      if (hidden === undefined) {
+        // Not loaded yet; load and display.
+        loadComponentList();
+        return;
+      }
+
+      if (hidden) {
+        // Hidden; display.
+        showComponentList();
+        return;
+      }
+
+      // Currently visible; hide
+      hideComponentList();
+    }
+
+    // Show the component list
+    function showComponentList() {
+      navbar.css({position: "relative"});
+      sidebar.css({position: "relative"});
+      components
+        .css({"margin-top": "-" + components.outerHeight() + "px"})
+        .show()
+        .animate({"margin-top": 0}, {
+          complete: function () {
+            componentToggle
+              .data("placement", "top")
+              .attr("data-original-title", "Hide component list");
+            hidden = false;
+          },
+          queue: false
+        });
+    }
+
+    // Hide the component list
+    function hideComponentList() {
+      components.animate({"margin-top": "-" + components.outerHeight() + "px"}, {
+        complete: function () {
+          navbar.css({position: "fixed"});
+          sidebar.css({position: sidebarInitialPos});
+          componentToggle
+            .data("placement", "bottom")
+            .attr("data-original-title", "Show component list");
+          components.hide();
+          hidden = true;
+        },
+        queue: false
+      });
+      sidebar.animate({ top: sidebarInitialTop + "px" }, { queue: false});
+    }
+
+    // Inject a component into the componet list DOM.
+    function injectComponent(index, component) {
+      componentList.append('<div class="component"><h4><a href="' + component.url + '">' + component.name + '</a></h4><p>' + component.description + '</p></div>');
+    }
+
+    // Parse the component list, build the DOM, and display it.
+    function parseComponentList(components) {
+      $.each(components, injectComponent);
+      showComponentList();
+    }
+
+    // Fetch the component list and display it.
+    function loadComponentList () {
+      $.ajax({
+        url: "//zendframework.github.io/zf-mkdoc-theme/scripts/zf-component-list.json",
+        dataType: "text json",
+        success: parseComponentList,
+        error: function (e) {
+          console.log("Error occurred with XHR call", e);
+        }
+      });
+    }
+  });
+</script>
+    </body>
+
+</html>
