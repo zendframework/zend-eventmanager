@@ -44,7 +44,7 @@ $events->trigger('do', null, $params);
 
 The above will result in the following:
 
-```
+```text
 Handled event "do", with parameters {"foo":"bar","baz":"bat"}
 ```
 
@@ -176,7 +176,7 @@ $example->do('bar', 'bat');
 
 and expect the following output:
 
-```
+```text
 Handled event "do" on target "Example", with parameters {"foo":"bar","baz":"bat"}
 ```
 

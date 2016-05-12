@@ -5,6 +5,7 @@ pages:
     - Intro: intro.md
     - "Quick Start": quick-start.md
     - Tutorial: tutorial.md
+    - Examples: examples.md
     - Reference:
         - "Wildcard Listeners": wildcard-listeners.md
         - "Listener Aggregates": aggregates.md
@@ -13,7 +14,6 @@ pages:
             - LazyListener: lazy-listeners/lazy-listener.md
             - LazyEventListener: lazy-listeners/lazy-event-listener.md
             - LazyListenerAggregate: lazy-listeners/lazy-listener-aggregate.md
-        - Examples: examples.md
         - "EventManager API": api.md
         - "Intercepting Filters": intercepting-filters.md
         - "Migration Guide":
@@ -21,6 +21,6 @@ pages:
             - "Removed Functionality": migration/removed.md
             - "Changed Functionality": migration/changed.md
 site_name: zend-eventmanager
-site_description: "zend-eventmanager: Powerful event bus system for Zend Framework"
+site_description: "zend-eventmanager: Implement events, signal slots, aspects, and observers!"
 repo_url: 'https://github.com/zendframework/zend-eventmanager'
 copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
