@@ -22,6 +22,22 @@ class EventManager implements EventManagerInterface
     /**
      * Subscribed events and their listeners
      *
+     * STRUCTURE:
+     * [
+     *     <string name> => [
+     *         <int priority> => [
+     *             0 => [<callable listener>, ...]
+     *         ],
+     *         ...
+     *     ],
+     *     ...
+     * ]
+     *
+     * NOTE:
+     * This structure helps us to reuse the list of listeners
+     * instead of first iterating over it and generating a new one
+     * -> In result it improves performance by up to 25% even if it looks a bit strange
+     *
      * @var array[]
      */
     protected $events = [];
@@ -164,10 +180,7 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        // see performance note of triggerListeners() why the internal
-        // event array is structured this way.
         $this->events[$eventName][(int) $priority][0][] = $listener;
-
         return $listener;
     }
 
@@ -264,38 +277,23 @@ class EventManager implements EventManagerInterface
             throw new Exception\RuntimeException('Event is missing a name; cannot trigger!');
         }
 
-        // Merge all listeners by priority together with format
-        //   [
-        //     <int priority1> => [
-        //       [
-        //         [<callable listener1>, <callable listener2>, ...]
-        //       ],
-        //       ...
-        //     ],
-        //     <int priority2> => [
-        //       [
-        //         [<callable listener1>, <callable listener2>, ...]
-        //       ],
-        //       ...
-        //     ],
-        //     ...
-        //   ]
-        //
-        // PERFORMANCE NOTE:
-        //   This way pushing the list of listeners into a new generated list
-        //   helps us to not call "array_merge_[recursive]"
-        //   and reusing the list of listeners we already have
-        //   instead of iterating over it and generating a new one.
-        //   -> In result it improves performance by up to 25% even if it looks a bit strange.
-        $listOfListenersByPriority = isset($this->events[$name]) ? $this->events[$name] : [];
-        if (isset($this->events['*'])) {
-            foreach ($this->events['*'] as $p => $l) {
-                $listOfListenersByPriority[$p][] = $l[0];
+        if (isset($this->events[$name])) {
+            $listOfListenersByPriority = $this->events[$name];
+
+            if (isset($this->events['*'])) {
+                foreach ($this->events['*'] as $priority => $listOfListeners) {
+                    $listOfListenersByPriority[$priority][] = $listOfListeners[0];
+                }
             }
+        } elseif (isset($this->events['*'])) {
+            $listOfListenersByPriority = $this->events['*'];
+        } else {
+            $listOfListenersByPriority = [];
         }
+
         if ($this->sharedManager) {
-            foreach ($this->sharedManager->getListeners($this->identifiers, $name) as $p => $l) {
-                $listOfListenersByPriority[$p][] = $l;
+            foreach ($this->sharedManager->getListeners($this->identifiers, $name) as $priority => $listeners) {
+                $listOfListenersByPriority[$priority][] = $listeners;
             }
         }
 
@@ -307,8 +305,8 @@ class EventManager implements EventManagerInterface
 
         // Execute listeners
         $responses = new ResponseCollection();
-        foreach ($listOfListenersByPriority as $listenersList) {
-            foreach ($listenersList as $listeners) {
+        foreach ($listOfListenersByPriority as $listOfListeners) {
+            foreach ($listOfListeners as $listeners) {
                 foreach ($listeners as $listener) {
                     $response = $listener($event);
                     $responses->push($response);
@@ -316,14 +314,14 @@ class EventManager implements EventManagerInterface
                     // If the event was asked to stop propagating, do so
                     if ($event->propagationIsStopped()) {
                         $responses->setStopped(true);
-                        break 3;
+                        return $responses;
                     }
 
                     // If the result causes our validation callback to return true,
                     // stop propagation
                     if ($callback && $callback($response)) {
                         $responses->setStopped(true);
-                        break 3;
+                        return $responses;
                     }
                 }
             }

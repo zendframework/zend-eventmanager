@@ -153,8 +153,8 @@ class SharedEventManager implements SharedEventManagerInterface
     /**
      * Retrieve all listeners for a given identifier and event
      *
-     * @param  array $identifiers
-     * @param  string $eventName
+     * @param  string[] $identifiers
+     * @param  string   $eventName
      * @return array[]
      * @throws Exception\InvalidArgumentException
      */
@@ -167,7 +167,7 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $listeners = [];
+        $returnListeners = [];
 
         foreach ($identifiers as $identifier) {
             if ('*' === $identifier || ! is_string($identifier) || empty($identifier)) {
@@ -177,15 +177,17 @@ class SharedEventManager implements SharedEventManagerInterface
                 ));
             }
 
-            $listenersByIdentifier = isset($this->identifiers[$identifier]) ? $this->identifiers[$identifier] : [];
-            if (isset($listenersByIdentifier[$eventName])) {
-                foreach ($listenersByIdentifier[$eventName] as $p => $l) {
-                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+            if (isset($this->identifiers[$identifier])) {
+                $listenersByIdentifier = $this->identifiers[$identifier];
+                if (isset($listenersByIdentifier[$eventName])) {
+                    foreach ($listenersByIdentifier[$eventName] as $priority => $listeners) {
+                        $returnListeners[$priority][] = $listeners;
+                    }
                 }
-            }
-            if (isset($listenersByIdentifier['*'])) {
-                foreach ($listenersByIdentifier['*'] as $p => $l) {
-                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                if (isset($listenersByIdentifier['*'])) {
+                    foreach ($listenersByIdentifier['*'] as $priority => $listeners) {
+                        $returnListeners[$priority][] = $listeners;
+                    }
                 }
             }
         }
@@ -193,18 +195,24 @@ class SharedEventManager implements SharedEventManagerInterface
         if (isset($this->identifiers['*'])) {
             $wildcardIdentifier = $this->identifiers['*'];
             if (isset($wildcardIdentifier[$eventName])) {
-                foreach ($wildcardIdentifier[$eventName] as $p => $l) {
-                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                foreach ($wildcardIdentifier[$eventName] as $priority => $listeners) {
+                    $returnListeners[$priority][] = $listeners;
                 }
             }
             if (isset($wildcardIdentifier['*'])) {
-                foreach ($wildcardIdentifier['*'] as $p => $l) {
-                    $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+                foreach ($wildcardIdentifier['*'] as $priority => $listeners) {
+                    $returnListeners[$priority][] = $listeners;
                 }
             }
         }
 
-        return $listeners;
+        foreach ($returnListeners as $priority => $listOfListeners) {
+            // Argument unpacking requires PHP-5.6
+            // $listeners[$priority] = array_merge(...$listOfListeners);
+            $returnListeners[$priority] = call_user_func_array('array_merge', $listOfListeners);
+        }
+
+        return $returnListeners;
     }
 
     /**
@@ -212,7 +220,7 @@ class SharedEventManager implements SharedEventManagerInterface
      */
     public function clearListeners($identifier, $eventName = null)
     {
-        if (! array_key_exists($identifier, $this->identifiers)) {
+        if (! isset($this->identifiers[$identifier])) {
             return false;
         }
 
