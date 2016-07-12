@@ -132,8 +132,14 @@ class EventManager implements EventManagerInterface
     {
         $event = clone $this->eventPrototype;
         $event->setName($eventName);
-        $event->setTarget($target);
-        $event->setParams($argv);
+
+        if ($target !== null) {
+            $event->setTarget($target);
+        }
+
+        if ($argv) {
+            $event->setParams($argv);
+        }
 
         return $this->triggerListeners($event);
     }
@@ -145,8 +151,14 @@ class EventManager implements EventManagerInterface
     {
         $event = clone $this->eventPrototype;
         $event->setName($eventName);
-        $event->setTarget($target);
-        $event->setParams($argv);
+
+        if ($target !== null) {
+            $event->setTarget($target);
+        }
+
+        if ($argv) {
+            $event->setParams($argv);
+        }
 
         return $this->triggerListeners($event, $callback);
     }
@@ -226,22 +238,21 @@ class EventManager implements EventManagerInterface
                     break;
                 }
             }
+        }
 
-            // If the queue for the given event is empty, remove it.
-            if (empty($this->events[$eventName])) {
-                unset($this->events[$eventName]);
-                break;
-            }
+        // If the queue for the given event is empty, remove it.
+        if (empty($this->events[$eventName])) {
+            unset($this->events[$eventName]);
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function clearListeners($event)
+    public function clearListeners($eventName)
     {
-        if (isset($this->events[$event])) {
-            unset($this->events[$event]);
+        if (isset($this->events[$eventName])) {
+            unset($this->events[$eventName]);
         }
     }
 
