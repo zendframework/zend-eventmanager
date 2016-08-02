@@ -141,7 +141,6 @@ class SharedEventManager implements SharedEventManagerInterface
                 unset($this->identifiers[$identifier][$eventName]);
                 break;
             }
-
         }
 
         // Is the identifier queue now empty? Remove it.
