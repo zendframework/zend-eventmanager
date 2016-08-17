@@ -38,7 +38,7 @@ $events->attach('do', function ($e) {
     );
 });
 
-$params = )'foo' => 'bar', 'baz' => 'bat'];
+$params = ['foo' => 'bar', 'baz' => 'bat'];
 $events->trigger('do', null, $params);
 ```
 
