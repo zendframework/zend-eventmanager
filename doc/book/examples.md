@@ -171,6 +171,7 @@ class CacheListener implements ListenerAggregateInterface
     use ListenerAggregateTrait;
 
     private $cache;
+    private $listeners = [];
 
     public function __construct(Cache $cache)
     {
