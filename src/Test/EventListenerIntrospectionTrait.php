@@ -66,13 +66,16 @@ trait EventListenerIntrospectionTrait
     {
         $r = new ReflectionProperty($events, 'events');
         $r->setAccessible(true);
-        $listeners = $r->getValue($events);
+        $internal = $r->getValue($events);
 
-        if (! isset($listeners[$event])) {
-            return $this->traverseListeners([]);
+        $listeners = [];
+        foreach (isset($internal[$event]) ? $internal[$event] : [] as $p => $listOfListeners) {
+            foreach ($listOfListeners as $l) {
+                $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
+            }
         }
 
-        return $this->traverseListeners($listeners[$event], $withPriority);
+        return $this->traverseListeners($listeners, $withPriority);
     }
 
     /**

@@ -74,7 +74,7 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $this->identifiers[$identifier][$event][((int) $priority) . '.0'][] = $listener;
+        $this->identifiers[$identifier][$event][(int) $priority][] = $listener;
     }
 
     /**
@@ -141,7 +141,6 @@ class SharedEventManager implements SharedEventManagerInterface
                 unset($this->identifiers[$identifier][$eventName]);
                 break;
             }
-
         }
 
         // Is the identifier queue now empty? Remove it.
@@ -153,8 +152,8 @@ class SharedEventManager implements SharedEventManagerInterface
     /**
      * Retrieve all listeners for a given identifier and event
      *
-     * @param  array $identifiers
-     * @param  string $eventName
+     * @param  string[] $identifiers
+     * @param  string   $eventName
      * @return array[]
      * @throws Exception\InvalidArgumentException
      */
@@ -167,7 +166,7 @@ class SharedEventManager implements SharedEventManagerInterface
             ));
         }
 
-        $listeners = [];
+        $returnListeners = [];
 
         foreach ($identifiers as $identifier) {
             if ('*' === $identifier || ! is_string($identifier) || empty($identifier)) {
@@ -177,26 +176,42 @@ class SharedEventManager implements SharedEventManagerInterface
                 ));
             }
 
-            $listenersByIdentifier = isset($this->identifiers[$identifier]) ? $this->identifiers[$identifier] : [];
-
-            $listeners = array_merge_recursive(
-                $listeners,
-                isset($listenersByIdentifier[$eventName]) ? $listenersByIdentifier[$eventName] : [],
-                isset($listenersByIdentifier['*']) ? $listenersByIdentifier['*'] : []
-            );
+            if (isset($this->identifiers[$identifier])) {
+                $listenersByIdentifier = $this->identifiers[$identifier];
+                if (isset($listenersByIdentifier[$eventName])) {
+                    foreach ($listenersByIdentifier[$eventName] as $priority => $listeners) {
+                        $returnListeners[$priority][] = $listeners;
+                    }
+                }
+                if (isset($listenersByIdentifier['*'])) {
+                    foreach ($listenersByIdentifier['*'] as $priority => $listeners) {
+                        $returnListeners[$priority][] = $listeners;
+                    }
+                }
+            }
         }
 
-        if (isset($this->identifiers['*']) && ! in_array('*', $identifiers)) {
+        if (isset($this->identifiers['*'])) {
             $wildcardIdentifier = $this->identifiers['*'];
-
-            $listeners = array_merge_recursive(
-                $listeners,
-                isset($wildcardIdentifier[$eventName]) ? $wildcardIdentifier[$eventName] : [],
-                isset($wildcardIdentifier['*']) ? $wildcardIdentifier['*'] : []
-            );
+            if (isset($wildcardIdentifier[$eventName])) {
+                foreach ($wildcardIdentifier[$eventName] as $priority => $listeners) {
+                    $returnListeners[$priority][] = $listeners;
+                }
+            }
+            if (isset($wildcardIdentifier['*'])) {
+                foreach ($wildcardIdentifier['*'] as $priority => $listeners) {
+                    $returnListeners[$priority][] = $listeners;
+                }
+            }
         }
 
-        return $listeners;
+        foreach ($returnListeners as $priority => $listOfListeners) {
+            // Argument unpacking requires PHP-5.6
+            // $listeners[$priority] = array_merge(...$listOfListeners);
+            $returnListeners[$priority] = call_user_func_array('array_merge', $listOfListeners);
+        }
+
+        return $returnListeners;
     }
 
     /**
@@ -204,7 +219,7 @@ class SharedEventManager implements SharedEventManagerInterface
      */
     public function clearListeners($identifier, $eventName = null)
     {
-        if (! array_key_exists($identifier, $this->identifiers)) {
+        if (! isset($this->identifiers[$identifier])) {
             return false;
         }
 
