@@ -41,5 +41,16 @@
     "suggest": {
         "container-interop/container-interop": "^1.1.0, to use the lazy listeners feature",
         "zendframework/zend-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
     }
 }
