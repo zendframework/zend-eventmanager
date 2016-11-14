@@ -73,7 +73,7 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
             if (isset($params['string'])) {
                 $params['string'] = trim($params['string']);
             }
-            $return =  $chain->next($context, $params, $chain);
+            $return = $chain->next($context, $params, $chain);
             return $return;
         });
         $this->filterchain->attach(function ($context, array $params) {
