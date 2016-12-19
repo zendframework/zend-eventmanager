@@ -13,7 +13,7 @@ To create a `LazyListener` instance, you must pass to its constructor:
 - a *container*; this is a [container-interop](https://github.com/container-interop/container-interop),
   such as provided by
   [zend-servicemanager](https://github.com/zendframework/zend-servicemanager),
-  [Aura.Di](https://github.com/auraphp/Aura.Di], etc.
+  [Aura.Di](https://github.com/auraphp/Aura.Di), etc.
 - optionally an `$env` array; this is a set of options or other configuration to
   use when creating the listener instance. Since not all containers support
   passing additional options at creation, we recommend omitting the `$env`
