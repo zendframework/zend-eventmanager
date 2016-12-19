@@ -416,15 +416,23 @@ $sharedEvents-&gt;attach('Example', 'do', function ($e) {
 there is an additional argument at the <em>start</em> of the list, <code>Example</code>. This
 code is basically saying, "Listen to the 'do' event of the 'Example' target,
 and, when notified, execute this callback."</p>
-<p>This is where the <code>setIdentifiers()</code> argument of <code>EventManager</code> comes into play.
+<p>This is where the <code>setIdentifiers()</code> method of <code>EventManager</code> comes into play.
 The method allows passing an array of strings, defining the names of the context
 or targets the given instance will be interested in.</p>
 <p>So, getting back to our example, let's assume that the above shared listener is
-registered, and also that the <code>Example</code> class is defined as above. We can then
-execute the following:</p>
+registered, and also that the <code>Example</code> class is defined as above. (Note that as of 
+version 3, <code>setSharedManager()</code> is removed from  <code>EventManager</code>; the <code>SharedEventManager</code> 
+instance must instead be injected via the constructor.) We can then execute the following:</p>
 <pre class="codehilite"><code class="language-php">$example = new Example();
+
+// Prior to version 3:
 $example-&gt;getEventManager()-&gt;setSharedManager($sharedEvents);
-$example-&gt;do('bar', 'bat');</code></pre>
+
+// As of version 3:
+$example-&gt;setEventManager(new EventManager($sharedEvents));
+
+// Both versions:
+$example-&gt;doIt('bar', 'bat');</code></pre>
 
 
 <p>and expect the following output:</p>
