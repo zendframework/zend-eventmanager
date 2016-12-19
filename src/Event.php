@@ -95,7 +95,7 @@ class Event implements EventInterface
      */
     public function setParams($params)
     {
-        if (!is_array($params) && !is_object($params)) {
+        if (! is_array($params) && ! is_object($params)) {
             throw new Exception\InvalidArgumentException(
                 sprintf('Event parameters must be an array or object; received "%s"', gettype($params))
             );
@@ -127,7 +127,7 @@ class Event implements EventInterface
     {
         // Check in params that are arrays or implement array access
         if (is_array($this->params) || $this->params instanceof ArrayAccess) {
-            if (!isset($this->params[$name])) {
+            if (! isset($this->params[$name])) {
                 return $default;
             }
 
@@ -135,7 +135,7 @@ class Event implements EventInterface
         }
 
         // Check in normal objects
-        if (!isset($this->params->{$name})) {
+        if (! isset($this->params->{$name})) {
             return $default;
         }
         return $this->params->{$name};
