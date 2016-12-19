@@ -30,7 +30,6 @@ class StaticEventsMock implements SharedEventManagerInterface
      */
     public function attach($identifier, $event, callable $listener, $priority = 1)
     {
-
     }
 
     /**
