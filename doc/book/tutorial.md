@@ -160,18 +160,26 @@ there is an additional argument at the *start* of the list, `Example`. This
 code is basically saying, "Listen to the 'do' event of the 'Example' target,
 and, when notified, execute this callback."
 
-This is where the `setIdentifiers()` argument of `EventManager` comes into play.
+This is where the `setIdentifiers()` method of `EventManager` comes into play.
 The method allows passing an array of strings, defining the names of the context
 or targets the given instance will be interested in.
 
 So, getting back to our example, let's assume that the above shared listener is
-registered, and also that the `Example` class is defined as above. We can then
-execute the following:
+registered, and also that the `Example` class is defined as above. (Note that as of 
+version 3, `setSharedManager()` is removed from  `EventManager`; the `SharedEventManager` 
+instance must instead be injected via the constructor.) We can then execute the following:
 
 ```php
 $example = new Example();
+
+// Prior to version 3:
 $example->getEventManager()->setSharedManager($sharedEvents);
-$example->do('bar', 'bat');
+
+// As of version 3:
+$example->setEventManager(new EventManager($sharedEvents));
+
+// Both versions:
+$example->doIt('bar', 'bat');
 ```
 
 and expect the following output:
