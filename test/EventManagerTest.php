@@ -56,7 +56,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $r->setAccessible(true);
         $events = $r->getValue($manager);
 
-        return isset($events[$event]) ? $events[$event] : [];
+        $listenersByPriority = isset($events[$event]) ? $events[$event] : [];
+        foreach ($listenersByPriority as $priority => & $listeners) {
+            $listeners = $listeners[0];
+        }
+
+        return $listenersByPriority;
     }
 
     public function testAttachShouldAddListenerToEvent()

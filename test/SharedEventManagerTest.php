@@ -27,7 +27,7 @@ class SharedEventManagerTest extends TestCase
 
     public function getListeners(SharedEventManager $manager, array $identifiers, $event, $priority = 1)
     {
-        $priority = (int) $priority . '.0';
+        $priority = (int) $priority;
         $listeners = $manager->getListeners($identifiers, $event);
         if (! isset($listeners[$priority])) {
             return [];
@@ -247,7 +247,7 @@ class SharedEventManagerTest extends TestCase
         $this->manager->clearListeners('IDENTIFIER', 'EVENT');
 
         // getListeners() always pulls in wildcard listeners
-        $this->assertEquals(['1.0' => [
+        $this->assertEquals([1 => [
             $this->callback,
         ]], $this->manager->getListeners([ 'IDENTIFIER' ], 'EVENT'));
     }

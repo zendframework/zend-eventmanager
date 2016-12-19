@@ -22,6 +22,22 @@ class EventManager implements EventManagerInterface
     /**
      * Subscribed events and their listeners
      *
+     * STRUCTURE:
+     * [
+     *     <string name> => [
+     *         <int priority> => [
+     *             0 => [<callable listener>, ...]
+     *         ],
+     *         ...
+     *     ],
+     *     ...
+     * ]
+     *
+     * NOTE:
+     * This structure helps us to reuse the list of listeners
+     * instead of first iterating over it and generating a new one
+     * -> In result it improves performance by up to 25% even if it looks a bit strange
+     *
      * @var array[]
      */
     protected $events = [];
@@ -116,8 +132,14 @@ class EventManager implements EventManagerInterface
     {
         $event = clone $this->eventPrototype;
         $event->setName($eventName);
-        $event->setTarget($target);
-        $event->setParams($argv);
+
+        if ($target !== null) {
+            $event->setTarget($target);
+        }
+
+        if ($argv) {
+            $event->setParams($argv);
+        }
 
         return $this->triggerListeners($event);
     }
@@ -129,8 +151,14 @@ class EventManager implements EventManagerInterface
     {
         $event = clone $this->eventPrototype;
         $event->setName($eventName);
-        $event->setTarget($target);
-        $event->setParams($argv);
+
+        if ($target !== null) {
+            $event->setTarget($target);
+        }
+
+        if ($argv) {
+            $event->setParams($argv);
+        }
 
         return $this->triggerListeners($event, $callback);
     }
@@ -164,8 +192,7 @@ class EventManager implements EventManagerInterface
             ));
         }
 
-        $this->events[$eventName][((int) $priority) . '.0'][] = $listener;
-
+        $this->events[$eventName][(int) $priority][0][] = $listener;
         return $listener;
     }
 
@@ -197,36 +224,35 @@ class EventManager implements EventManagerInterface
         }
 
         foreach ($this->events[$eventName] as $priority => $listeners) {
-            foreach ($listeners as $index => $evaluatedListener) {
+            foreach ($listeners[0] as $index => $evaluatedListener) {
                 if ($evaluatedListener !== $listener) {
                     continue;
                 }
 
                 // Found the listener; remove it.
-                unset($this->events[$eventName][$priority][$index]);
+                unset($this->events[$eventName][$priority][0][$index]);
 
                 // If the queue for the given priority is empty, remove it.
-                if (empty($this->events[$eventName][$priority])) {
+                if (empty($this->events[$eventName][$priority][0])) {
                     unset($this->events[$eventName][$priority]);
                     break;
                 }
             }
+        }
 
-            // If the queue for the given event is empty, remove it.
-            if (empty($this->events[$eventName])) {
-                unset($this->events[$eventName]);
-                break;
-            }
+        // If the queue for the given event is empty, remove it.
+        if (empty($this->events[$eventName])) {
+            unset($this->events[$eventName]);
         }
     }
 
     /**
      * @inheritDoc
      */
-    public function clearListeners($event)
+    public function clearListeners($eventName)
     {
-        if (isset($this->events[$event])) {
-            unset($this->events[$event]);
+        if (isset($this->events[$eventName])) {
+            unset($this->events[$eventName]);
         }
     }
 
@@ -262,58 +288,56 @@ class EventManager implements EventManagerInterface
             throw new Exception\RuntimeException('Event is missing a name; cannot trigger!');
         }
 
+        if (isset($this->events[$name])) {
+            $listOfListenersByPriority = $this->events[$name];
+
+            if (isset($this->events['*'])) {
+                foreach ($this->events['*'] as $priority => $listOfListeners) {
+                    $listOfListenersByPriority[$priority][] = $listOfListeners[0];
+                }
+            }
+        } elseif (isset($this->events['*'])) {
+            $listOfListenersByPriority = $this->events['*'];
+        } else {
+            $listOfListenersByPriority = [];
+        }
+
+        if ($this->sharedManager) {
+            foreach ($this->sharedManager->getListeners($this->identifiers, $name) as $priority => $listeners) {
+                $listOfListenersByPriority[$priority][] = $listeners;
+            }
+        }
+
+        // Sort by priority in reverse order
+        krsort($listOfListenersByPriority);
+
         // Initial value of stop propagation flag should be false
         $event->stopPropagation(false);
 
+        // Execute listeners
         $responses = new ResponseCollection();
+        foreach ($listOfListenersByPriority as $listOfListeners) {
+            foreach ($listOfListeners as $listeners) {
+                foreach ($listeners as $listener) {
+                    $response = $listener($event);
+                    $responses->push($response);
 
-        foreach ($this->getListenersByEventName($name) as $listener) {
-            $response = $listener($event);
-            $responses->push($response);
+                    // If the event was asked to stop propagating, do so
+                    if ($event->propagationIsStopped()) {
+                        $responses->setStopped(true);
+                        return $responses;
+                    }
 
-            // If the event was asked to stop propagating, do so
-            if ($event->propagationIsStopped()) {
-                $responses->setStopped(true);
-                break;
-            }
-
-            // If the result causes our validation callback to return true,
-            // stop propagation
-            if ($callback && $callback($response)) {
-                $responses->setStopped(true);
-                break;
+                    // If the result causes our validation callback to return true,
+                    // stop propagation
+                    if ($callback && $callback($response)) {
+                        $responses->setStopped(true);
+                        return $responses;
+                    }
+                }
             }
         }
 
         return $responses;
-    }
-
-    /**
-     * Get listeners for the currently triggered event.
-     *
-     * @param  string $eventName
-     * @return callable[]
-     */
-    private function getListenersByEventName($eventName)
-    {
-        $listeners = array_merge_recursive(
-            isset($this->events[$eventName]) ? $this->events[$eventName] : [],
-            isset($this->events['*']) ? $this->events['*'] : [],
-            $this->sharedManager ? $this->sharedManager->getListeners($this->identifiers, $eventName) : []
-        );
-
-        krsort($listeners, SORT_NUMERIC);
-
-        $listenersForEvent = [];
-
-        foreach ($listeners as $priority => $listenersByPriority) {
-            foreach ($listenersByPriority as $listener) {
-                // Performance note: after some testing, it appears that accumulating listeners and sending
-                // them at the end of the method is FASTER than using generators (ie. yielding)
-                $listenersForEvent[] = $listener;
-            }
-        }
-
-        return $listenersForEvent;
     }
 }
