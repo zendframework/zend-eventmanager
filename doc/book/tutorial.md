@@ -171,10 +171,14 @@ instance must instead be injected via the constructor.) We can then execute the 
 
 ```php
 $example = new Example();
-// prior to version 3:
-// $example->getEventManager()->setSharedManager($sharedEvents);
-// as of version 3:
+
+// Prior to version 3:
+$example->getEventManager()->setSharedManager($sharedEvents);
+
+// As of version 3:
 $example->setEventManager(new EventManager($sharedEvents));
+
+// Both versions:
 $example->doIt('bar', 'bat');
 ```
 
