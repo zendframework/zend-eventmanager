@@ -142,7 +142,7 @@ $sharedEvents->attach('Foo', 'bar', function ($e) use ($log) {
 
 // Later, instantiate Foo:
 $foo = new Foo();
-$foo->setEventManager(new EventManager([], $sharedEvents));
+$foo->setEventManager(new EventManager($sharedEvents, []));
 
 // And we can still trigger the above event:
 $foo->bar('baz', 'bat');
