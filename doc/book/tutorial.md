@@ -168,9 +168,22 @@ So, getting back to our example, let's assume that the above shared listener is
 registered, and also that the `Example` class is defined as above. We can then
 execute the following:
 
+For ZF2 EventManager, we can do:
+
 ```php
-$example = new Example();
+$example      = new Example();
 $example->getEventManager()->setSharedManager($sharedEvents);
+$example->do('bar', 'bat');
+```
+
+For ZF3 EventManager, we can do:
+
+```php
+use Zend\EventManager\EventManager;
+
+$example      = new Example();
+$eventManager = new EventManager($sharedEvents);
+$example->setEventManager($eventManager);
 $example->do('bar', 'bat');
 ```
 
