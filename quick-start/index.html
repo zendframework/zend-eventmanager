@@ -378,7 +378,7 @@ $sharedEvents-&gt;attach('Foo', 'bar', function ($e) use ($log) {
 
 // Later, instantiate Foo:
 $foo = new Foo();
-$foo-&gt;setEventManager(new EventManager([], $sharedEvents));
+$foo-&gt;setEventManager(new EventManager($sharedEvents, []));
 
 // And we can still trigger the above event:
 $foo-&gt;bar('baz', 'bat');
