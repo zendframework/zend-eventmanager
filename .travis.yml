@@ -23,16 +23,15 @@ env:
 
 matrix:
   include:
-    - php: 5.5
-      env:
-        - CS_CHECK=true
-        - EXECUTE_DOC_CHECK=true
     - php: 5.6
       env:
         - TEST_COVERAGE=true
         - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
         - PATH="$HOME/.local/bin:$PATH"
     - php: 7
+      env:
+        - CS_CHECK=true
+    - php: 7.1
     - php: hhvm 
   allow_failures:
     - php: hhvm
