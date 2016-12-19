@@ -176,7 +176,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function evaluateStringCallback($value)
     {
-        return (!$value);
+        return (! $value);
     }
 
     public function testTriggerUntilShouldMarkResponseCollectionStoppedWhenConditionMet()
