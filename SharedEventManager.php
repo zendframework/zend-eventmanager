@@ -64,7 +64,7 @@ class SharedEventManager implements
         $ids = (array) $id;
         $listeners = array();
         foreach ($ids as $id) {
-            if (!array_key_exists($id, $this->identifiers)) {
+            if (!isset($this->identifiers[$id])) {
                 $this->identifiers[$id] = new EventManager($id);
             }
             $listeners[] = $this->identifiers[$id]->attach($event, $callback, $priority);
@@ -100,7 +100,7 @@ class SharedEventManager implements
      */
     public function detach($id, CallbackHandler $listener)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
+        if (!isset($this->identifiers[$id])) {
             return false;
         }
         return $this->identifiers[$id]->detach($listener);
@@ -128,9 +128,9 @@ class SharedEventManager implements
      */
     public function getEvents($id)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
+        if (!isset($this->identifiers[$id])) {
             //Check if there are any id wildcards listeners
-            if ('*' != $id && array_key_exists('*', $this->identifiers)) {
+            if ('*' != $id && isset($this->identifiers['*'])) {
                 return $this->identifiers['*']->getEvents();
             }
             return false;
@@ -147,7 +147,7 @@ class SharedEventManager implements
      */
     public function getListeners($id, $event)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
+        if (!isset($this->identifiers[$id])) {
             return false;
         }
         return $this->identifiers[$id]->getListeners($event);
@@ -162,7 +162,7 @@ class SharedEventManager implements
      */
     public function clearListeners($id, $event = null)
     {
-        if (!array_key_exists($id, $this->identifiers)) {
+        if (!isset($this->identifiers[$id])) {
             return false;
         }
 
