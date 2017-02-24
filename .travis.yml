@@ -46,7 +46,7 @@ before_install:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer require --dev --no-update satooshi/php-coveralls ; fi
 
 install:
-  - travis_retry composer install --no-interaction --ignore-platform-reqs --prefer-source
+  - travis_retry composer install --no-interaction --prefer-source
   - composer info -i
 
 script:
