@@ -9,7 +9,7 @@
 
 namespace Zend\EventManager\Test;
 
-use PHPUnit\Framework\Assert as Assert;
+use PHPUnit\Framework\Assert;
 use ReflectionProperty;
 use Zend\EventManager\EventManager;
 

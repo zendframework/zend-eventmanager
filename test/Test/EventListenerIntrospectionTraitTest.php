@@ -10,7 +10,6 @@
 namespace ZendTest\EventManager\Test;
 
 use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit_Framework_ExpectationFailedException as PHPUnit57ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Traversable;
 use Zend\EventManager\EventManager;
@@ -189,13 +188,6 @@ class EventListenerIntrospectionTraitTest extends TestCase
                 );
                 $this->fail('assertListenerAtPriority assertion had a false positive for case ' . $case);
             } catch (ExpectationFailedException $e) {
-                $this->assertContains(sprintf(
-                    'Listener not found for event "%s" and priority %d',
-                    $arguments['event'],
-                    $arguments['priority']
-                ), $e->getMessage(), sprintf('Assertion failure message was unexpected: %s', $e->getMessage()));
-            // for PHPUnit 5.7
-            } catch (PHPUnit57ExpectationFailedException $e) {
                 $this->assertContains(sprintf(
                     'Listener not found for event "%s" and priority %d',
                     $arguments['event'],
