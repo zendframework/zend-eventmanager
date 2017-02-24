@@ -9,15 +9,17 @@
 
 namespace ZendTest\EventManager;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\EventManager\EventManager;
+use Zend\EventManager\EventManagerAwareTrait;
+use Zend\EventManager\EventManagerInterface;
 use ZendTest\EventManager\TestAsset\MockEventManagerAwareTrait;
 
 class EventManagerAwareTraitTest extends TestCase
 {
     public function testSetEventManager()
     {
-        $object = $this->getObjectForTrait('\Zend\EventManager\EventManagerAwareTrait');
+        $object = $this->getObjectForTrait(EventManagerAwareTrait::class);
 
         $this->assertAttributeEquals(null, 'events', $object);
 
@@ -30,9 +32,9 @@ class EventManagerAwareTraitTest extends TestCase
 
     public function testGetEventManager()
     {
-        $object = $this->getObjectForTrait('\Zend\EventManager\EventManagerAwareTrait');
+        $object = $this->getObjectForTrait(EventManagerAwareTrait::class);
 
-        $this->assertInstanceOf('\Zend\EventManager\EventManagerInterface', $object->getEventManager());
+        $this->assertInstanceOf(EventManagerInterface::class, $object->getEventManager());
 
         $eventManager = new EventManager;
 

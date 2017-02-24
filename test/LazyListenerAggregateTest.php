@@ -10,7 +10,7 @@
 namespace ZendTest\EventManager;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ReflectionProperty;
 use Zend\EventManager\EventInterface;
@@ -70,7 +70,8 @@ class LazyListenerAggregateTest extends TestCase
      */
     public function testPassingInvalidListenerTypesAtInstantiationRaisesException($listener)
     {
-        $this->setExpectedException(InvalidArgumentException::class, 'must be LazyEventListener instances');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must be LazyEventListener instances');
         new LazyListenerAggregate([$listener], $this->container->reveal());
     }
 
@@ -79,7 +80,8 @@ class LazyListenerAggregateTest extends TestCase
      */
     public function testPassingInvalidListenersAtInstantiationRaisesException($listener)
     {
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid');
         new LazyListenerAggregate([$listener], $this->container->reveal());
     }
 

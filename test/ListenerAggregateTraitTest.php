@@ -9,7 +9,7 @@
 
 namespace ZendTest\EventManager;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Zend\EventManager\EventManagerInterface;
 

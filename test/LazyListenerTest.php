@@ -10,7 +10,7 @@
 namespace ZendTest\EventManager;
 
 use Interop\Container\ContainerInterface;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use stdClass;
 use Zend\EventManager\EventInterface;
@@ -48,7 +48,8 @@ class LazyListenerTest extends TestCase
             'event'  => 'event',
             'method' => 'method',
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "listener"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "listener"');
         new $class($struct, $this->container->reveal());
     }
 
@@ -63,7 +64,8 @@ class LazyListenerTest extends TestCase
             'listener' => $listener,
             'method'   => 'method',
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "listener"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "listener"');
         new $class($struct, $this->container->reveal());
     }
 
@@ -74,7 +76,8 @@ class LazyListenerTest extends TestCase
             'event'    => 'event',
             'listener' => 'listener',
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "method"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "method"');
         new $class($struct, $this->container->reveal());
     }
 
@@ -89,7 +92,8 @@ class LazyListenerTest extends TestCase
             'listener' => 'listener',
             'method'   => $method,
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "method"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "method"');
         new $class($struct, $this->container->reveal());
     }
 
