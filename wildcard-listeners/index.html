@@ -266,9 +266,8 @@ instance — or potentially, with a shared event collection, all contexts.</p>
 <h2 id="attaching-using-the-wildcard">Attaching using the wildcard</h2>
 <p>To attach to all events on a given <code>EventManager</code> instance, you can use the
 wildcard event, <code>*</code>:</p>
-<pre class="codehilite"><code class="language-php">$events = new EventManager();
+<pre class="codehilite"><code class="language-php linenums">$events = new EventManager();
 $events-&gt;attach('*', $listener);</code></pre>
-
 
 <p>Note that if you specify a priority, that priority will be used for this
 listener for any event triggered.</p>
@@ -278,7 +277,7 @@ instance will result in notification of this particular listener.</p>
 <p>Using the <code>SharedEventManager</code>, you can indicate that you want to attach to all
 events of a given identifier, a single named event across all identifiers, or
 all events on all identifiers.</p>
-<pre class="codehilite"><code class="language-php">$sharedEvents = new SharedEventManager();
+<pre class="codehilite"><code class="language-php linenums">$sharedEvents = new SharedEventManager();
 
 // Attach to all events on the context &quot;foo&quot;
 $sharedEvents-&gt;attach('foo', '*', $listener);
@@ -288,7 +287,6 @@ $sharedEvents-&gt;attach('*', 'foo', $listener);
 
 // Attach to all events on all contexts:
 $sharedEvents-&gt;attach('*', '*', $listener);</code></pre>
-
 
 <p>Note that if you specify a priority, that priority will be used for all events
 specified.</p>

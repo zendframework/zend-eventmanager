@@ -280,7 +280,7 @@ use to create <code>LazyEventListener</code> instances; you may also intersperse
 will use its <code>onRoute()</code> method to listen to the <code>route</code> event at priority 100,
 the second its <code>onDispatch()</code> method to listen to the <code>dispatch</code> event at
 priority -100.</p>
-<pre class="codehilite"><code class="language-php">use My\Application\DispatchListener;
+<pre class="codehilite"><code class="language-php linenums">use My\Application\DispatchListener;
 use My\Application\RouteListener;
 use Zend\EventManager\LazyListenerAggregate;
 
@@ -305,13 +305,12 @@ $aggregate = new LazyListenerAggregate(
 );
 $aggregate-&gt;attach($events);</code></pre>
 
-
 <p>Internally, the <code>LazyListenerAggregate</code> will create <code>LazyEventListener</code>
 instances, and during its <code>attach()</code> phase use them to attach to the event
 manager using the event and priority they compose.</p>
 <p>Below is a functionally identical example, mixing in a concrete
 <code>LazyEventListener</code> instance for one listener:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\DispatchListener;
+<pre class="codehilite"><code class="language-php linenums">use My\Application\DispatchListener;
 use My\Application\RouteListener;
 use Zend\EventManager\LazyEventListener;
 use Zend\EventManager\LazyListenerAggregate;
@@ -338,7 +337,6 @@ $aggregate = new LazyListenerAggregate(
     $container
 );
 $aggregate-&gt;attach($events);</code></pre>
-
 
 <h2 id="recommendations">Recommendations</h2>
 <p>We recommend using <code>LazyListenerAggregate</code> when you have listeners you will be

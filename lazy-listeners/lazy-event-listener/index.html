@@ -291,7 +291,7 @@ keys in the definition supplied at instantiation:</p>
 <p>Additionally, we'll assume that we have a container-interop instance in the
 variable <code>$container</code> and an event manager in the variable <code>$events</code>.</p>
 <p>You could create the lazy event listener as follows:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\Listener;
+<pre class="codehilite"><code class="language-php linenums">use My\Application\Listener;
 use Zend\EventManager\LazyEventListener;
 
 $listener = new LazyEventListener([
@@ -300,7 +300,6 @@ $listener = new LazyEventListener([
     'event'    =&gt; 'dispatch',
     'priority' =&gt; 100,
 ], $container);</code></pre>
-
 
 <h2 id="methods">Methods</h2>
 <p><code>LazyEventListener</code> exposes two methods:</p>

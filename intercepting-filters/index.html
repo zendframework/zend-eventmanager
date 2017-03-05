@@ -279,14 +279,13 @@ take the incoming arguments in order to alter the workflow.</p>
 <h2 id="preparation">Preparation</h2>
 <p>To use the <code>FilterChain</code> implementation, you will need to install zend-stdlib,
 if you have not already:</p>
-<pre class="codehilite"><code class="language-bash">$ composer require zendframework/zend-stdlib</code></pre>
-
+<pre class="codehilite"><code class="language-bash linenums">$ composer require zendframework/zend-stdlib</code></pre>
 
 <h2 id="filterchaininterface">FilterChainInterface</h2>
 <p><code>Zend\EventManager\FilterChain</code> is a concrete implementation of
 <code>Zend\EventManager\Filter\FilterInterface</code>, which defines a workflow for
 intercepting filters. This includes the following methods:</p>
-<pre class="codehilite"><code class="language-php">interface FilterInterface
+<pre class="codehilite"><code class="language-php linenums">interface FilterInterface
 {
     public function run($context, array $params = []);
 
@@ -297,7 +296,6 @@ intercepting filters. This includes the following methods:</p>
     public function clearFilters();
     public function getResponses();
 }</code></pre>
-
 
 <p>In many ways, it's very similar to the <code>EventManagerInterface</code>, but with a few
 key differences:</p>
@@ -322,14 +320,13 @@ call on <code>$chain-&gt;next()</code>, passing the same set of arguments.</p>
 <h2 id="filters">Filters</h2>
 <p>A filter attached to a <code>FilterChain</code> instance can be any callable. However,
 these callables should expect the following arguments:</p>
-<pre class="codehilite"><code class="language-php">function ($context, array $argv, FilterIterator $chain)</code></pre>
-
+<pre class="codehilite"><code class="language-php linenums">function ($context, array $argv, FilterIterator $chain)</code></pre>
 
 <p>A filter can therefore act on the provided <code>$context</code>, using the provided
 arguments.</p>
 <p>Part of that execution can also be deciding that other filters should be called.
 To do so, it will call <code>$chain-&gt;next()</code>, providing it the same arguments:</p>
-<pre class="codehilite"><code class="language-php">function ($context, array $argv, FilterIterator $chain)
+<pre class="codehilite"><code class="language-php linenums">function ($context, array $argv, FilterIterator $chain)
 {
     $message = isset($argv['message']) ? $argv['message'] : '';
 
@@ -339,7 +336,6 @@ To do so, it will call <code>$chain-&gt;next()</code>, providing it the same arg
 
     return str_rot13($filtered);
 }</code></pre>
-
 
 <p>You can choose to call <code>$chain-&gt;next()</code> at any point in the filter, allowing you
 to:</p>
@@ -357,7 +353,7 @@ to:</p>
 the object under observation, and arguments, which are typically the arguments
 passed to the method triggering the filter chain.</p>
 <p>As an example, consider the following filter-enabled class:</p>
-<pre class="codehilite"><code class="language-php">use Zend\EventManager\FilterChain;
+<pre class="codehilite"><code class="language-php linenums">use Zend\EventManager\FilterChain;
 
 class ObservedTarget
 {
@@ -386,9 +382,8 @@ class ObservedTarget
     }
 }</code></pre>
 
-
 <p>Now, let's create an instance of the class, and attach some filters to it.</p>
-<pre class="codehilite"><code class="language-php">$observed = new ObservedTarget();
+<pre class="codehilite"><code class="language-php linenums">$observed = new ObservedTarget();
 
 $observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
     $args['message'] = isset($args['message'])
@@ -410,10 +405,8 @@ $observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
         : '');
 });</code></pre>
 
-
 <p>Finally, we'll call the method, and see what results we get:</p>
-<pre class="codehilite"><code class="language-php">$observed-&gt;execute('Hello, world!');</code></pre>
-
+<pre class="codehilite"><code class="language-php linenums">$observed-&gt;execute('Hello, world!');</code></pre>
 
 <p>Since filters are run in the order in which they are attached, the following
 will occur:</p>
@@ -433,7 +426,7 @@ filters.</p>
 chain in a filter itself, and attaching it at invocation. This allows
 intercepting filters to replace the main logic, while still providing a default
 path. This might look like:</p>
-<pre class="codehilite"><code class="language-php">// Assume that the class contains the `attachFilter()` implementation from above.
+<pre class="codehilite"><code class="language-php linenums">// Assume that the class contains the `attachFilter()` implementation from above.
 class ObservedTarget
 {
     private $attached = [];
@@ -456,7 +449,6 @@ class ObservedTarget
         };
     }
 }</code></pre>
-
 
 <p>Intercepting filters are a powerful way to introduce aspect-oriented programming
 paradigms into your code, as well as general-purpose mechanisms for introducing

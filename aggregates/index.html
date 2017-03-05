@@ -270,9 +270,8 @@
 </ul>
 <p>A listener aggregate is a class implementing
 <code>Zend\EventManager\ListenerAggregateInterface</code>, which defines two methods:</p>
-<pre class="codehilite"><code class="language-php">attach(EventManagerInterface $events, $priority = 1);
+<pre class="codehilite"><code class="language-php linenums">attach(EventManagerInterface $events, $priority = 1);
 detach(EventManagerInterface $events);</code></pre>
-
 
 <p>To attach an aggregate to an event manager, you pass the event manager to the
 aggregate's <code>attach()</code> method; in that method, you will then attach listeners to
@@ -280,7 +279,7 @@ the events you are interested in.</p>
 <h2 id="implementation">Implementation</h2>
 <p>To implement <code>ListenerAggregateInterface</code>, you need to define the <code>attach()</code> and
 <code>detach()</code> methods. A typical implementation will look something like this:</p>
-<pre class="codehilite"><code class="language-php">use Zend\EventManager\EventInterface;
+<pre class="codehilite"><code class="language-php linenums">use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 
@@ -319,7 +318,6 @@ class Aggregate implements ListenerAggregateInterface
     }
 }</code></pre>
 
-
 <p>Because the logic for detaching is essentially the same in all implementations,
 we provide two facilities for implementing this:</p>
 <ul>
@@ -335,10 +333,9 @@ we provide two facilities for implementing this:</p>
 <p>To use an aggregate listener, you need to attach it to the event manager. As
 noted in the intro to this section, you do so by passing the event
 manager to the aggregate's <code>attach()</code> method:</p>
-<pre class="codehilite"><code class="language-php">// Assume $events is an EventManager instance, and $aggregate is an instance of
+<pre class="codehilite"><code class="language-php linenums">// Assume $events is an EventManager instance, and $aggregate is an instance of
 // the Aggregate class defined earlier.
 $aggregate-&gt;attach($events);</code></pre>
-
 
 <h2 id="recommendations">Recommendations</h2>
 <ul>

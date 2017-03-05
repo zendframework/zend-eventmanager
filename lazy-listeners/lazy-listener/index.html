@@ -291,7 +291,7 @@ listener from a container and invoking it.</p>
   manager in the variable <code>$events</code>.</li>
 </ul>
 <p>I might then create and attach my lazy listener as follows:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\Listener;
+<pre class="codehilite"><code class="language-php linenums">use My\Application\Listener;
 use Zend\EventManager\LazyListener;
 
 $events-&gt;attach('foo', new LazyListener([
@@ -299,11 +299,10 @@ $events-&gt;attach('foo', new LazyListener([
     'method'   =&gt; 'onDispatch',
 ], $container));</code></pre>
 
-
 <p><code>LazyListener</code> implements the method <code>__invoke()</code>, allowing you to attach it
 directly as a callable listener!</p>
 <p>Internally, it will do essentially the following:</p>
-<pre class="codehilite"><code class="language-php">$listener = $container-&gt;get($this-&gt;listener);
+<pre class="codehilite"><code class="language-php linenums">$listener = $container-&gt;get($this-&gt;listener);
 $method   = $this-&gt;method;
 return $listener-&gt;{$method}($event);</code></pre>
 
