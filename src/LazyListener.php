@@ -9,7 +9,7 @@
 
 namespace Zend\EventManager;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Lazy listener instance.

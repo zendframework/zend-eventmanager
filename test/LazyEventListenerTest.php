@@ -9,7 +9,7 @@
 
 namespace ZendTest\EventManager;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\Exception\InvalidArgumentException;
 use Zend\EventManager\LazyEventListener;
