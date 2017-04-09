@@ -314,7 +314,7 @@ class LogEvents implements ListenerAggregateInterface
 >
 > The trait `Zend\EventManager\ListenerAggregateTrait` can be composed to help
 > implement `ListenerAggregateInterface`; it defines the `$listeners` property,
-> and the `detach()` logic as demostrated above.
+> and the `detach()` logic as demonstrated above.
 
 You can attach this by passing the event manager to the aggregate's `attach()`
 method:
@@ -548,7 +548,7 @@ stored in the object, and also to ensure the listeners have the exact same
 context as the calling method. But it raises an interesting problem in this
 example: what name do we give the result of the method? One standard that has
 emerged is the use of `__RESULT__`, as double-underscored variables are
-typically reserved for the sytem.
+typically reserved for the system.
 
 Here's what the method will look like:
 
