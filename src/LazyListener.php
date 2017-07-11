@@ -63,23 +63,9 @@ class LazyListener
      */
     public function __construct(array $definition, ContainerInterface $container, array $env = [])
     {
-        if ((! isset($definition['listener'])
-            || ! is_string($definition['listener'])
-            || empty($definition['listener']))
-        ) {
-            throw new Exception\InvalidArgumentException(
-                'Lazy listener definition is missing a valid "listener" member; cannot create LazyListener'
-            );
-        }
+        $this->isDefinitionEmpty($definition, 'listener');
 
-        if ((! isset($definition['method'])
-            || ! is_string($definition['method'])
-            || empty($definition['method']))
-        ) {
-            throw new Exception\InvalidArgumentException(
-                'Lazy listener definition is missing a valid "method" member; cannot create LazyListener'
-            );
-        }
+        $this->isDefinitionEmpty($definition, 'method');
 
         $this->service   = $definition['listener'];
         $this->method    = $definition['method'];
@@ -98,6 +84,22 @@ class LazyListener
         $listener = $this->fetchListener();
         $method   = $this->method;
         return $listener->{$method}($event);
+    }
+
+    /**
+     * @param array  $definition
+     * @param string $key
+     */
+    private function isDefinitionEmpty(array $definition, $key)
+    {
+        if ((!isset($definition[$key])
+            || !is_string($definition[$key])
+            || empty($definition[$key]))
+        ) {
+            throw new Exception\InvalidArgumentException(
+                'Lazy listener definition is missing a valid "' . $key . '" member; cannot create LazyListener'
+            );
+        }
     }
 
     /**
