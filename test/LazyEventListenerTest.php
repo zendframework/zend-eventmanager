@@ -29,7 +29,8 @@ class LazyEventListenerTest extends LazyListenerTest
             'listener' => 'listener',
             'method'   => 'method',
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "event"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "event"');
         new $class($struct, $this->container->reveal());
     }
 
@@ -44,7 +45,8 @@ class LazyEventListenerTest extends LazyListenerTest
             'listener' => 'listener',
             'method'   => 'method',
         ];
-        $this->setExpectedException(InvalidArgumentException::class, 'missing a valid "event"');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('missing a valid "event"');
         new $class($struct, $this->container->reveal());
     }
 

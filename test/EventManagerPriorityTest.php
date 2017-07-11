@@ -10,7 +10,7 @@
 namespace ZendTest\EventManager;
 
 use SplQueue;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\SharedEventManager;

@@ -9,12 +9,14 @@
 
 namespace ZendTest\EventManager;
 
+use PHPUnit\Framework\TestCase;
 use Zend\EventManager\Event;
+use Zend\EventManager\Exception;
 
 /**
  * @group      Zend_Stdlib
  */
-class EventTest extends \PHPUnit_Framework_TestCase
+class EventTest extends TestCase
 {
 
     public function testConstructorWithArguments()
@@ -33,7 +35,7 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function testSetParamsWithInvalidParameter()
     {
         $event = new Event('foo');
-        $this->setExpectedException('Zend\EventManager\Exception\InvalidArgumentException');
+        $this->expectException(Exception\InvalidArgumentException::class);
         $event->setParams('test');
     }
 

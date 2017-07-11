@@ -10,7 +10,7 @@
 namespace ZendTest\EventManager;
 
 use ArrayIterator;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Zend\EventManager\Exception;
 use Zend\EventManager\SharedEventManager;
@@ -56,7 +56,8 @@ class SharedEventManagerTest extends TestCase
      */
     public function testAttachRaisesExceptionForInvalidIdentifer($identifier)
     {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'identifier');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('identifier');
         $this->manager->attach($identifier, 'foo', $this->callback);
     }
 
@@ -81,7 +82,8 @@ class SharedEventManagerTest extends TestCase
      */
     public function testAttachRaisesExceptionForInvalidEvent($event)
     {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'event');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('event');
         $this->manager->attach('foo', $event, $this->callback);
     }
 
@@ -264,7 +266,8 @@ class SharedEventManagerTest extends TestCase
      */
     public function testDetachingWithInvalidIdentifierTypeRaisesException($identifier)
     {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Invalid identifier');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid identifier');
         $this->manager->detach($this->callback, $identifier, 'test');
     }
 
@@ -274,7 +277,8 @@ class SharedEventManagerTest extends TestCase
     public function testDetachingWithInvalidEventTypeRaisesException($eventName)
     {
         $this->manager->attach('IDENTIFIER', '*', $this->callback);
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'Invalid event name');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid event name');
         $this->manager->detach($this->callback, 'IDENTIFIER', $eventName);
     }
 
@@ -290,7 +294,8 @@ class SharedEventManagerTest extends TestCase
      */
     public function testGetListenersRaisesExceptionForInvalidEventName($eventName)
     {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'non-empty, non-wildcard');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('non-empty, non-wildcard');
         $this->manager->getListeners(['IDENTIFIER'], $eventName);
     }
 
@@ -299,7 +304,8 @@ class SharedEventManagerTest extends TestCase
      */
     public function testGetListenersRaisesExceptionForInvalidIdentifier($identifier)
     {
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'non-empty, non-wildcard');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('non-empty, non-wildcard');
         $this->manager->getListeners([$identifier], 'EVENT');
     }
 }
