@@ -9,12 +9,14 @@
 
 namespace ZendTest\EventManager;
 
+use PHPUnit\Framework\TestCase;
+use Zend\EventManager\Filter\FilterIterator;
 use Zend\EventManager\FilterChain;
 
 /**
  * @group      Zend_Stdlib
  */
-class FilterChainTest extends \PHPUnit_Framework_TestCase
+class FilterChainTest extends TestCase
 {
     /**
      * @var FilterChain
@@ -136,7 +138,7 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
 
     public function filterReceivalCallback($context, array $params, $chain)
     {
-        $this->assertInstanceOf('Zend\EventManager\Filter\FilterIterator', $chain);
+        $this->assertInstanceOf(FilterIterator::class, $chain);
     }
 
     public function testRunReturnsNullWhenChainIsEmpty()
