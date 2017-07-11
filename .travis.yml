@@ -36,7 +36,6 @@ matrix:
     - php: 7.1
 
 notifications:
-  irc: "irc.freenode.org#zftalk.dev"
   email: false
 
 before_install:
