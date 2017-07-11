@@ -244,7 +244,7 @@ Attach a listener to a named event triggered by an identified context, where:
 ### detach()
 
 ```php
-detach(callable $listener, $identifer = null, $eventName = null) : void
+detach(callable $listener, $identifier = null, $eventName = null) : void
 ```
 
 Detach a listener, optionally from a single identifier, and optionally from a

@@ -53,7 +53,7 @@ class EventManagerAwareTraitTest extends TestCase
 
         $object->setEventManager($eventManager);
 
-        //check that the identifer has been added.
+        //check that the identifier has been added.
         $this->assertContains($eventIdentifier, $eventManager->getIdentifiers());
 
         //check that the method attachDefaultListeners has been called
