@@ -9,6 +9,7 @@
 
 namespace ZendTest\EventManager;
 
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use ReflectionProperty;
 use stdClass;
@@ -17,10 +18,11 @@ use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\Exception;
 use Zend\EventManager\ListenerAggregateInterface;
+use Zend\EventManager\ResponseCollection;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\SharedEventManagerInterface;
 
-class EventManagerTest extends \PHPUnit_Framework_TestCase
+class EventManagerTest extends TestCase
 {
     public function setUp()
     {
@@ -124,7 +126,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             return str_rot13($string);
         });
         $responses = $this->events->trigger('string.transform', $this, ['string' => ' foo ']);
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertEquals(2, $responses->count());
         $this->assertEquals('foo', $responses->first());
         $this->assertEquals(\str_rot13(' foo '), $responses->last());
@@ -148,7 +150,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $this,
             ['string' => 'foo', 'search' => 'f']
         );
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertSame(0, $responses->last());
     }
 
@@ -191,7 +193,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $responses = $this->events->triggerUntil(function ($result) {
             return ($result === 'found');
         }, 'foo.bar', $this);
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertTrue($responses->stopped());
         $result = $responses->last();
         $this->assertEquals('found', $result);
@@ -210,7 +212,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $responses = $this->events->triggerUntil(function ($result) {
             return ($result === 'found');
         }, 'foo.bar', $this);
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertTrue($responses->stopped());
         $this->assertEquals('found', $responses->last());
     }
@@ -227,7 +229,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $responses = $this->events->triggerUntil(function ($result) {
             return ($result === 'never found');
         }, 'foo.bar', $this);
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertFalse($responses->stopped());
         $this->assertEquals('zero', $responses->last());
     }
@@ -242,7 +244,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         // @codingStandardsIgnoreEnd
 
         $responses = $this->events->trigger('foo.bar');
-        $this->assertInstanceOf('Zend\EventManager\ResponseCollection', $responses);
+        $this->assertInstanceOf(ResponseCollection::class, $responses);
         $this->assertTrue($responses->stopped());
         $this->assertEquals('nada', $responses->last());
         $this->assertTrue($responses->contains('bogus'));
@@ -479,7 +481,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     {
         $callback = function () {
         };
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('string');
         $this->events->attach($event, $callback);
     }
 
@@ -704,7 +707,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $listener = function ($e) {
         };
 
-        $this->setExpectedException(Exception\InvalidArgumentException::class, 'string');
+        $this->expectException(Exception\InvalidArgumentException::class);
+        $this->expectExceptionMessage('string');
         $this->events->detach($listener, $event);
     }
 
@@ -750,7 +754,8 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testTriggeringAnEventWithAnEmptyNameRaisesAnException($event, $method, $callback)
     {
-        $this->setExpectedException(Exception\RuntimeException::class, 'missing a name');
+        $this->expectException(Exception\RuntimeException::class);
+        $this->expectExceptionMessage('missing a name');
         if ($callback) {
             $this->events->$method($callback, $event);
         } else {

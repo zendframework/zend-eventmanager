@@ -9,13 +9,14 @@
 
 namespace ZendTest\EventManager;
 
+use PHPUnit\Framework\TestCase;
 use Zend\EventManager\Exception\InvalidArgumentException;
 use Zend\EventManager\Filter\FilterIterator;
 
 /**
  * @group      Zend_Stdlib
  */
-class FilterIteratorTest extends \PHPUnit_Framework_TestCase
+class FilterIteratorTest extends TestCase
 {
 
     public function testNextReturnsNullOnEmptyChain()
@@ -103,7 +104,8 @@ class FilterIteratorTest extends \PHPUnit_Framework_TestCase
     public function testInsertShouldRaiseExceptionOnNonCallableDatum($filter)
     {
         $iterator = new FilterIterator();
-        $this->setExpectedException(InvalidArgumentException::class, 'callables');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('callables');
         $iterator->insert($filter, 1);
     }
 }
