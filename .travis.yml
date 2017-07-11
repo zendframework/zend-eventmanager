@@ -74,7 +74,7 @@ notifications:
 
 before_install:
   - travis_retry composer self-update
-  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini ; fi
+  - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || true ; fi
 
 install:
   - travis_retry composer install $COMPOSER_ARGS
