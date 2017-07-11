@@ -60,7 +60,7 @@ trigger($event, $target = null, $argv = []);
 triggerUntil(callable $callback, $event, $target = null, $argv = []);
 ```
 
-with the following defintions:
+with the following definitions:
 
 - `$event` is a string event name.
 - `$target` is a value representing the target of the event.
