@@ -206,9 +206,7 @@ class SharedEventManager implements SharedEventManagerInterface
         }
 
         foreach ($returnListeners as $priority => $listOfListeners) {
-            // Argument unpacking requires PHP-5.6
-            // $listeners[$priority] = array_merge(...$listOfListeners);
-            $returnListeners[$priority] = call_user_func_array('array_merge', $listOfListeners);
+            $returnListeners[$priority] = array_merge(...$listOfListeners);
         }
 
         return $returnListeners;
