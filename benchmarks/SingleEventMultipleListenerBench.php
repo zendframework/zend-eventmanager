@@ -2,12 +2,17 @@
 
 namespace ZendBench\EventManager;
 
+use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
+use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\Revs;
 use Zend\EventManager\EventManager;
-use Athletic\AthleticEvent;
 
-class SingleEventMultipleListener extends AthleticEvent
+/**
+ * @BeforeMethods({"setUp"})
+ */
+class SingleEventMultipleListenerBench
 {
-    use TraitEventBench;
+    use BenchTrait;
 
     private $events;
 
@@ -22,9 +27,10 @@ class SingleEventMultipleListener extends AthleticEvent
     /**
      * Trigger the dispatch event
      *
-     * @iterations 5000
+     * @Revs(1000)
+     * @Iterations(20)
      */
-    public function trigger()
+    public function benchTrigger()
     {
         $this->events->trigger('dispatch');
     }

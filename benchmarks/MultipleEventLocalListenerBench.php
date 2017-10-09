@@ -2,12 +2,17 @@
 
 namespace ZendBench\EventManager;
 
+use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
+use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\Revs;
 use Zend\EventManager\EventManager;
-use Athletic\AthleticEvent;
 
-class MultipleEventLocalListener extends AthleticEvent
+/**
+ * @BeforeMethods({"setUp"})
+ */
+class MultipleEventLocalListenerBench
 {
-    use TraitEventBench;
+    use BenchTrait;
 
     private $eventsToTrigger;
 
@@ -23,9 +28,10 @@ class MultipleEventLocalListener extends AthleticEvent
     /**
      * Attach and trigger the event list
      *
-     * @iterations 5000
+     * @Revs(1000)
+     * @Iterations(20)
      */
-    public function trigger()
+    public function benchTrigger()
     {
         foreach ($this->eventsToTrigger as $event) {
             $this->events->attach($event, $this->generateCallback());

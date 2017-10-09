@@ -1,7 +1,8 @@
 <?php
+
 namespace ZendBench\EventManager;
 
-trait TraitEventBench
+trait BenchTrait
 {
     private $numListeners = 50;
 
