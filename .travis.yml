@@ -32,6 +32,7 @@ matrix:
         - PATH="$HOME/.local/bin:$PATH"
     - php: 7
       env:
+        - BENCHMARKS=true
         - CS_CHECK=true
     - php: 7.1
 
@@ -50,6 +51,7 @@ install:
 
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
+  - if [[ $BENCHMARKS == 'true' ]]; then vendor/bin/phpbench run --revs=2 --iterations=2 --report=aggregate ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
   - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then wget -O theme-installer.sh "https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh" ; chmod 755 theme-installer.sh ; ./theme-installer.sh ; fi
 

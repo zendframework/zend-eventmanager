@@ -2,13 +2,18 @@
 
 namespace ZendBench\EventManager;
 
+use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
+use PhpBench\Benchmark\Metadata\Annotations\Iterations;
+use PhpBench\Benchmark\Metadata\Annotations\Revs;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\EventManager;
-use Athletic\AthleticEvent;
 
-class MultipleEventIndividualSharedListener extends AthleticEvent
+/**
+ * @BeforeMethods({"setUp"})
+ */
+class MultipleEventMultipleSharedListenerBench
 {
-    use TraitEventBench;
+    use BenchTrait;
 
     private $sharedEvents;
 
@@ -20,10 +25,12 @@ class MultipleEventIndividualSharedListener extends AthleticEvent
     {
         $identifiers = $this->getIdentifierList();
         $this->sharedEvents = new SharedEventManager();
-        foreach ($this->getEventList() as $event) {
-            $this->sharedEvents->attach($identifiers[0], $event, $this->generateCallback());
+        foreach ($this->getIdentifierList() as $identifier) {
+            foreach ($this->getEventList() as $event) {
+                $this->sharedEvents->attach($identifier, $event, $this->generateCallback());
+            }
         }
-        $this->events = new EventManager($this->sharedEvents, [$identifiers[0]]);
+        $this->events = new EventManager($this->sharedEvents, $identifiers);
 
         $this->eventsToTrigger = array_filter($this->getEventList(), function ($value) {
             return ($value !== '*');
@@ -33,9 +40,10 @@ class MultipleEventIndividualSharedListener extends AthleticEvent
     /**
      * Trigger the event list
      *
-     * @iterations 5000
+     * @Revs(1000)
+     * @Iterations(20)
      */
-    public function trigger()
+    public function benchTrigger()
     {
         foreach ($this->eventsToTrigger as $event) {
             $this->events->trigger($event);

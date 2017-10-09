@@ -8,5 +8,6 @@
 .travis.yml export-ignore
 Makefile export-ignore
 mkdocs.yml export-ignore
+phpbench.json export-ignore
 phpunit.xml.dist export-ignore
 phpcs.xml export-ignore

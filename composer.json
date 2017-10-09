@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "phpunit/PHPUnit": "^6.0.7 || ^5.7.14",
-        "athletic/athletic": "^0.1",
+        "phpbench/phpbench": "^0.13",
         "zendframework/zend-stdlib": "^2.7.3 || ^3.0",
         "container-interop/container-interop": "^1.1.0",
         "zendframework/zend-coding-standard": "~1.0.0"
