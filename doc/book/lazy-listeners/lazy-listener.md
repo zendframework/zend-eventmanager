@@ -10,7 +10,7 @@ To create a `LazyListener` instance, you must pass to its constructor:
 - a *definition* of the listener; this is an array defining:
     - a `listener` key, with the name of the listener service to pull from the container.
     - a `method` key, with the name of the method to invoke on the listener instance.
-- a *container*; this is a [container-interop](https://github.com/container-interop/container-interop),
+- a *container*; this is a [PSR-11 container](https://github.com/php-fig/container),
   such as provided by
   [zend-servicemanager](https://github.com/zendframework/zend-servicemanager),
   [Aura.Di](https://github.com/auraphp/Aura.Di), etc.
@@ -24,8 +24,8 @@ As an example, let's assume:
 - We have a listener registered in our container with the service name
   `My\Application\Listener`.
 - The specific listener method is `onDispatch`.
-- I have a container-interop instance in the variable `$container` and an event
-  manager in the variable `$events`.
+- I have a `Psr\Container\ContainerInterface` instance in the variable `$container`
+  and an event manager in the variable `$events`.
 
 I might then create and attach my lazy listener as follows:
 

@@ -9,9 +9,9 @@
 
 namespace ZendTest\EventManager;
 
-use Interop\Container\ContainerInterface;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 use Prophecy\Argument;
+use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;

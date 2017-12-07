@@ -23,8 +23,9 @@ As an example, let's assume:
 - we want to attach it to the event `dispatch`,
 - at priority 100.
 
-Additionally, we'll assume that we have a container-interop instance in the
-variable `$container` and an event manager in the variable `$events`.
+Additionally, we'll assume that we have a `Psr\Container\ContainerInterface`
+instance in the variable `$container` and an event manager in the variable
+`$events`.
 
 You could create the lazy event listener as follows:
 

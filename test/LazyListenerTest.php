@@ -9,9 +9,9 @@
 
 namespace ZendTest\EventManager;
 
-use Interop\Container\ContainerInterface;
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 use Prophecy\Argument;
+use Psr\Container\ContainerInterface;
 use stdClass;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\Exception\InvalidArgumentException;

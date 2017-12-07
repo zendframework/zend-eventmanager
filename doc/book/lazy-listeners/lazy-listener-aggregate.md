@@ -7,8 +7,8 @@ number of listeners as lazy listeners.
 
 Similar to a [LazyListener](lazy-listener.md) or
 [LazyEventListener](lazy-event-listener.md), the `LazyListenerAggregate` accepts
-a definition (or, rather, set of definitions) a container-interop instance, and
-optionall an `$env` array to its constructor.
+a definition (or, rather, set of definitions) a `Psr\Container\ContainerInterface`
+instance, and optionally an `$env` array to its constructor.
 
 Unlike either, however, the definition provided is an array of definitions to
 use to create `LazyEventListener` instances; you may also intersperse actual
