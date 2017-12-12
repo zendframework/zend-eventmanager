@@ -464,6 +464,7 @@ class EventManager implements EventManagerInterface
         $responses = new ResponseCollection;
         $listeners = $this->getListeners($event);
 
+
         // Add shared/wildcard listeners to the list of listeners,
         // but don't modify the listeners object
         $sharedListeners         = $this->getSharedListeners($event);
@@ -481,6 +482,9 @@ class EventManager implements EventManagerInterface
             // Add wildcard listeners
             $this->insertListeners($listeners, $wildcardListeners);
         }
+
+        // Initial value of stop propagation flag should be false
+        $e->stopPropagation(false);
 
         foreach ($listeners as $listener) {
             $listenerCallback = $listener->getCallback();
