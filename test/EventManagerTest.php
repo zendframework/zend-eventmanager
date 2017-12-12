@@ -10,6 +10,7 @@
 namespace ZendTest\EventManager;
 
 use ArrayIterator;
+use Prophecy\Prophecy\ProphecyInterface;
 use stdClass;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
@@ -24,6 +25,9 @@ use Zend\Stdlib\CallBackHandler;
  */
 class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var EventManager */
+    protected $events;
+
     public function setUp()
     {
         StaticEventManager::resetInstance();
@@ -802,9 +806,13 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerEventAcceptsEventInstanceAndTriggersListeners()
     {
+        /** @var ProphecyInterface | EventInterface $event */
         $event = $this->prophesize(EventInterface::class);
+        $event->stopPropagation(false)->will(function () {
+            $this->propagationIsStopped()->willReturn(false);
+        });
         $event->getName()->willReturn('test');
-        $event->propagationIsStopped()->willReturn(false);
+
 
         $triggered = false;
         $this->events->attach('test', function ($e) use ($event, &$triggered) {
@@ -818,9 +826,12 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testTriggerEventUntilAcceptsEventInstanceAndTriggersListenersUntilCallbackEvaluatesTrue()
     {
+        /** @var ProphecyInterface | EventInterface $event */
         $event = $this->prophesize(EventInterface::class);
+        $event->stopPropagation(false)->will(function () {
+            $this->propagationIsStopped()->willReturn(false);
+        });
         $event->getName()->willReturn('test');
-        $event->propagationIsStopped()->willReturn(false);
 
         $callback = function ($result) {
             return ($result === true);
