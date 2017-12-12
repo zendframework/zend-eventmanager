@@ -10,20 +10,25 @@
 namespace ZendTest\EventManager;
 
 use ArrayIterator;
+use ReflectionClass;
 use stdClass;
 use Zend\EventManager\Event;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\StaticEventManager;
-use ReflectionClass;
-use Zend\Stdlib\CallBackHandler;
+use Zend\Stdlib\CallbackHandler;
 
 /**
  * @group      Zend_EventManager
  */
 class EventManagerTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var EventManager
+     */
+    protected $events;
+
     public function setUp()
     {
         StaticEventManager::resetInstance();
@@ -682,7 +687,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
             $marker->propagationIsStopped = $e->propagationIsStopped();
         });
 
-        $event = new Event();
+        $event = new Event('foo');
         $event->stopPropagation(true);
         $this->events->triggerEvent($event);
 
@@ -718,7 +723,7 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $criteria = function ($r) {
             return false;
         };
-        $event = new Event();
+        $event = new Event('foo');
         $event->stopPropagation(true);
         $this->events->triggerEventUntil($criteria, $event);
 
@@ -836,8 +841,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testTriggerEventAcceptsEventInstanceAndTriggersListeners()
     {
         $event = $this->prophesize(EventInterface::class);
+        $event->stopPropagation(false)->will(function () {
+            $this->propagationIsStopped()->willReturn(false);
+        });
         $event->getName()->willReturn('test');
-        $event->propagationIsStopped()->willReturn(false);
 
         $triggered = false;
         $this->events->attach('test', function ($e) use ($event, &$triggered) {
@@ -852,8 +859,10 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
     public function testTriggerEventUntilAcceptsEventInstanceAndTriggersListenersUntilCallbackEvaluatesTrue()
     {
         $event = $this->prophesize(EventInterface::class);
+        $event->stopPropagation(false)->will(function () {
+            $this->propagationIsStopped()->willReturn(false);
+        });
         $event->getName()->willReturn('test');
-        $event->propagationIsStopped()->willReturn(false);
 
         $callback = function ($result) {
             return ($result === true);
