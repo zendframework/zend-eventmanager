@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## 2.6.4 - 2017-12-12
+
+### Added
+
+- Nothing.
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- Nothing.
+
+### Fixed
+
+- [#68](https://github.com/zendframework/zend-eventmanager/pull/68) fixes an
+  issue whereby `triggerListeners()` was not resetting the event instance's
+  "stop propagation" flag before triggering listeners; this could result in all
+  listeners for a given event being skipped in cases where the event manager
+  instance triggers multiple events.
+
 ## 2.6.3 - 2016-02-18
 
 ### Added
