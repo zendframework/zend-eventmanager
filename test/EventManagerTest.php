@@ -675,6 +675,21 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($event->propagationIsStopped());
     }
 
+    public function testTriggerEventSetsStopPropagationFlagToFalse()
+    {
+        $marker = (object) ['propagationIsStopped' => true];
+        $this->events->attach('foo', function ($e) use ($marker) {
+            $marker->propagationIsStopped = $e->propagationIsStopped();
+        });
+
+        $event = new Event();
+        $event->stopPropagation(true);
+        $this->events->triggerEvent($event);
+
+        $this->assertFalse($marker->propagationIsStopped);
+        $this->assertFalse($event->propagationIsStopped());
+    }
+
     public function testTriggerUntilSetsStopPropagationFlagToFalse()
     {
         $marker = (object) ['propagationIsStopped' => true];
@@ -688,6 +703,24 @@ class EventManagerTest extends \PHPUnit_Framework_TestCase
         $event = new Event();
         $event->stopPropagation(true);
         $this->events->trigger('foo', $event, $criteria);
+
+        $this->assertFalse($marker->propagationIsStopped);
+        $this->assertFalse($event->propagationIsStopped());
+    }
+
+    public function testTriggerEventUntilSetsStopPropagationFlagToFalse()
+    {
+        $marker = (object) ['propagationIsStopped' => true];
+        $this->events->attach('foo', function ($e) use ($marker) {
+            $marker->propagationIsStopped = $e->propagationIsStopped();
+        });
+
+        $criteria = function ($r) {
+            return false;
+        };
+        $event = new Event();
+        $event->stopPropagation(true);
+        $this->events->triggerEventUntil($criteria, $event);
 
         $this->assertFalse($marker->propagationIsStopped);
         $this->assertFalse($event->propagationIsStopped());
