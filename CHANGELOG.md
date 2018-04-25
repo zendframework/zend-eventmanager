@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
+- [#66](https://github.com/zendframework/zend-eventmanager/pull/66) adds support for PHP 7.2.
+
+### Changed
+
 - Nothing.
 
 ### Deprecated
