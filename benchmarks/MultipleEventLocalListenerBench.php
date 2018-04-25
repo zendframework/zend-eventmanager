@@ -2,21 +2,27 @@
 
 namespace ZendBench\EventManager;
 
-use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Benchmark\Metadata\Annotations\Warmup;
 use Zend\EventManager\EventManager;
 
 /**
- * @BeforeMethods({"setUp"})
+ * @Revs(1000)
+ * @Iterations(10)
+ * @Warmup(2)
  */
 class MultipleEventLocalListenerBench
 {
     use BenchTrait;
 
+    /** @var EventManager */
+    private $events;
+
+    /** @var array */
     private $eventsToTrigger;
 
-    public function setUp()
+    public function __construct()
     {
         $this->events = new EventManager();
 
@@ -25,12 +31,6 @@ class MultipleEventLocalListenerBench
         });
     }
 
-    /**
-     * Attach and trigger the event list
-     *
-     * @Revs(1000)
-     * @Iterations(20)
-     */
     public function benchTrigger()
     {
         foreach ($this->eventsToTrigger as $event) {

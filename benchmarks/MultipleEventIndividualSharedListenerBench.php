@@ -2,45 +2,41 @@
 
 namespace ZendBench\EventManager;
 
-use PhpBench\Benchmark\Metadata\Annotations\BeforeMethods;
 use PhpBench\Benchmark\Metadata\Annotations\Iterations;
 use PhpBench\Benchmark\Metadata\Annotations\Revs;
+use PhpBench\Benchmark\Metadata\Annotations\Warmup;
 use Zend\EventManager\SharedEventManager;
 use Zend\EventManager\EventManager;
 
 /**
- * @BeforeMethods({"setUp"})
+ * @Revs(1000)
+ * @Iterations(10)
+ * @Warmup(2)
  */
 class MultipleEventIndividualSharedListenerBench
 {
     use BenchTrait;
 
-    private $sharedEvents;
-
+    /** @var EventManager */
     private $events;
 
+    /** @var array */
     private $eventsToTrigger;
 
-    public function setUp()
+    public function __construct()
     {
         $identifiers = $this->getIdentifierList();
-        $this->sharedEvents = new SharedEventManager();
+        $sharedEvents = new SharedEventManager();
         foreach ($this->getEventList() as $event) {
-            $this->sharedEvents->attach($identifiers[0], $event, $this->generateCallback());
+            $sharedEvents->attach($identifiers[0], $event, $this->generateCallback());
         }
-        $this->events = new EventManager($this->sharedEvents, [$identifiers[0]]);
+        $this->events = new EventManager($sharedEvents, [$identifiers[0]]);
 
         $this->eventsToTrigger = array_filter($this->getEventList(), function ($value) {
             return ($value !== '*');
         });
     }
 
-    /**
-     * Trigger the event list
-     *
-     * @Revs(1000)
-     * @Iterations(20)
-     */
     public function benchTrigger()
     {
         foreach ($this->eventsToTrigger as $event) {
