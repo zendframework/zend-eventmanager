@@ -366,7 +366,7 @@ listener executes, resulting in the following output:</p>
 Triggered second</code></pre>
 
 <h3 id="triggerevent">triggerEvent()</h3>
-<pre class="codehilite"><code class="language-php">triggerEvent(EventInterfce $event) : ResponseCollection</code></pre>
+<pre class="codehilite"><code class="language-php">triggerEvent(EventInterface $event) : ResponseCollection</code></pre>
 
 <p>This method is a sibling to <code>trigger()</code>, but unlike <code>trigger()</code>, it accepts an
 <code>EventInterface</code> instance as its sole argument. It is up to the caller to ensure
@@ -428,9 +428,9 @@ $args-&gt;foo = 'bar';
 
 <p>As such, we recommend passing either an array or an <code>ArrayObject</code> instance for
 event arguments. If you pass the latter, you get the benefit of being able to
-mainpulate by reference.</p>
+manipulate by reference.</p>
 <p><code>prepareArgs()</code> can thus be used to return an <code>ArrayObject</code> representation of
-your aguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:</p>
+your arguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:</p>
 <pre class="codehilite"><code class="language-php">$events-&gt;attach('foo', $this, $events-&gt;prepareArgs(compact('bar', 'baz')));</code></pre>
 
 <h2 id="sharedeventmanager">SharedEventManager</h2>
@@ -506,7 +506,7 @@ across any event implementation.</p>
 
 <p>Sets the event target. <code>$target</code> may be a string or object.</p>
 <h3 id="setparams">setParams()</h3>
-<pre class="codehilite"><code class="language-php">setParams($parms) : void</code></pre>
+<pre class="codehilite"><code class="language-php">setParams($params) : void</code></pre>
 
 <p>Set the event parameters; <code>$params</code> should be an array or object implementing
 <code>ArrayAccess</code>.</p>

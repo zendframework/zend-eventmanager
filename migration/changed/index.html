@@ -380,7 +380,7 @@ $event-&gt;setName('foo');
 $event-&gt;setTarget($this);
 $events-&gt;triggerEvent($event);</code></pre>
 
-<p>If you are using a callback to shortcircuit, use one of the <code>*Until()</code> methods,
+<p>If you are using a callback to short-circuit, use one of the <code>*Until()</code> methods,
 passing the callback as the first argument:</p>
 <pre class="codehilite"><code class="language-php">// Standard trigger:
 $events-&gt;trigger('foo', $this, ['bar' =&gt; 'baz'], $criteria);

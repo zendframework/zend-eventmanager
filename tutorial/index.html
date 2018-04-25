@@ -540,7 +540,7 @@ class LogEvents implements ListenerAggregateInterface
         $this-&gt;listeners[] = $events-&gt;attach('doSomethingElse', [$this, 'log']);
     }
 
-    public function detach(EventCollection $events)
+    public function detach(EventManagerInterface $events)
     {
         foreach ($this-&gt;listeners as $index =&gt; $listener) {
             $events-&gt;detach($listener);
@@ -596,7 +596,7 @@ object triggering the event shouldn't really have much insight into what
 listeners are attached. However, sometimes you may want to short-circuit
 execution if interesting results are obtained.</p>
 <h2 id="short-circuiting-listener-execution">Short-circuiting listener execution</h2>
-<p>You may want to short-ciruit execution if a particular result is obtained, or if
+<p>You may want to short-circuit execution if a particular result is obtained, or if
 a listener determines that something is wrong, or that it can return something
 quicker than the target.</p>
 <p>As examples, one rationale for adding an <code>EventManager</code> is as a caching
