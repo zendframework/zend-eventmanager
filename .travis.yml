@@ -2,27 +2,14 @@ sudo: false
 
 language: php
 
-branches:
-  except:
-    - /^release-.*$/
-    - /^ghgfk-.*$/
-
 cache:
   directories:
     - $HOME/.composer/cache
-    - $HOME/.local
-    - zf-mkdoc-theme
 
 env:
   global:
     - COMPOSER_ARGS="--no-interaction"
     - COVERAGE_DEPS="satooshi/php-coveralls"
-    - LEGACY_DEPS="phpunit/phpunit"
-    - SITE_URL: https://zendframework.github.io/zend-eventmanager
-    - GH_USER_NAME: "Matthew Weier O'Phinney"
-    - GH_USER_EMAIL: matthew@weierophinney.net
-    - GH_REF: github.com/zendframework/zend-eventmanager.git
-    - secure: "q6mC+KhLKsPYD22R9RI7lLhQGF5dSQ0QttmaFSQf/wtIntruVIFoyWt8ObR3zFsZ4xxra8MZFV2AjbMM9vqB28aHZ1jV5kbCbhTfSbdv0GT4nwqIHh84Ui7gCykJBqyyboWf/ekOv87cbuTg3EbqJcgdBh6/oyRGIVVB3HQayJJTTUCz+TQ/M4mpvOE+61FGpu6WLv465R8aKRi0ZLjk6qMtAY616cnGlPBOoNopyQM2+VTGyLOFgwnCUae3l4MSc8zsWgA4FLwttsYOzoVXit1ZXcqAt+XCAxUMntT3esIKVdeNejqQ7ZhMdMJpbdXTgfOD9kPt4fbNrcyg12Zkl0F3lHUNMb22PWNXb7tZ3+E4pR8B+6GtKXLRleEl9sPUKhxZ0CgwQErqOE8Osnw+BeNjueosNzJvrpxdHLX1a1+1v4VZIcikK+btW6YS+YLjZJgd80LI/4vQByUehgfFRuJnmjkMp+p9NN+PphdYHcQLfe2VU+qif114cR2WAyaiJ47zXMu2+vqp9sR20M2CfKZXrihiSO+CdbhSmep3sWaCuLWZtpsMx7u3rKl1o5doGLmkYAc+OaCEw5mZ/nVxzkH2ldNNcCeV2+ENKj4zlKoVXy1MB0KTT2U2rJ4pO5WhYLORbgBNNKeuD8r5nl65Dhn3gaIPXvlica/jIqay+/U="
 
 matrix:
   include:
@@ -32,9 +19,8 @@ matrix:
     - php: 5.6
       env:
         - DEPS=locked
+        - LEGACY_DEPS="phpunit/phpunit"
         - TEST_COVERAGE=true
-        - DEPLOY_DOCS="$(if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then echo -n 'true' ; else echo -n 'false' ; fi)"
-        - PATH="$HOME/.local/bin:$PATH"
     - php: 5.6
       env:
         - DEPS=latest
@@ -44,6 +30,7 @@ matrix:
     - php: 7
       env:
         - DEPS=locked
+        - LEGACY_DEPS="phpunit/phpunit"
         - CS_CHECK=true
     - php: 7
       env:
@@ -54,9 +41,11 @@ matrix:
     - php: 7.1
       env:
         - DEPS=locked
+        - TEST_COVERAGE=true
     - php: 7.1
       env:
         - DEPS=latest
+        - BENCHMARKS=true
     - php: 7.2
       env:
         - DEPS=lowest
@@ -66,32 +55,24 @@ matrix:
     - php: 7.2
       env:
         - DEPS=latest
-  allow_failures:
-    - php: 7.2
-
-notifications:
-  email: false
 
 before_install:
-  - travis_retry composer self-update
   - if [[ $TEST_COVERAGE != 'true' ]]; then phpenv config-rm xdebug.ini || true ; fi
 
 install:
-  - travis_retry composer install $COMPOSER_ARGS
-  - if [[ $TRAVIS_PHP_VERSION =~ ^5.6 ]]; then travis_retry composer update $COMPOSER_ARGS --with-dependencies $LEGACY_DEPS ; fi
-  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
+  - travis_retry composer install $COMPOSER_ARGS --ignore-platform-reqs
+  - if [[ $LEGACY_DEPS != '' ]]; then travis_retry composer update --with-dependencies $COMPOSER_ARGS $LEGACY_DEPS ; fi
   - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable $COMPOSER_ARGS ; fi
+  - if [[ $DEPS == 'latest' ]]; then travis_retry composer update $COMPOSER_ARGS ; fi
   - if [[ $TEST_COVERAGE == 'true' ]]; then travis_retry composer require --dev $COMPOSER_ARGS $COVERAGE_DEPS ; fi
-  - stty cols 120
-  - COLUMNS=120 composer show
+  - stty cols 120 && composer show
 
 script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer test-coverage ; else composer test ; fi
   - if [[ $CS_CHECK == 'true' ]]; then composer cs-check ; fi
-  - if [[ $DEPLOY_DOCS == "true" && "$TRAVIS_TEST_RESULT" == "0" ]]; then wget -O theme-installer.sh "https://raw.githubusercontent.com/zendframework/zf-mkdoc-theme/master/theme-installer.sh" ; chmod 755 theme-installer.sh ; ./theme-installer.sh ; fi
-
-after_success:
-  - if [[ $DEPLOY_DOCS == "true" ]]; then echo "Preparing to build and deploy documentation" ; ./zf-mkdoc-theme/deploy.sh ; echo "Completed deploying documentation" ; fi
 
 after_script:
   - if [[ $TEST_COVERAGE == 'true' ]]; then composer upload-coverage ; fi
+
+notifications:
+  email: false
