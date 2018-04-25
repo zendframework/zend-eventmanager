@@ -35,7 +35,7 @@
         "php": "^5.6 || ^7.0"
     },
     "require-dev": {
-        "phpunit/PHPUnit": "^6.0.7 || ^5.7.14",
+        "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
         "athletic/athletic": "^0.1",
         "zendframework/zend-stdlib": "^2.7.3 || ^3.0",
         "container-interop/container-interop": "^1.1.0",
@@ -53,7 +53,6 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "upload-coverage": "coveralls -v"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     }
 }
