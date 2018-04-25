@@ -122,7 +122,7 @@ Triggered second
 ### triggerEvent()
 
 ```php
-triggerEvent(EventInterfce $event) : ResponseCollection
+triggerEvent(EventInterface $event) : ResponseCollection
 ```
 
 This method is a sibling to `trigger()`, but unlike `trigger()`, it accepts an
@@ -216,10 +216,10 @@ $foo = $e->getParam('foo'); // How should the event know how to get this?
 
 As such, we recommend passing either an array or an `ArrayObject` instance for
 event arguments. If you pass the latter, you get the benefit of being able to
-mainpulate by reference.
+manipulate by reference.
 
 `prepareArgs()` can thus be used to return an `ArrayObject` representation of
-your aguments to pass to `trigger()` or `triggerUntil()`:
+your arguments to pass to `trigger()` or `triggerUntil()`:
 
 ```php
 $events->attach('foo', $this, $events->prepareArgs(compact('bar', 'baz')));
@@ -347,7 +347,7 @@ Sets the event target. `$target` may be a string or object.
 ### setParams()
 
 ```php
-setParams($parms) : void
+setParams($params) : void
 ```
 
 Set the event parameters; `$params` should be an array or object implementing
