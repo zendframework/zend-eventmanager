@@ -196,9 +196,10 @@ class SharedEventManagerTest extends TestCase
         $listeners = $this->getListeners($this->manager, ['IDENTIFIER'], 'EVENT');
         $this->assertInternalType('array', $listeners, 'Unexpected return value from getListeners() for event EVENT');
         $this->assertCount(1, $listeners);
-        $this->assertContainsOnly($wildcard, $listeners, null, sprintf(
+        $listener = array_shift($listeners);
+        $this->assertSame($wildcard, $listener, sprintf(
             'Expected only wildcard listener on event EVENT after clearListener operation; received: %s',
-            var_export($listeners, 1)
+            var_export($listener, 1)
         ));
 
         $listeners = $this->getListeners($this->manager, ['IDENTIFIER'], 'ALTERNATE');
@@ -208,7 +209,8 @@ class SharedEventManagerTest extends TestCase
             'Unexpected return value from getListeners() for event ALTERNATE'
         );
         $this->assertCount(1, $listeners);
-        $this->assertContainsOnly($alternate, $listeners, null, 'Unexpected listener list for event ALTERNATE');
+        $listener = array_shift($listeners);
+        $this->assertSame($alternate, $listener, 'Unexpected listener list for event ALTERNATE');
     }
 
     public function testClearListenersDoesNotRemoveWildcardListenersWhenEventIsProvided()
