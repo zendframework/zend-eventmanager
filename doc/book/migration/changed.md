@@ -111,7 +111,7 @@ $event->setTarget($this);
 $events->triggerEvent($event);
 ```
 
-If you are using a callback to shortcircuit, use one of the `*Until()` methods,
+If you are using a callback to short-circuit, use one of the `*Until()` methods,
 passing the callback as the first argument:
 
 ```php

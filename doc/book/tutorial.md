@@ -358,7 +358,7 @@ execution if interesting results are obtained.
 
 ## Short-circuiting listener execution
 
-You may want to short-ciruit execution if a particular result is obtained, or if
+You may want to short-circuit execution if a particular result is obtained, or if
 a listener determines that something is wrong, or that it can return something
 quicker than the target.
 
