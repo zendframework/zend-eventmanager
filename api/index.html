@@ -1,38 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="zend-eventmanager: Implement events, signal slots, aspects, and observers!">  
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>EventManager API - zend-eventmanager</title>
 
-    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
-    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <link href="../css/base.css" rel="stylesheet">
-    <link href="../css/zf.css" rel="stylesheet">
-    <link href="../css/prism-zf.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
-    <script>
-    WebFont.load({
-        google: {
-            families: ['Open Sans', 'PT Sans']
-        }
-    });
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/styles-288837cc22.css">
 
     
 </head>
@@ -56,8 +37,8 @@
 
             <!-- Main title -->
             <span class="navbar-brand">
-              <a class="logo-link" href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Zend Framework"><img src="../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
-              <a href="..">zend-eventmanager</a>
+                <a class="logo-link" href="https://framework.zend.com/" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../img/zf-logo-mark.svg" height="28" alt="Zend Framework" /></a>
+                <a href="..">zend-eventmanager</a>
             </span>
         </div>
 
@@ -68,9 +49,12 @@
                 <ul class="nav navbar-nav">
                 
                 
+                
                     <li >
-                        <a href="..">Home</a>
+                        <a href="..">zend-eventmanager</a>
                     </li>
+                
+                
                 
                 
                 
@@ -80,9 +64,13 @@
                 
                 
                 
+                
+                
                     <li >
                         <a href="../quick-start/">Quick Start</a>
                     </li>
+                
+                
                 
                 
                 
@@ -92,9 +80,13 @@
                 
                 
                 
+                
+                
                     <li >
                         <a href="../examples/">Examples</a>
                     </li>
+                
+                
                 
                 
                 
@@ -103,91 +95,118 @@
                         <ul class="dropdown-menu">
                         
                             
+
 <li >
     <a href="../wildcard-listeners/">Wildcard Listeners</a>
 </li>
 
+
                         
                             
+
 <li >
     <a href="../aggregates/">Listener Aggregates</a>
 </li>
 
+
                         
                             
+
   <li class="dropdown-submenu">
     <a tabindex="-1" href="">Lazy Listeners</a>
     <ul class="dropdown-menu">
         
             
+
 <li >
     <a href="../lazy-listeners/intro/">Intro</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../lazy-listeners/lazy-listener/">LazyListener</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../lazy-listeners/lazy-event-listener/">LazyEventListener</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../lazy-listeners/lazy-listener-aggregate/">LazyListenerAggregate</a>
 </li>
+
 
         
     </ul>
   </li>
 
+
                         
                             
+
 <li class="active">
     <a href="./">EventManager API</a>
 </li>
 
+
                         
                             
+
 <li >
     <a href="../intercepting-filters/">Intercepting Filters</a>
 </li>
 
+
                         
                             
+
   <li class="dropdown-submenu">
     <a tabindex="-1" href="">Migration Guide</a>
     <ul class="dropdown-menu">
         
             
+
 <li >
     <a href="../migration/intro/">Intro</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../migration/removed/">Removed Functionality</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../migration/changed/">Changed Functionality</a>
 </li>
+
 
         
     </ul>
   </li>
 
+
                         
                         </ul>
                     </li>
+                
                 
                 
                 </ul>
@@ -207,7 +226,7 @@
                 </li>
                 
                     <li>
-                        <a href="https://github.com/zendframework/zend-eventmanager">
+                        <a href="https://github.com/zendframework/zend-eventmanager/">
                             
                                 <i class="fa fa-github"></i>
                             
@@ -221,7 +240,7 @@
 </div>
 
     <!-- content:begin -->
-    <div class="container">
+    <div id="page-top" class="container docs">
         
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
@@ -253,11 +272,11 @@
         <div class="col-md-9" role="main">
 
 <ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
-  <li><a href="..">Docs</a> &raquo;</li>
+  <li><a href="..">zend-eventmanager</a></li>
   
     
       
-        <li>Reference &raquo;</li>
+        <li>Reference</li>
       
     
   
@@ -269,7 +288,7 @@
 <code>EventInterface</code>, and <code>ResponseCollection</code>.</p>
 <h2 id="eventmanager">EventManager</h2>
 <h3 id="constructor">Constructor</h3>
-<pre class="codehilite"><code class="language-php linenums">public function __construct(
+<pre class="codehilite"><code class="language-php">public function __construct(
     SharedEventManagerInterface $sharedEvents = null,
     array $identifiers = []
 )</code></pre>
@@ -277,31 +296,31 @@
 <p>The <code>EventManager</code> instance accepts a shared event manager instance and
 identifiers to use with the shared event manager.</p>
 <h3 id="seteventprototype">setEventPrototype()</h3>
-<pre class="codehilite"><code class="language-php linenums">public function setEventPrototype(EventInterface $event) : void</code></pre>
+<pre class="codehilite"><code class="language-php">public function setEventPrototype(EventInterface $event) : void</code></pre>
 
 <p>Use this method in order to provide an event prototype. The event prototype is
 used with the <code>trigger()</code> and <code>triggerUntil()</code> methods to create a new event
 instance; the prototype is cloned and populated with the event name, target, and
 arguments passed to the method.</p>
 <h3 id="getsharedmanager">getSharedManager()</h3>
-<pre class="codehilite"><code class="language-php linenums">public function getSharedManager() : null|SharedEventManagerInterface</code></pre>
+<pre class="codehilite"><code class="language-php">public function getSharedManager() : null|SharedEventManagerInterface</code></pre>
 
 <p>Use this method to retrieve the composed shared event manager instance, if any.</p>
 <h3 id="getidentifiers">getIdentifiers()</h3>
-<pre class="codehilite"><code class="language-php linenums">public function getIdentifiers() : array</code></pre>
+<pre class="codehilite"><code class="language-php">public function getIdentifiers() : array</code></pre>
 
 <p>Use this method to retrieve the current list of identifiers the event manager
 defines. Identifiers are used when retrieving listeners from the composed shared
 event manager.</p>
 <h3 id="setidentifiers-and-addidentifiers">setIdentifiers() and addIdentifiers()</h3>
-<pre class="codehilite"><code class="language-php linenums">public function setIdentifiers(array $identifiers) : void
+<pre class="codehilite"><code class="language-php">public function setIdentifiers(array $identifiers) : void
 public function addIdentifiers(array $identifiers) : void</code></pre>
 
 <p>Use these methods to manipulate the list of identifiers the event manager
 is interested in. <code>setIdentifiers()</code> will overwrite any identifiers previously
 set, while <code>addIdentifiers()</code> will merge them.</p>
 <h3 id="trigger">trigger()</h3>
-<pre class="codehilite"><code class="language-php linenums">trigger($eventName, $target = null, $argv = []) : ResponseCollection</code></pre>
+<pre class="codehilite"><code class="language-php">trigger($eventName, $target = null, $argv = []) : ResponseCollection</code></pre>
 
 <p>where:</p>
 <ul>
@@ -315,7 +334,7 @@ set, while <code>addIdentifiers()</code> will merge them.</p>
 <p>The target and/or arguments may be omitted, but the event name is required.</p>
 <p>When done triggering, the method returns a <code>ResponseCollection</code>.</p>
 <h3 id="triggeruntil">triggerUntil()</h3>
-<pre class="codehilite"><code class="language-php linenums">triggerUntil(callable $callback, $eventName, $target = null, $argv = []) : ResponseCollection</code></pre>
+<pre class="codehilite"><code class="language-php">triggerUntil(callable $callback, $eventName, $target = null, $argv = []) : ResponseCollection</code></pre>
 
 <p><code>triggerUntil()</code> is a sibling to <code>trigger()</code>, and prefixes the argument list
 with a single <code>$callback</code>.</p>
@@ -324,7 +343,7 @@ that listener. The <code>$callback</code> should inspect the result, and determi
 should result in short-circuiting the event loop. Returning a boolean <code>true</code>
 value indicates that the criteria has been met and the event loop should end.</p>
 <p>As an example:</p>
-<pre class="codehilite"><code class="language-php linenums">$events-&gt;attach('foo', function ($e) {
+<pre class="codehilite"><code class="language-php">$events-&gt;attach('foo', function ($e) {
     echo &quot;Triggered first\n&quot;;
     return true;
 });
@@ -343,11 +362,11 @@ $events-&gt;triggerUntil(function ($result) {
 
 <p>In the above example, the event loop will short-circuit after the second
 listener executes, resulting in the following output:</p>
-<pre class="codehilite"><code class="language-text linenums">Triggered first
+<pre class="codehilite"><code class="language-text">Triggered first
 Triggered second</code></pre>
 
 <h3 id="triggerevent">triggerEvent()</h3>
-<pre class="codehilite"><code class="language-php linenums">triggerEvent(EventInterfce $event) : ResponseCollection</code></pre>
+<pre class="codehilite"><code class="language-php">triggerEvent(EventInterfce $event) : ResponseCollection</code></pre>
 
 <p>This method is a sibling to <code>trigger()</code>, but unlike <code>trigger()</code>, it accepts an
 <code>EventInterface</code> instance as its sole argument. It is up to the caller to ensure
@@ -355,14 +374,14 @@ the event is properly populated.</p>
 <p>This method behaves identically to <code>trigger()</code>, returning a <code>ResponseCollection</code>
 after all listeners have been triggered.</p>
 <h3 id="triggereventuntil">triggerEventUntil()</h3>
-<pre class="codehilite"><code class="language-php linenums">triggerEventUntil(callable $callback, EventInterface $event) : ResponseCollection</code></pre>
+<pre class="codehilite"><code class="language-php">triggerEventUntil(callable $callback, EventInterface $event) : ResponseCollection</code></pre>
 
 <p>This method is a sibling to <code>triggerEvent()</code> and <code>triggerUntil()</code>. Like
 <code>triggerUntil()</code>, the first argument is a PHP callable to invoke for each
 response, and is used to determine whether or not to short-circuit execution.
 Like <code>triggerEvent()</code>, the next argument is an <code>EventInterface</code> instance.</p>
 <h3 id="attach">attach()</h3>
-<pre class="codehilite"><code class="language-php linenums">attach($eventName, callable $listener, $priority = 1) : callable</code></pre>
+<pre class="codehilite"><code class="language-php">attach($eventName, callable $listener, $priority = 1) : callable</code></pre>
 
 <p>Use <code>attach()</code> to attach a callable listener to a named event. <code>$priority</code> can
 be used to indicate where in the listener queue the event should be executed.
@@ -372,22 +391,22 @@ execute last). The default priority is 1, and listeners registered with the same
 priority will execute in the order in which they attach to the event manager.</p>
 <p>The method returns the listener attached.</p>
 <h3 id="detach">detach()</h3>
-<pre class="codehilite"><code class="language-php linenums">detach(callable $listener, $eventName = null) : void</code></pre>
+<pre class="codehilite"><code class="language-php">detach(callable $listener, $eventName = null) : void</code></pre>
 
 <p>Use <code>detach()</code> to remove a listener. When a named <code>$eventName</code> is provided, the
 method will detach the listener from that event only (or, if the event does not
 exist in the event manager, nothing will occur). If no event is provided, or the
 wildcard event is provided, the listener will be detached from all events.</p>
 <h3 id="clearlisteners">clearListeners()</h3>
-<pre class="codehilite"><code class="language-php linenums">clearListeners($eventName) : void</code></pre>
+<pre class="codehilite"><code class="language-php">clearListeners($eventName) : void</code></pre>
 
 <p>Use this method to remove all listeners for a given named event.</p>
 <h3 id="prepareargs">prepareArgs()</h3>
-<pre class="codehilite"><code class="language-php linenums">prepareArgs(array $args) : ArrayObject</code></pre>
+<pre class="codehilite"><code class="language-php">prepareArgs(array $args) : ArrayObject</code></pre>
 
 <p>Normally when working with an event, if you want to change any arguments in the
 event, you would need to do the following:</p>
-<pre class="codehilite"><code class="language-php linenums">$args = $e-&gt;getParams();
+<pre class="codehilite"><code class="language-php">$args = $e-&gt;getParams();
 
 // Manipulate args:
 $args['foo'] = 'bar';
@@ -397,7 +416,7 @@ $e-&gt;setParams($args);</code></pre>
 
 <p>If the arguments you provide are an <em>object</em>, however, you can manipulate them
 directly:</p>
-<pre class="codehilite"><code class="language-php linenums">$args = $e-&gt;getParams();
+<pre class="codehilite"><code class="language-php">$args = $e-&gt;getParams();
 
 // Manipulate args:
 $args-&gt;foo = 'bar';
@@ -405,18 +424,18 @@ $args-&gt;foo = 'bar';
 // Done!</code></pre>
 
 <p>Using an object, however, makes accessing individual parameters difficult:</p>
-<pre class="codehilite"><code class="language-php linenums">$foo = $e-&gt;getParam('foo'); // How should the event know how to get this?</code></pre>
+<pre class="codehilite"><code class="language-php">$foo = $e-&gt;getParam('foo'); // How should the event know how to get this?</code></pre>
 
 <p>As such, we recommend passing either an array or an <code>ArrayObject</code> instance for
 event arguments. If you pass the latter, you get the benefit of being able to
 mainpulate by reference.</p>
 <p><code>prepareArgs()</code> can thus be used to return an <code>ArrayObject</code> representation of
 your aguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:</p>
-<pre class="codehilite"><code class="language-php linenums">$events-&gt;attach('foo', $this, $events-&gt;prepareArgs(compact('bar', 'baz')));</code></pre>
+<pre class="codehilite"><code class="language-php">$events-&gt;attach('foo', $this, $events-&gt;prepareArgs(compact('bar', 'baz')));</code></pre>
 
 <h2 id="sharedeventmanager">SharedEventManager</h2>
 <h3 id="attach_1">attach()</h3>
-<pre class="codehilite"><code class="language-php linenums">attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre>
+<pre class="codehilite"><code class="language-php">attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre>
 
 <p>Attach a listener to a named event triggered by an identified context, where:</p>
 <ul>
@@ -427,7 +446,7 @@ your aguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:<
 <li><code>$priority</code> is the priority to use when attaching the listener.</li>
 </ul>
 <h3 id="detach_1">detach()</h3>
-<pre class="codehilite"><code class="language-php linenums">detach(callable $listener, $identifer = null, $eventName = null) : void</code></pre>
+<pre class="codehilite"><code class="language-php">detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre>
 
 <p>Detach a listener, optionally from a single identifier, and optionally from a
 named event, where:</p>
@@ -440,12 +459,12 @@ named event, where:</p>
 identified contexts. If no or a null <code>$eventName</code> is provided, the listener will be
 detached from all named events discovered.</p>
 <h3 id="getlisteners">getListeners()</h3>
-<pre class="codehilite"><code class="language-php linenums">getListeners(array $identifiers, $eventName = null) : array[]</code></pre>
+<pre class="codehilite"><code class="language-php">getListeners(array $identifiers, $eventName = null) : array[]</code></pre>
 
 <p>Retrieves all registered listeners for a given identifier and named event; if
 the event name is omitted, it returns all listeners for the identifier.</p>
 <p>Each value in the array returned is in the form:</p>
-<pre class="codehilite"><code class="language-php linenums">[
+<pre class="codehilite"><code class="language-php">[
     'listener' =&gt; callable,
     'priority' =&gt; int,
 ]</code></pre>
@@ -454,7 +473,7 @@ the event name is omitted, it returns all listeners for the identifier.</p>
 <p>This method is used by the <code>EventManager</code> in order to get a set of listeners for
 the event being triggered.</p>
 <h3 id="clearlisteners_1">clearListeners()</h3>
-<pre class="codehilite"><code class="language-php linenums">clearListeners($id, $eventName = null) : bool</code></pre>
+<pre class="codehilite"><code class="language-php">clearListeners($id, $eventName = null) : bool</code></pre>
 
 <p>This event will clear all listeners for a given identifier, or, if specified,
 the specific event for the named identifier.</p>
@@ -463,45 +482,45 @@ the specific event for the named identifier.</p>
 define custom events. The <code>EventInterface</code> thus defines the common methods
 across any event implementation.</p>
 <h3 id="getname">getName()</h3>
-<pre class="codehilite"><code class="language-php linenums">getName() : string</code></pre>
+<pre class="codehilite"><code class="language-php">getName() : string</code></pre>
 
 <p>Returns the event name.</p>
 <h3 id="gettarget">getTarget()</h3>
-<pre class="codehilite"><code class="language-php linenums">getTarget() : null|string|object</code></pre>
+<pre class="codehilite"><code class="language-php">getTarget() : null|string|object</code></pre>
 
 <p>Returns the event target, if any.</p>
 <h3 id="getparams">getParams()</h3>
-<pre class="codehilite"><code class="language-php linenums">getParams() : array|ArrayAccess</code></pre>
+<pre class="codehilite"><code class="language-php">getParams() : array|ArrayAccess</code></pre>
 
 <p>Returns the event parameters, if any.</p>
 <h3 id="getparam">getParam()</h3>
-<pre class="codehilite"><code class="language-php linenums">getParam($name, $default = null) : mixed</code></pre>
+<pre class="codehilite"><code class="language-php">getParam($name, $default = null) : mixed</code></pre>
 
 <p>Returns a single named parameter, returning the <code>$default</code> if not found.</p>
 <h3 id="setname">setName()</h3>
-<pre class="codehilite"><code class="language-php linenums">setName($name) : void</code></pre>
+<pre class="codehilite"><code class="language-php">setName($name) : void</code></pre>
 
 <p>Sets the event name.</p>
 <h3 id="settarget">setTarget()</h3>
-<pre class="codehilite"><code class="language-php linenums">setTarget($target) : void</code></pre>
+<pre class="codehilite"><code class="language-php">setTarget($target) : void</code></pre>
 
 <p>Sets the event target. <code>$target</code> may be a string or object.</p>
 <h3 id="setparams">setParams()</h3>
-<pre class="codehilite"><code class="language-php linenums">setParams($parms) : void</code></pre>
+<pre class="codehilite"><code class="language-php">setParams($parms) : void</code></pre>
 
 <p>Set the event parameters; <code>$params</code> should be an array or object implementing
 <code>ArrayAccess</code>.</p>
 <h3 id="setparam">setParam()</h3>
-<pre class="codehilite"><code class="language-php linenums">setParam($name, $value) : void</code></pre>
+<pre class="codehilite"><code class="language-php">setParam($name, $value) : void</code></pre>
 
 <p>Set a single named event parameter value.</p>
 <h3 id="stoppropagation">stopPropagation()</h3>
-<pre class="codehilite"><code class="language-php linenums">stopPropagation($flag = true) : void</code></pre>
+<pre class="codehilite"><code class="language-php">stopPropagation($flag = true) : void</code></pre>
 
 <p>Indicate whether or not event propagation should halt (short-circuit). This
 value is what will be returned by <code>propagationIsStopped()</code>.</p>
 <h3 id="propagationisstopped">propagationIsStopped()</h3>
-<pre class="codehilite"><code class="language-php linenums">propagationIsStopped() : bool</code></pre>
+<pre class="codehilite"><code class="language-php">propagationIsStopped() : bool</code></pre>
 
 <p>Used by the event manager to determine if the event has indicated that the event
 loop should short-circuit.</p>
@@ -513,19 +532,19 @@ the various results of listener execution.</p>
 responses in the order in which they were provided. In addition, it has the API
 listed below.</p>
 <h3 id="stopped">stopped()</h3>
-<pre class="codehilite"><code class="language-php linenums">stopped() : bool</code></pre>
+<pre class="codehilite"><code class="language-php">stopped() : bool</code></pre>
 
 <p>Use this to determine if something caused the event loop to short-circuit.</p>
 <h3 id="first">first()</h3>
-<pre class="codehilite"><code class="language-php linenums">first() : mixed</code></pre>
+<pre class="codehilite"><code class="language-php">first() : mixed</code></pre>
 
 <p>Returns the result from the first listener executed.</p>
 <h3 id="last">last()</h3>
-<pre class="codehilite"><code class="language-php linenums">last() : mixed</code></pre>
+<pre class="codehilite"><code class="language-php">last() : mixed</code></pre>
 
 <p>Returns the result from the last listener executed.</p>
 <h3 id="contains">contains()</h3>
-<pre class="codehilite"><code class="language-php linenums">contains($value) : bool</code></pre>
+<pre class="codehilite"><code class="language-php">contains($value) : bool</code></pre>
 
 <p>Query the response collection to determine if a specific value was returned by
 any listener.</p>
@@ -548,21 +567,57 @@ any listener.</p>
     </div>
     <!-- content:end -->
 
-    <footer class="col-md-12 text-center">
-        <hr>
-        <p>
-        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
-        </p>
-        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
-    </footer>
+    <div id="footerwrap">
+    <div class="container">
+        <div class="row site-map">
+            <div class="col-lg-3">
+              <p>
+                <strong>Zend Framework</strong><br />
+                <a href="https://framework.zend.com/">framework.zend.com</a><br />
+                <a href="https://docs.zendframework.com">docs.zendframework.com</a><br />
+                <a href="https://packages.zendframework.com">packages.zendframework.com</a><br />
+                <a href="https://apigility.org">apigility.org</a><br />
+              </p>
+            </div>
+        </div>
 
-    <script src="../js/jquery-1.10.2.min.js"></script>
-    <script src="../js/bootstrap-3.0.3.min.js"></script>
-    <script src="../js/prism-zf.js"></script>
+        <div class="row">
+            <div class="col-lg-12 centered">
+                <a class="back-to-top" href="#page-top"><i class="fa fa-chevron-circle-up fa-4" aria-hidden="true"></i></a>
+            </div>
+        </div>
 
+        <div class="spacing"></div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <h4>Copyright</h4>
+                <div class="hline-w"></div>
+
+                <p>&copy; 2006-2017 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+            </div>
+
+            <div class="col-lg-4">
+                <h4>Contacts</h4>
+                <div class="hline-w"></div>
+                <p>
+                    <a href="https://discourse.zendframework.com" class="btn-social btn-outline" alt="Forum" title="Forum"><i class="fa fa-comments"></i></a>
+                    <a href="https://zendframework-slack.herokuapp.com" class="btn-social btn-outline" alt="Slack" title="Slack"><i class="fa fa-slack"></i></a>
+                    <a href="https://github.com/zendframework" class="btn-social btn-outline" alt="Github" title="Github"><i class="fa fa-github"></i></a>
+                    <a href="https://twitter.com/zfdevteam" class="btn-social btn-outline" alt="Twitter" title="Twitter"><i class="fa fa-twitter"></i></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script>var base_url = '..';</script>
+    <script src="../js/scripts-0b6185f4a5.js"></script>
     <script data-main="../mkdocs/js/search.js" src="../mkdocs/js/require.js"></script>
-    <script src="../js/base.js"></script>
+        <script src="../search/require.js"></script>
+        <script src="../search/search.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
         <div class="modal-dialog">
@@ -594,7 +649,7 @@ any listener.</p>
     <div class="zf-components">
   <div class="zf-components-grid">
     <div class="zf-logo">
-      <a href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="http://framework.zend.com/images/logos/zf-logo-mark.png" alt="Zend Framework" width="250" /></a>
+      <a href="https://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../img/zf-logo-mark.svg" alt="Zend Framework" width="250" /></a>
     </div>
 
     <div class="component-list"></div>
@@ -603,112 +658,7 @@ any listener.</p>
   </div>
 </div>
 
-    <script>
-  // Prepare the component list dropdown for display
-  $(function () {
-    var components = $(".zf-components"),
-        componentList = components.find(".component-list"),
-        sidebar = $(".bs-sidebar.affix"),
-        sidebarInitialPos = sidebar.css("position"),
-        hidden,
-        componentToggle = $(".component-toggle"),
-        navbar = $(".navbar-fixed-top"),
-        rollUpLink = $(".zf-components-rollup a");
+</body>
 
-    // Initial setup on document load
-    components.insertBefore(navbar);
-    $(".zf-logo a").tooltip();
-    componentToggle.tooltip();
-    rollUpLink.attr({ href: "#", alt: "Hide component list" });
-
-    // Cast initial sidebar position value
-    if (undefined === sidebarInitialPos) {
-      sidebarInitialPos = "fixed";
-    }
-
-    // Setup onclick events to toggle list
-    componentToggle.click(toggleComponentList);
-    rollUpLink.click(toggleComponentList);
-
-    // Toggle the component list display
-    function toggleComponentList(event) {
-      event.preventDefault();
-
-      if (hidden === undefined) {
-        // Not loaded yet; load and display.
-        loadComponentList();
-        return;
-      }
-
-      if (hidden) {
-        // Hidden; display.
-        showComponentList();
-        return;
-      }
-
-      // Currently visible; hide
-      hideComponentList();
-    }
-
-    // Show the component list
-    function showComponentList() {
-      navbar.css({position: "relative"});
-      sidebar.css({position: "relative"});
-      components
-        .css({"margin-top": "-" + components.outerHeight() + "px"})
-        .show()
-        .animate({"margin-top": 0}, {
-          complete: function () {
-            componentToggle
-              .data("placement", "top")
-              .attr("data-original-title", "Hide component list");
-            hidden = false;
-          },
-          queue: false
-        });
-    }
-
-    // Hide the component list
-    function hideComponentList() {
-      components.animate({"margin-top": "-" + components.outerHeight() + "px"}, {
-        complete: function () {
-          navbar.css({position: "fixed"});
-          sidebar.css({position: sidebarInitialPos});
-          componentToggle
-            .data("placement", "bottom")
-            .attr("data-original-title", "Show component list");
-          components.hide();
-          hidden = true;
-        },
-        queue: false
-      });
-      sidebar.animate({ top: sidebarInitialTop + "px" }, { queue: false});
-    }
-
-    // Inject a component into the componet list DOM.
-    function injectComponent(index, component) {
-      componentList.append('<div class="component"><h4><a href="' + component.url + '">' + component.name + '</a></h4><p>' + component.description + '</p></div>');
-    }
-
-    // Parse the component list, build the DOM, and display it.
-    function parseComponentList(components) {
-      $.each(components, injectComponent);
-      showComponentList();
-    }
-
-    // Fetch the component list and display it.
-    function loadComponentList () {
-      $.ajax({
-        url: "//zendframework.github.io/zf-mkdoc-theme/scripts/zf-component-list.json",
-        dataType: "text json",
-        success: parseComponentList,
-        error: function (e) {
-          console.log("Error occurred with XHR call", e);
-        }
-      });
-    }
-  });
-</script>
-    </body>
 
 </html>

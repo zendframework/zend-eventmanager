@@ -1,38 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="zend-eventmanager: Implement events, signal slots, aspects, and observers!">  
     <link rel="shortcut icon" href="../../img/favicon.ico">
 
     <title>Changed Functionality - zend-eventmanager</title>
 
-    <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.018/css/hack.min.css">
-    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin" rel="stylesheet" type="text/css">
-    <link href="//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <link href="../../css/base.css" rel="stylesheet">
-    <link href="../../css/zf.css" rel="stylesheet">
-    <link href="../../css/prism-zf.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
-    <script>
-    WebFont.load({
-        google: {
-            families: ['Open Sans', 'PT Sans']
-        }
-    });
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/styles-288837cc22.css">
 
     
 </head>
@@ -56,8 +37,8 @@
 
             <!-- Main title -->
             <span class="navbar-brand">
-              <a class="logo-link" href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Zend Framework"><img src="../../img/zf-logo-mark.png" height="28" alt="Zend Framework" /></a>
-              <a href="../..">zend-eventmanager</a>
+                <a class="logo-link" href="https://framework.zend.com/" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../../img/zf-logo-mark.svg" height="28" alt="Zend Framework" /></a>
+                <a href="../..">zend-eventmanager</a>
             </span>
         </div>
 
@@ -68,9 +49,12 @@
                 <ul class="nav navbar-nav">
                 
                 
+                
                     <li >
-                        <a href="../..">Home</a>
+                        <a href="../..">zend-eventmanager</a>
                     </li>
+                
+                
                 
                 
                 
@@ -80,9 +64,13 @@
                 
                 
                 
+                
+                
                     <li >
                         <a href="../../quick-start/">Quick Start</a>
                     </li>
+                
+                
                 
                 
                 
@@ -92,9 +80,13 @@
                 
                 
                 
+                
+                
                     <li >
                         <a href="../../examples/">Examples</a>
                     </li>
+                
+                
                 
                 
                 
@@ -103,91 +95,118 @@
                         <ul class="dropdown-menu">
                         
                             
+
 <li >
     <a href="../../wildcard-listeners/">Wildcard Listeners</a>
 </li>
 
+
                         
                             
+
 <li >
     <a href="../../aggregates/">Listener Aggregates</a>
 </li>
 
+
                         
                             
+
   <li class="dropdown-submenu">
     <a tabindex="-1" href="">Lazy Listeners</a>
     <ul class="dropdown-menu">
         
             
+
 <li >
     <a href="../../lazy-listeners/intro/">Intro</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../../lazy-listeners/lazy-listener/">LazyListener</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../../lazy-listeners/lazy-event-listener/">LazyEventListener</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../../lazy-listeners/lazy-listener-aggregate/">LazyListenerAggregate</a>
 </li>
+
 
         
     </ul>
   </li>
 
+
                         
                             
+
 <li >
     <a href="../../api/">EventManager API</a>
 </li>
 
+
                         
                             
+
 <li >
     <a href="../../intercepting-filters/">Intercepting Filters</a>
 </li>
 
+
                         
                             
+
   <li class="dropdown-submenu">
     <a tabindex="-1" href="">Migration Guide</a>
     <ul class="dropdown-menu">
         
             
+
 <li >
     <a href="../intro/">Intro</a>
 </li>
 
+
         
             
+
 <li >
     <a href="../removed/">Removed Functionality</a>
 </li>
 
+
         
             
+
 <li class="active">
     <a href="./">Changed Functionality</a>
 </li>
+
 
         
     </ul>
   </li>
 
+
                         
                         </ul>
                     </li>
+                
                 
                 
                 </ul>
@@ -207,7 +226,7 @@
                 </li>
                 
                     <li>
-                        <a href="https://github.com/zendframework/zend-eventmanager">
+                        <a href="https://github.com/zendframework/zend-eventmanager/">
                             
                                 <i class="fa fa-github"></i>
                             
@@ -221,7 +240,7 @@
 </div>
 
     <!-- content:begin -->
-    <div class="container">
+    <div id="page-top" class="container docs">
         
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
@@ -256,28 +275,19 @@
     </ul>
 
     
-    <ul class="pager hidden-print">
-      <li class="previous">
-        <a rel="prev" href="../removed/"><i class="fa fa-arrow-left"></i> Previous</a>
-      </li>
-      <li class="next disabled ">
-        <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
-      </li>
-    </ul>
-    
 </div></div>
         <div class="col-md-9" role="main">
 
 <ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
-  <li><a href="../..">Docs</a> &raquo;</li>
+  <li><a href="../..">zend-eventmanager</a></li>
   
     
       
-        <li>Reference &raquo;</li>
+        <li>Reference</li>
       
     
       
-        <li>Migration Guide &raquo;</li>
+        <li>Migration Guide</li>
       
     
   
@@ -288,7 +298,7 @@
 <p>The following methods had changes in signatures.</p>
 <h2 id="eventmanager__construct">EventManager::__construct()</h2>
 <p>In version 2, the signature of <code>__construct()</code> was:</p>
-<pre class="codehilite"><code class="language-php linenums">__construct($identifiers = null)</code></pre>
+<pre class="codehilite"><code class="language-php">__construct($identifiers = null)</code></pre>
 
 <p>where <code>$identifiers</code> could be a string, array of strings, or <code>Traversable</code> of
 strings.</p>
@@ -297,14 +307,14 @@ instead of via a setter. This also enforces the idea that identifiers have no
 semantic meaning without a shared event manager composed. As such, the
 constructor now has two arguments, with the first being the shared event
 manager:</p>
-<pre class="codehilite"><code class="language-php linenums">__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])</code></pre>
+<pre class="codehilite"><code class="language-php">__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])</code></pre>
 
 <p>Finally, because we changed the signature of <code>setIdentifiers()</code> and
 <code>addIdentifiers()</code> to only accept arrays (see more below), we changed the
 <code>$identifiers</code> argument to only allow arrays.</p>
 <h2 id="eventmanagerinterfacetrigger-and-triggeruntil">EventManagerInterface::trigger() and triggerUntil()</h2>
 <p>In version 2, the signatures of <code>trigger()</code> and <code>triggerUntil()</code> are:</p>
-<pre class="codehilite"><code class="language-php linenums">trigger($event, $target = null, $argv = [], $callback = null);
+<pre class="codehilite"><code class="language-php">trigger($event, $target = null, $argv = [], $callback = null);
 triggerUntil($event, $target = null, $argv = [], $callback = null);</code></pre>
 
 <p>The methods allow overloading essentially every argument:</p>
@@ -325,10 +335,10 @@ triggerUntil($event, $target = null, $argv = [], $callback = null);</code></pre>
 <li>Dozens of lines used to validate and marshal arguments.</li>
 </ul>
 <p>In version 3, we changed the methods to have the following signatures:</p>
-<pre class="codehilite"><code class="language-php linenums">trigger($event, $target = null, $argv = []);
+<pre class="codehilite"><code class="language-php">trigger($event, $target = null, $argv = []);
 triggerUntil(callable $callback, $event, $target = null, $argv = []);</code></pre>
 
-<p>with the following defintions:</p>
+<p>with the following definitions:</p>
 <ul>
 <li><code>$event</code> is a string event name.</li>
 <li><code>$target</code> is a value representing the target of the event.</li>
@@ -343,7 +353,7 @@ usage, and ensures the argument order stays predictable for the remaining
 arguments.</p>
 <p>In order to accommodate other styles of usage, we <strong>added</strong> the following
 methods:</p>
-<pre class="codehilite"><code class="language-php linenums">triggerUntil(callable $callback, $event, $target = null, $argv = []);
+<pre class="codehilite"><code class="language-php">triggerUntil(callable $callback, $event, $target = null, $argv = []);
 triggerEvent(EventInterface $event);
 triggerEventUntil(callable $callback, EventInterface $event);</code></pre>
 
@@ -355,7 +365,7 @@ evaluating your code to see which of the four possible call styles you are
 using, and that you adapt your code to use one of the 4 discrete methods.</p>
 <p>The following signatures, however, are no longer supported, and will need to be
 updated as illustrated:</p>
-<pre class="codehilite"><code class="language-php linenums">// Event instance as second argument:
+<pre class="codehilite"><code class="language-php">// Event instance as second argument:
 $events-&gt;trigger('foo', $event);
 
 // Resolve by setting the event name prior to trigger:
@@ -372,7 +382,7 @@ $events-&gt;triggerEvent($event);</code></pre>
 
 <p>If you are using a callback to shortcircuit, use one of the <code>*Until()</code> methods,
 passing the callback as the first argument:</p>
-<pre class="codehilite"><code class="language-php linenums">// Standard trigger:
+<pre class="codehilite"><code class="language-php">// Standard trigger:
 $events-&gt;trigger('foo', $this, ['bar' =&gt; 'baz'], $criteria);
 
 // becomes:
@@ -386,7 +396,7 @@ $events-&gt;triggerEventUntil($criteria, $event);</code></pre>
 
 <h2 id="eventmanagerinterfaceattach-and-detach">EventManagerInterface::attach() and detach()</h2>
 <p>In version 2, <code>attach()</code> and <code>detach()</code> had the following signatures:</p>
-<pre class="codehilite"><code class="language-php linenums">attach($event, $callback = null, $priority = null);
+<pre class="codehilite"><code class="language-php">attach($event, $callback = null, $priority = null);
 detach($listener);</code></pre>
 
 <p>with the following argument definitions:</p>
@@ -401,7 +411,7 @@ detach($listener);</code></pre>
   <code>ListenerAggregateInterface</code>.</li>
 </ul>
 <p>Much like we did for the <code>trigger*()</code> methods, we simplified the signatures:</p>
-<pre class="codehilite"><code class="language-php linenums">attach($event, callable $listener, $priority = 1);
+<pre class="codehilite"><code class="language-php">attach($event, callable $listener, $priority = 1);
 detach(callable $listener, $event = null);</code></pre>
 
 <p>Where:</p>
@@ -430,7 +440,7 @@ event manager, stop doing so, and attach the callable listener itself instead.
 This, too, is completely forwards compatible.</p>
 <p>If you are passing <code>CallbackHandler</code> instances to <code>detach()</code>, you will need to
 make the following change after updating to version 3:</p>
-<pre class="codehilite"><code class="language-php linenums">// This code:
+<pre class="codehilite"><code class="language-php">// This code:
 $events-&gt;detach($callbackHandler);
 
 // Will become:
@@ -454,10 +464,10 @@ their calls.</p>
 <h2 id="sharedeventmanagerinterfacegetlisteners">SharedEventManagerInterface::getListeners()</h2>
 <p><code>Zend\EventManager\SharedEventManagerInterface::getListeners()</code> has changed. The
 previous signature was:</p>
-<pre class="codehilite"><code class="language-php linenums">getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue</code></pre>
+<pre class="codehilite"><code class="language-php">getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue</code></pre>
 
 <p>Version 3 has the following signature:</p>
-<pre class="codehilite"><code class="language-php linenums">getListeners(array $identifiers, $eventName) : array</code></pre>
+<pre class="codehilite"><code class="language-php">getListeners(array $identifiers, $eventName) : array</code></pre>
 
 <p>The changes are:</p>
 <ul>
@@ -472,7 +482,7 @@ previous signature was:</p>
 </ul>
 <h2 id="sharedeventmanagerinterfaceattach">SharedEventManagerInterface::attach()</h2>
 <p>The v2 signature of <code>attach()</code> was:</p>
-<pre class="codehilite"><code class="language-php linenums">attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]</code></pre>
+<pre class="codehilite"><code class="language-php">attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]</code></pre>
 
 <p>where:</p>
 <ul>
@@ -484,7 +494,7 @@ previous signature was:</p>
 <li><code>$priority</code> was an integer.</li>
 </ul>
 <p>The v3 signature becomes:</p>
-<pre class="codehilite"><code class="language-php linenums">attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre>
+<pre class="codehilite"><code class="language-php">attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre>
 
 <p>where:</p>
 <ul>
@@ -498,7 +508,7 @@ previous signature was:</p>
 <li>If you are passing arrays of identifiers to which to attach, you must now do
   so in a loop or using a construct such as <code>array_walk</code>:</li>
 </ul>
-<pre class="codehilite"><code class="language-php linenums">foreach ($identifiers as $id) {
+<pre class="codehilite"><code class="language-php">foreach ($identifiers as $id) {
     $sharedEvents-&gt;attach($id, $event, $listener);
 }
 
@@ -518,7 +528,7 @@ array_walk($identifiers, function ($id) use ($listener) {
 </ul>
 <h2 id="sharedeventmanagerinterfacedetach">SharedEventManagerInterface::detach()</h2>
 <p>The v2 signature of <code>detach()</code> was:</p>
-<pre class="codehilite"><code class="language-php linenums">detach($id, CallbackHandler $listener) : bool</code></pre>
+<pre class="codehilite"><code class="language-php">detach($id, CallbackHandler $listener) : bool</code></pre>
 
 <p>where:</p>
 <ul>
@@ -527,7 +537,7 @@ array_walk($identifiers, function ($id) use ($listener) {
 <li>the method returned a boolean indicating whether or not it removed anything.</li>
 </ul>
 <p>The v3 signature becomes:</p>
-<pre class="codehilite"><code class="language-php linenums">detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre>
+<pre class="codehilite"><code class="language-php">detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre>
 
 <p>where:</p>
 <ul>
@@ -555,10 +565,10 @@ already implemented.</p>
 abstract methods, you can forward-proof your existing
 <code>ListenerAggregateInterface</code> implementations by adding the argument.</p>
 <p>As an example, if you define your method like this:</p>
-<pre class="codehilite"><code class="language-php linenums">public function attach(EventManagerInterface $events)</code></pre>
+<pre class="codehilite"><code class="language-php">public function attach(EventManagerInterface $events)</code></pre>
 
 <p>Simply change it to this:</p>
-<pre class="codehilite"><code class="language-php linenums">public function attach(EventManagerInterface $events, $priority = 1)</code></pre>
+<pre class="codehilite"><code class="language-php">public function attach(EventManagerInterface $events, $priority = 1)</code></pre>
 
 <p>You do not need to do anything with the <code>$priority</code> argument, though we
 recommend passing it as a default value if you are not specifying a priority for
@@ -566,12 +576,12 @@ any listeners you attach.</p>
 <h2 id="filterinterfaceattach-and-detach">FilterInterface::attach() and detach()</h2>
 <p><code>Zend\EventManager\Filter\FilterInterface::attach()</code> and <code>detach()</code> have changed
 signatures. The originals were:</p>
-<pre class="codehilite"><code class="language-php linenums">attach($callback) : CallbackHandler
+<pre class="codehilite"><code class="language-php">attach($callback) : CallbackHandler
 detach(CallbackHandler $callback) : bool</code></pre>
 
 <p>where <code>$callback</code> for <code>attach()</code> could be a callable or a <code>CallbackHandler</code>. The
 new signatures are:</p>
-<pre class="codehilite"><code class="language-php linenums">attach(callable $callback) : void
+<pre class="codehilite"><code class="language-php">attach(callable $callback) : void
 detach(callable $filter) : bool</code></pre>
 
 <p>Typical usage in v2 was to capture the return value of <code>attach()</code> and pass it to
@@ -592,37 +602,62 @@ fluent interface.</p>
 
 <hr />
 
-
-<nav>
-  <ul class="pager hidden-print">
-    <li class="previous">
-      <a rel="prev" href="../removed/"><i class="fa fa-arrow-left"></i> Previous</a>
-    </li>
-    <li class="next disabled ">
-      <a rel="next" >Next <i class="fa fa-arrow-right"></i></a>
-    </li>
-  </ul>
-</nav>
 </div>
         
     </div>
     <!-- content:end -->
 
-    <footer class="col-md-12 text-center">
-        <hr>
-        <p>
-        <small>Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a><br></small>
-        </p>
-        <p><small><a href="http://framework.zend.com">Learn more about Zend Framework</a></small></p>
-    </footer>
+    <div id="footerwrap">
+    <div class="container">
+        <div class="row site-map">
+            <div class="col-lg-3">
+              <p>
+                <strong>Zend Framework</strong><br />
+                <a href="https://framework.zend.com/">framework.zend.com</a><br />
+                <a href="https://docs.zendframework.com">docs.zendframework.com</a><br />
+                <a href="https://packages.zendframework.com">packages.zendframework.com</a><br />
+                <a href="https://apigility.org">apigility.org</a><br />
+              </p>
+            </div>
+        </div>
 
-    <script src="../../js/jquery-1.10.2.min.js"></script>
-    <script src="../../js/bootstrap-3.0.3.min.js"></script>
-    <script src="../../js/prism-zf.js"></script>
+        <div class="row">
+            <div class="col-lg-12 centered">
+                <a class="back-to-top" href="#page-top"><i class="fa fa-chevron-circle-up fa-4" aria-hidden="true"></i></a>
+            </div>
+        </div>
 
+        <div class="spacing"></div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <h4>Copyright</h4>
+                <div class="hline-w"></div>
+
+                <p>&copy; 2006-2017 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+            </div>
+
+            <div class="col-lg-4">
+                <h4>Contacts</h4>
+                <div class="hline-w"></div>
+                <p>
+                    <a href="https://discourse.zendframework.com" class="btn-social btn-outline" alt="Forum" title="Forum"><i class="fa fa-comments"></i></a>
+                    <a href="https://zendframework-slack.herokuapp.com" class="btn-social btn-outline" alt="Slack" title="Slack"><i class="fa fa-slack"></i></a>
+                    <a href="https://github.com/zendframework" class="btn-social btn-outline" alt="Github" title="Github"><i class="fa fa-github"></i></a>
+                    <a href="https://twitter.com/zfdevteam" class="btn-social btn-outline" alt="Twitter" title="Twitter"><i class="fa fa-twitter"></i></a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script>var base_url = '../..';</script>
+    <script src="../../js/scripts-0b6185f4a5.js"></script>
     <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
-    <script src="../../js/base.js"></script>
+        <script src="../../search/require.js"></script>
+        <script src="../../search/search.js"></script>
 
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
         <div class="modal-dialog">
@@ -654,7 +689,7 @@ fluent interface.</p>
     <div class="zf-components">
   <div class="zf-components-grid">
     <div class="zf-logo">
-      <a href="http://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="http://framework.zend.com/images/logos/zf-logo-mark.png" alt="Zend Framework" width="250" /></a>
+      <a href="https://framework.zend.com" data-toggle="tooltip" data-placement="bottom" title="Go to the ZF homepage"><img src="../../img/zf-logo-mark.svg" alt="Zend Framework" width="250" /></a>
     </div>
 
     <div class="component-list"></div>
@@ -663,112 +698,7 @@ fluent interface.</p>
   </div>
 </div>
 
-    <script>
-  // Prepare the component list dropdown for display
-  $(function () {
-    var components = $(".zf-components"),
-        componentList = components.find(".component-list"),
-        sidebar = $(".bs-sidebar.affix"),
-        sidebarInitialPos = sidebar.css("position"),
-        hidden,
-        componentToggle = $(".component-toggle"),
-        navbar = $(".navbar-fixed-top"),
-        rollUpLink = $(".zf-components-rollup a");
+</body>
 
-    // Initial setup on document load
-    components.insertBefore(navbar);
-    $(".zf-logo a").tooltip();
-    componentToggle.tooltip();
-    rollUpLink.attr({ href: "#", alt: "Hide component list" });
-
-    // Cast initial sidebar position value
-    if (undefined === sidebarInitialPos) {
-      sidebarInitialPos = "fixed";
-    }
-
-    // Setup onclick events to toggle list
-    componentToggle.click(toggleComponentList);
-    rollUpLink.click(toggleComponentList);
-
-    // Toggle the component list display
-    function toggleComponentList(event) {
-      event.preventDefault();
-
-      if (hidden === undefined) {
-        // Not loaded yet; load and display.
-        loadComponentList();
-        return;
-      }
-
-      if (hidden) {
-        // Hidden; display.
-        showComponentList();
-        return;
-      }
-
-      // Currently visible; hide
-      hideComponentList();
-    }
-
-    // Show the component list
-    function showComponentList() {
-      navbar.css({position: "relative"});
-      sidebar.css({position: "relative"});
-      components
-        .css({"margin-top": "-" + components.outerHeight() + "px"})
-        .show()
-        .animate({"margin-top": 0}, {
-          complete: function () {
-            componentToggle
-              .data("placement", "top")
-              .attr("data-original-title", "Hide component list");
-            hidden = false;
-          },
-          queue: false
-        });
-    }
-
-    // Hide the component list
-    function hideComponentList() {
-      components.animate({"margin-top": "-" + components.outerHeight() + "px"}, {
-        complete: function () {
-          navbar.css({position: "fixed"});
-          sidebar.css({position: sidebarInitialPos});
-          componentToggle
-            .data("placement", "bottom")
-            .attr("data-original-title", "Show component list");
-          components.hide();
-          hidden = true;
-        },
-        queue: false
-      });
-      sidebar.animate({ top: sidebarInitialTop + "px" }, { queue: false});
-    }
-
-    // Inject a component into the componet list DOM.
-    function injectComponent(index, component) {
-      componentList.append('<div class="component"><h4><a href="' + component.url + '">' + component.name + '</a></h4><p>' + component.description + '</p></div>');
-    }
-
-    // Parse the component list, build the DOM, and display it.
-    function parseComponentList(components) {
-      $.each(components, injectComponent);
-      showComponentList();
-    }
-
-    // Fetch the component list and display it.
-    function loadComponentList () {
-      $.ajax({
-        url: "//zendframework.github.io/zf-mkdoc-theme/scripts/zf-component-list.json",
-        dataType: "text json",
-        success: parseComponentList,
-        error: function (e) {
-          console.log("Error occurred with XHR call", e);
-        }
-      });
-    }
-  });
-</script>
-    </body>
 
 </html>
