@@ -293,7 +293,7 @@ class LogEvents implements ListenerAggregateInterface
         $this->listeners[] = $events->attach('doSomethingElse', [$this, 'log']);
     }
 
-    public function detach(EventCollection $events)
+    public function detach(EventManagerInterface $events)
     {
         foreach ($this->listeners as $index => $listener) {
             $events->detach($listener);
