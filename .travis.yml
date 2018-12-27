@@ -17,7 +17,7 @@ matrix:
     - php: 5.6
       env:
         - DEPS=locked
-        - LEGACY_DEPS="phpunit/phpunit doctrine/annotations"
+        - LEGACY_DEPS="phpunit/phpunit phpbench/phpbench doctrine/annotations"
         - TEST_COVERAGE=true
     - php: 5.6
       env:
