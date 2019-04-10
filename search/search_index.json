@@ -3,7 +3,7 @@
         {
             "location": "/",
             "text": "zend-eventmanager\n\n\n\n\n\n\nzend-eventmanager is designed for the following use cases:\n\n\n\n\nImplementing simple subject/observer patterns.\n\n\nImplementing Aspect-Oriented designs.\n\n\nImplementing event-driven architectures.\n\n\n\n\nThe basic architecture allows you to attach and detach listeners to named events,\nboth on a per-instance basis as well as via shared collections; trigger events;\nand interrupt execution of listeners.\n\n\n\n\nFile issues at https://github.com/zendframework/zend-eventmanager/issues\n\n\nDocumentation is at https://zendframework.github.io/zend-eventmanager/\n\n\n\n\nFor migration from version 2 to version 3, please \nread the migration\ndocumentation\n.\n\n\nBenchmarks\n\n\nWe provide scripts for benchmarking zend-eventmanager using the\n\nAthletic\n framework; these can be\nfound in the \nbenchmarks/\n directory.\n\n\nTo execute the benchmarks you can run the following command:\n\n\n$ vendor/bin/athletic -p benchmarks",
-            "title": "zend-eventmanager"
+            "title": "Home"
         },
         {
             "location": "/#zend-eventmanager",
