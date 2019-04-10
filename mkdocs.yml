@@ -1,7 +1,7 @@
 docs_dir: doc/book
 site_dir: doc/html
 pages:
-    - index.md
+    - Home: index.md
     - Intro: intro.md
     - "Quick Start": quick-start.md
     - Tutorial: tutorial.md
@@ -21,6 +21,5 @@ pages:
             - "Removed Functionality": migration/removed.md
             - "Changed Functionality": migration/changed.md
 site_name: zend-eventmanager
-site_description: "zend-eventmanager: Implement events, signal slots, aspects, and observers!"
+site_description: 'Implement events, signal slots, aspects, and observers!'
 repo_url: 'https://github.com/zendframework/zend-eventmanager'
-copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'
