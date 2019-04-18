@@ -1,84 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
     <url>
-     <loc>/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/intro/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/quick-start/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/tutorial/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>/examples/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
-     <loc>/wildcard-listeners/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/aggregates/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/api/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc>/intercepting-filters/</loc>
-     <lastmod>2019-04-17</lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
-     <loc></loc>
-     <lastmod></lastmod>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>None</loc>
+     <lastmod>2019-04-18</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
 </urlset>

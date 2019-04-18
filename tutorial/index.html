@@ -12,6 +12,7 @@
     <title>Tutorial - zend-eventmanager</title>
 
     <link rel="stylesheet" href="../css/styles-18b942728f.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.2.0/anchor.min.js"></script>
 </head>
 <body id="page-top">
 
@@ -66,7 +67,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">zend-eventmanager</a>
+            <a href="">zend-eventmanager</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -75,25 +76,25 @@
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../intro/" class="subnavigation__link">Intro</a>
+                        <a href="intro/" class="subnavigation__link">Intro</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../quick-start/" class="subnavigation__link">Quick Start</a>
+                        <a href="quick-start/" class="subnavigation__link">Quick Start</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item subnavigation__list-item--active">
-                        <a href="./" class="subnavigation__link">Tutorial</a>
+                        <a href="tutorial/" class="subnavigation__link">Tutorial</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../examples/" class="subnavigation__link">Examples</a>
+                        <a href="examples/" class="subnavigation__link">Examples</a>
                     </li>
                 
             
@@ -104,13 +105,13 @@
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
+        <a href="wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../aggregates/" class="subnavigation__link">Listener Aggregates</a>
+        <a href="aggregates/" class="subnavigation__link">Listener Aggregates</a>
     </li>
 
                             
@@ -121,25 +122,25 @@
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/intro/" class="subnavigation__link">Intro</a>
+        <a href="lazy-listeners/intro/" class="subnavigation__link">Intro</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
+        <a href="lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
+        <a href="lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
+        <a href="lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
     </li>
 
             
@@ -149,13 +150,13 @@
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../api/" class="subnavigation__link">EventManager API</a>
+        <a href="api/" class="subnavigation__link">EventManager API</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
+        <a href="intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
     </li>
 
                             
@@ -166,19 +167,19 @@
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/intro/" class="subnavigation__link">Intro</a>
+        <a href="migration/intro/" class="subnavigation__link">Intro</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/removed/" class="subnavigation__link">Removed Functionality</a>
+        <a href="migration/removed/" class="subnavigation__link">Removed Functionality</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/changed/" class="subnavigation__link">Changed Functionality</a>
+        <a href="migration/changed/" class="subnavigation__link">Changed Functionality</a>
     </li>
 
             
@@ -266,7 +267,7 @@
         <li><a href="https://docs.zendframework.com/">Documentation</a></li>
 
         
-            <li><a href="..">zend-eventmanager</a></li>
+            <li><a href="">zend-eventmanager</a></li>
 
             
 
@@ -362,7 +363,7 @@ $events-&gt;attach('do', function ($e) {
     $event = $e-&gt;getName();
     $params = $e-&gt;getParams();
     printf(
-        'Handled event &quot;%s&quot;, with parameters %s',
+        'Handled event "%s", with parameters %s',
         $event,
         json_encode($params)
     );
@@ -372,7 +373,7 @@ $params = ['foo' =&gt; 'bar', 'baz' =&gt; 'bat'];
 $events-&gt;trigger('do', null, $params);</code></pre>
 
 <p>The above will result in the following:</p>
-<pre class="codehilite"><code class="language-text">Handled event &quot;do&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}</code></pre>
+<pre class="codehilite"><code class="language-text">Handled event "do", with parameters {"foo":"bar","baz":"bat"}</code></pre>
 
 <blockquote>
 <h3 id="note">Note</h3>
@@ -424,10 +425,10 @@ $example = new Example();
 
 $example-&gt;getEventManager()-&gt;attach('doIt', function($e) {
     $event  = $e-&gt;getName();
-    $target = get_class($e-&gt;getTarget()); // &quot;Example&quot;
+    $target = get_class($e-&gt;getTarget()); // "Example"
     $params = $e-&gt;getParams();
     printf(
-        'Handled event &quot;%s&quot; on target &quot;%s&quot;, with parameters %s',
+        'Handled event "%s" on target "%s", with parameters %s',
         $event,
         $target,
         json_encode($params)
@@ -458,10 +459,10 @@ well.</p>
 $sharedEvents = new SharedEventManager();
 $sharedEvents-&gt;attach('Example', 'do', function ($e) {
     $event  = $e-&gt;getName();
-    $target = get_class($e-&gt;getTarget()); // &quot;Example&quot;
+    $target = get_class($e-&gt;getTarget()); // "Example"
     $params = $e-&gt;getParams();
     printf(
-        'Handled event &quot;%s&quot; on target &quot;%s&quot;, with parameters %s',
+        'Handled event "%s" on target "%s", with parameters %s',
         $event,
         $target,
         json_encode($params)
@@ -491,7 +492,7 @@ $example-&gt;setEventManager(new EventManager($sharedEvents));
 $example-&gt;doIt('bar', 'bat');</code></pre>
 
 <p>and expect the following output:</p>
-<pre class="codehilite"><code class="language-text">Handled event &quot;do&quot; on target &quot;Example&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}</code></pre>
+<pre class="codehilite"><code class="language-text">Handled event "do" on target "Example", with parameters {"foo":"bar","baz":"bat"}</code></pre>
 
 <p>Now, let's say we extended <code>Example</code> as follows:</p>
 <pre class="codehilite"><code class="language-php">class SubExample extends Example
@@ -700,10 +701,10 @@ However, if you provide a priority value, you can influence order of execution.<
 <pre class="codehilite"><code class="language-php">$priority = 100;
 $events-&gt;attach('Example', 'do', function($e) {
     $event  = $e-&gt;getName();
-    $target = get_class($e-&gt;getTarget()); // &quot;Example&quot;
+    $target = get_class($e-&gt;getTarget()); // "Example"
     $params = $e-&gt;getParams();
     printf(
-        'Handled event &quot;%s&quot; on target &quot;%s&quot;, with parameters %s',
+        'Handled event "%s" on target "%s", with parameters %s',
         $event,
         $target,
         json_encode($params)
@@ -898,7 +899,7 @@ code, and is an important part of your Zend Framework toolbox.</p>
         
         <li class="page-nav__item">
             
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../quick-start/">
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="quick-start/">
                     <i class="fa fa-chevron-left"></i> Previous
                 </a>
             
@@ -907,7 +908,7 @@ code, and is an important part of your Zend Framework toolbox.</p>
         
         <li class="page-nav__item">
             
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../examples/">
+                <a rel="next" class="page-nav__link page-nav__link--next" href="examples/">
                     Next <i class="fa fa-chevron-right"></i>
                 </a>
             
@@ -942,7 +943,7 @@ code, and is an important part of your Zend Framework toolbox.</p>
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">zend-eventmanager</a>
+            <a href="">zend-eventmanager</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -951,25 +952,25 @@ code, and is an important part of your Zend Framework toolbox.</p>
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../intro/" class="subnavigation__link">Intro</a>
+                        <a href="intro/" class="subnavigation__link">Intro</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../quick-start/" class="subnavigation__link">Quick Start</a>
+                        <a href="quick-start/" class="subnavigation__link">Quick Start</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item subnavigation__list-item--active">
-                        <a href="./" class="subnavigation__link">Tutorial</a>
+                        <a href="tutorial/" class="subnavigation__link">Tutorial</a>
                     </li>
                 
             
                 
                     <li class="subnavigation__list-item ">
-                        <a href="../examples/" class="subnavigation__link">Examples</a>
+                        <a href="examples/" class="subnavigation__link">Examples</a>
                     </li>
                 
             
@@ -980,13 +981,13 @@ code, and is an important part of your Zend Framework toolbox.</p>
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
+        <a href="wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../aggregates/" class="subnavigation__link">Listener Aggregates</a>
+        <a href="aggregates/" class="subnavigation__link">Listener Aggregates</a>
     </li>
 
                             
@@ -997,25 +998,25 @@ code, and is an important part of your Zend Framework toolbox.</p>
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/intro/" class="subnavigation__link">Intro</a>
+        <a href="lazy-listeners/intro/" class="subnavigation__link">Intro</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
+        <a href="lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
+        <a href="lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
+        <a href="lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
     </li>
 
             
@@ -1025,13 +1026,13 @@ code, and is an important part of your Zend Framework toolbox.</p>
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../api/" class="subnavigation__link">EventManager API</a>
+        <a href="api/" class="subnavigation__link">EventManager API</a>
     </li>
 
                             
                                 
     <li class="subnavigation__list-item ">
-        <a href="../intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
+        <a href="intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
     </li>
 
                             
@@ -1042,19 +1043,19 @@ code, and is an important part of your Zend Framework toolbox.</p>
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/intro/" class="subnavigation__link">Intro</a>
+        <a href="migration/intro/" class="subnavigation__link">Intro</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/removed/" class="subnavigation__link">Removed Functionality</a>
+        <a href="migration/removed/" class="subnavigation__link">Removed Functionality</a>
     </li>
 
             
                 
     <li class="subnavigation__list-item ">
-        <a href="../migration/changed/" class="subnavigation__link">Changed Functionality</a>
+        <a href="migration/changed/" class="subnavigation__link">Changed Functionality</a>
     </li>
 
             
@@ -1140,9 +1141,8 @@ code, and is an important part of your Zend Framework toolbox.</p>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-0bcb0a3bb3.js"></script>
-        <script src="../search/require.js"></script>
-        <script src="../search/search.js"></script>
+    <script src="../js/scripts-edc4cfa790.js"></script>
+        <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
@@ -1171,6 +1171,14 @@ code, and is an important part of your Zend Framework toolbox.</p>
             </div>
         </div>
     </div>
+
+<script>
+// Anchors
+anchors.options.placement = 'left';
+anchors.add(
+    '.content h1:not(.content__title), .content h2, .content > h3, .content h4, .content h5'
+);
+</script>
 
 
 
