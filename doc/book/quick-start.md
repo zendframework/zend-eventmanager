@@ -112,7 +112,7 @@ normal event managers; the call to `attach` is identical to the `EventManager`,
 but expects an additional parameter at the beginning: a named instance.
 
 Remember the example of composing an `EventManager`, how we passed it an array
-containing `__CLASS__` and `get_class($this)`? Those values are then used to
+containing `__CLASS__` and `get_called_class()`? Those values are then used to
 *identify* the event manager instance, and pull listeners registered with one of
 those identifiers from the `SharedEventManager`.
 
