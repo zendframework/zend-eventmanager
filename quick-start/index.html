@@ -431,7 +431,7 @@ additional listeners.</p>
 normal event managers; the call to <code>attach</code> is identical to the <code>EventManager</code>,
 but expects an additional parameter at the beginning: a named instance.</p>
 <p>Remember the example of composing an <code>EventManager</code>, how we passed it an array
-containing <code>__CLASS__</code> and <code>get_class($this)</code>? Those values are then used to
+containing <code>__CLASS__</code> and <code>get_called_class()</code>? Those values are then used to
 <em>identify</em> the event manager instance, and pull listeners registered with one of
 those identifiers from the <code>SharedEventManager</code>.</p>
 <p>As an example, assuming we have a <code>SharedEventManager</code> instance that we know has
