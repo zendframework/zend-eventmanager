@@ -391,20 +391,19 @@ listener from a container and invoking it.</p>
   manager in the variable <code>$events</code>.</li>
 </ul>
 <p>I might then create and attach my lazy listener as follows:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\Listener;
+<p> <pre class=codehilite><code class=language-php>use My\Application\Listener;
 use Zend\EventManager\LazyListener;
 
 $events-&gt;attach('foo', new LazyListener([
     'listener' =&gt; Listener::class,
     'method'   =&gt; 'onDispatch',
-], $container));</code></pre>
-
+], $container));</code></pre></p>
 <p><code>LazyListener</code> implements the method <code>__invoke()</code>, allowing you to attach it
 directly as a callable listener!</p>
 <p>Internally, it will do essentially the following:</p>
-<pre class="codehilite"><code class="language-php">$listener = $container-&gt;get($this-&gt;listener);
+<p> <pre class=codehilite><code class=language-php>$listener = $container-&gt;get($this-&gt;listener);
 $method   = $this-&gt;method;
-return $listener-&gt;{$method}($event);</code></pre>
+return $listener-&gt;{$method}($event);</code></pre></p>
 
 
 
@@ -438,7 +437,7 @@ return $listener-&gt;{$method}($event);</code></pre>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/lazy-listeners/lazy-listener.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/lazy-listeners/lazy-listener.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

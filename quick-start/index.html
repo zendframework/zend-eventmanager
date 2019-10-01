@@ -337,7 +337,7 @@
 
     <h1 id="quick-start">Quick Start</h1>
 <p>Typically, you will compose an <code>EventManager</code> instance in a class.</p>
-<pre class="codehilite"><code class="language-php">use Zend\EventManager\EventManagerInterface;
+<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 
@@ -362,8 +362,7 @@ class Foo implements EventManagerAwareInterface
         }
         return $this-&gt;events;
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>The above allows users to access the <code>EventManager</code> instance, or reset it with a
 new instance; if one does not exist, it will be lazily instantiated on-demand.</p>
 <p>The instance property <code>$events</code> is a convention for referring to the
@@ -375,7 +374,7 @@ EventManager instance.</p>
 <li>The <em>target</em>, which is usually the current object instance;</li>
 <li>Event <em>arguments</em>, which are usually the arguments provided to the current function/method.</li>
 </ul>
-<pre class="codehilite"><code class="language-php">class Foo
+<p> <pre class=codehilite><code class=language-php>class Foo
 {
     // ... assume events definition from above
 
@@ -384,15 +383,14 @@ EventManager instance.</p>
         $params = compact('baz', 'bat');
         $this-&gt;getEventManager()-&gt;trigger(__FUNCTION__, $this, $params);
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>In turn, triggering events is only interesting if something is listening for the
 event.</p>
 <p>Listeners attach to the <code>EventManager</code>, specifying a named event and the
 callback to notify. The callback receives an <code>Event</code> object, which has accessors
 for retrieving the event name, target, and parameters. Let's add a listener, and
 trigger the event.</p>
-<pre class="codehilite"><code class="language-php">use Zend\Log\Factory as LogFactory;
+<p> <pre class=codehilite><code class=language-php>use Zend\Log\Factory as LogFactory;
 
 $log = LogFactory($someConfig);
 $foo = new Foo();
@@ -413,8 +411,7 @@ $foo-&gt;getEventManager()-&gt;attach('bar', function ($e) use ($log) {
 $foo-&gt;bar('baz', 'bat');
 
 // Results in the log message reading:
-// bar called on Foo, using params {"baz" : "baz", "bat" : "bat"}"</code></pre>
-
+// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;</code></pre></p>
 <p>Note that the second argument to <code>attach()</code> is any valid PHP callable; an
 anonymous function is shown in the example in order to keep the example
 self-contained.</p>
@@ -438,7 +435,7 @@ those identifiers from the <code>SharedEventManager</code>.</p>
 been injected in our <code>EventManager</code> instances (for instance, via dependency
 injection), we could change the above example to attach via the shared
 collection:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Log\Factory as LogFactory;
+<p> <pre class=codehilite><code class=language-php>use Zend\Log\Factory as LogFactory;
 
 // Assume $sharedEvents is a Zend\EventManager\SharedEventManager instance
 
@@ -463,8 +460,7 @@ $foo-&gt;setEventManager(new EventManager($sharedEvents, []));
 // And we can still trigger the above event:
 $foo-&gt;bar('baz', 'bat');
 // results in log message:
-// bar called on Foo, using params {"baz" : "baz", "bat" : "bat"}"</code></pre>
-
+// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;</code></pre></p>
 <p>The <code>EventManager</code> also provides the ability to detach listeners, short-circuit
 execution of an event either from within a listener or by testing return values
 of listeners, test and loop through the results returned by listeners,
@@ -503,7 +499,7 @@ examples.</p>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/quick-start.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/quick-start.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

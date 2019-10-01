@@ -395,7 +395,7 @@ keys in the definition supplied at instantiation:</p>
 <p>Additionally, we'll assume that we have a container-interop instance in the
 variable <code>$container</code> and an event manager in the variable <code>$events</code>.</p>
 <p>You could create the lazy event listener as follows:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\Listener;
+<p> <pre class=codehilite><code class=language-php>use My\Application\Listener;
 use Zend\EventManager\LazyEventListener;
 
 $listener = new LazyEventListener([
@@ -403,8 +403,7 @@ $listener = new LazyEventListener([
     'method'   =&gt; 'onDispatch',
     'event'    =&gt; 'dispatch',
     'priority' =&gt; 100,
-], $container);</code></pre>
-
+], $container);</code></pre></p>
 <h2 id="methods">Methods</h2>
 <p><code>LazyEventListener</code> exposes two methods:</p>
 <ul>
@@ -451,7 +450,7 @@ with them directly; instead, you'll leave that to the
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/lazy-listeners/lazy-event-listener.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/lazy-listeners/lazy-event-listener.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

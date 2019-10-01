@@ -382,7 +382,7 @@ use to create <code>LazyEventListener</code> instances; you may also intersperse
 will use its <code>onRoute()</code> method to listen to the <code>route</code> event at priority 100,
 the second its <code>onDispatch()</code> method to listen to the <code>dispatch</code> event at
 priority -100.</p>
-<pre class="codehilite"><code class="language-php">use My\Application\DispatchListener;
+<p> <pre class=codehilite><code class=language-php>use My\Application\DispatchListener;
 use My\Application\RouteListener;
 use Zend\EventManager\LazyListenerAggregate;
 
@@ -405,14 +405,13 @@ $aggregate = new LazyListenerAggregate(
     $definitions,
     $container
 );
-$aggregate-&gt;attach($events);</code></pre>
-
+$aggregate-&gt;attach($events);</code></pre></p>
 <p>Internally, the <code>LazyListenerAggregate</code> will create <code>LazyEventListener</code>
 instances, and during its <code>attach()</code> phase use them to attach to the event
 manager using the event and priority they compose.</p>
 <p>Below is a functionally identical example, mixing in a concrete
 <code>LazyEventListener</code> instance for one listener:</p>
-<pre class="codehilite"><code class="language-php">use My\Application\DispatchListener;
+<p> <pre class=codehilite><code class=language-php>use My\Application\DispatchListener;
 use My\Application\RouteListener;
 use Zend\EventManager\LazyEventListener;
 use Zend\EventManager\LazyListenerAggregate;
@@ -438,8 +437,7 @@ $aggregate = new LazyListenerAggregate(
     $definitions,
     $container
 );
-$aggregate-&gt;attach($events);</code></pre>
-
+$aggregate-&gt;attach($events);</code></pre></p>
 <h2 id="recommendations">Recommendations</h2>
 <p>We recommend using <code>LazyListenerAggregate</code> when you have listeners you will be
 pulling from a Dependency Injection Container, but which may not execute on
@@ -479,7 +477,7 @@ be a healthy performance optimization.</p>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/lazy-listeners/lazy-listener-aggregate.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/lazy-listeners/lazy-listener-aggregate.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

@@ -417,8 +417,7 @@ listener is not present, checking for presence first is not necessary.</p>
 <p>The method <code>EventManagerInterface::setEventClass()</code> was removed and replaced
 with <code>EventManagerInterface::setEventPrototype()</code>, which has the following
 signature:</p>
-<pre class="codehilite"><code class="language-php">setEventPrototype(EventInterface $event);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>setEventPrototype(EventInterface $event);</code></pre></p>
 <p>This was done to prevent errors that occurred when invalid event class names
 were provided. Additionally, internally, event managers will clone the
 instance any time <code>trigger()</code> or <code>triggerUntil()</code> are called — which is
@@ -431,19 +430,15 @@ typically faster and less resource intensive than instantiating a new instance.<
 and <code>detach()</code> methods of the <code>ListenerAggregateInterface</code>. As such, to
 forward-proof your applications, you can alter statements that attach aggregates
 to an event manager reading as follows:</p>
-<pre class="codehilite"><code class="language-php">$events-&gt;attach($aggregate); // or
-$events-&gt;attachAggregate($aggregate);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$events-&gt;attach($aggregate); // or
+$events-&gt;attachAggregate($aggregate);</code></pre></p>
 <p>to:</p>
-<pre class="codehilite"><code class="language-php">$aggregate-&gt;attach($events);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$aggregate-&gt;attach($events);</code></pre></p>
 <p>Similarly, for detaching an aggregate, migrate from:</p>
-<pre class="codehilite"><code class="language-php">$events-&gt;detach($aggregate); // or
-$events-&gt;detachAggregate($aggregate);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$events-&gt;detach($aggregate); // or
+$events-&gt;detachAggregate($aggregate);</code></pre></p>
 <p>to:</p>
-<pre class="codehilite"><code class="language-php">$aggregate-&gt;detach($events);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$aggregate-&gt;detach($events);</code></pre></p>
 <p>The above works in all released versions of the component.</p>
 <h2 id="sharedeventaggregateawareinterface-sharedlisteneraggregateinterface">SharedEventAggregateAwareInterface, SharedListenerAggregateInterface</h2>
 <p>The interfaces <code>Zend\EventManager\SharedEventAggregateAwareInterface</code> and
@@ -452,7 +447,7 @@ listener aggregates was removed from version 3.</p>
 <p>Migration will depend on what you have done in your application: extending
 the <code>SharedEventManager</code> and/or implementing <code>SharedEventAggregateAwareInterface</code>,
 or implementing <code>SharedListenerAggregateInterface</code>.</p>
-<h3 id="sharedeventaggregateawareinterface">SharedEventAggregateAwareInterface</h3>
+<h3>SharedEventAggregateAwareInterface</h3>
 <p><code>Zend\EventManager\SharedEventAggregateAwareInterface</code> was added mid-way through
 the v2 lifecycle to allow adding shared listener aggregates to the
 <code>SharedEventManager</code>. If you were extending the <code>SharedEventManager</code> and
@@ -460,7 +455,7 @@ overriding the methods defined in <code>SharedEventAggregateAwareInterface</code
 should remove them.</p>
 <p>If you were implementing <code>SharedEventAggregateAwareInterface</code>, the interface no
 longer exists, and you should likely remove your implementation.</p>
-<h3 id="sharedlisteneraggregateinterface">SharedListenerAggregateInterface</h3>
+<h3>SharedListenerAggregateInterface</h3>
 <p>For those implementing shared listener aggregates, you can continue to use them,
 but will need to change how you do so.</p>
 <p>To migrate, you have two steps to take: remove the
@@ -470,7 +465,7 @@ aggregate class, and swap attachment of the aggregate.</p>
 methods in your class, but remove the <code>implements
 SharedListenerAggregateInterface</code> from the class declaration. For instance, if
 you had the following:</p>
-<pre class="codehilite"><code class="language-php">namespace Foo;
+<p> <pre class=codehilite><code class=language-php>namespace Foo;
 
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\EventManager\SharedListenerAggregateInterface;
@@ -486,10 +481,9 @@ class MySharedAggregate implements SharedListenerAggregateInterface
     {
         // ...
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>then modify it to instead read:</p>
-<pre class="codehilite"><code class="language-php">namespace Foo;
+<p> <pre class=codehilite><code class=language-php>namespace Foo;
 
 use Zend\EventManager\SharedEventManagerInterface;
 
@@ -504,19 +498,16 @@ class MySharedAggregate
     {
         // ...
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>For the second step, instead of attaching the aggregate to the shared event
 manager, you will pass the shared event manager to your aggregate. For example,
 if you had the following in your code:</p>
-<pre class="codehilite"><code class="language-php">$sharedEvents-&gt;attachAggregate($mySharedAggregate);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$sharedEvents-&gt;attachAggregate($mySharedAggregate);</code></pre></p>
 <p>then you can change it to:</p>
-<pre class="codehilite"><code class="language-php">$mySharedAggregate-&gt;attachShared($sharedEvents);</code></pre>
-
+<p> <pre class=codehilite><code class=language-php>$mySharedAggregate-&gt;attachShared($sharedEvents);</code></pre></p>
 <p>This has exactly the same effect, and makes your code forward-compatible with
 v3.</p>
-<h4 id="sharedeventmanagerawareinterface">SharedEventManagerAwareInterface</h4>
+<h4>SharedEventManagerAwareInterface</h4>
 <p>The interface <code>Zend\EventManager\SharedEventManagerAwareInterface</code> was removed,
 as version 3 now requires tha the <code>SharedEventManagerInterface</code> instance be
 injected into the <code>EventManager</code> instance at instantiation.</p>
@@ -531,10 +522,10 @@ injected into the <code>EventManager</code> instance at instantiation.</p>
 <li>If you will require injecting the shared manager, use duck typing to determine
   if a class has the <code>setSharedManager()</code> method:</li>
 </ul>
-<pre class="codehilite"><code class="language-php">if (method_exists($instance, 'setSharedManager')) {
-    $instance-&gt;setSharedManager($sharedEvents);
-}</code></pre>
-
+<p><code>php
+  if (method_exists($instance, 'setSharedManager')) {
+      $instance-&gt;setSharedManager($sharedEvents);
+  }</code></p>
 <p>Alternately, if you control instantiation of the instance, consider injection
   at instantiation, or within the factory used to create your instance.</p>
 <h2 id="sharedeventmanagerinterfacegetevents">SharedEventManagerInterface::getEvents()</h2>
@@ -573,7 +564,7 @@ was not consumed by the event manager, and served no real purpose.</p>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/migration/removed.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/migration/removed.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>

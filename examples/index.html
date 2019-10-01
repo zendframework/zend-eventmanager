@@ -364,7 +364,7 @@ a string and convert it to a <code>DateTime</code> argument.</p>
 <p>To do this, you can pass your arguments to <code>prepareArgs()</code>, and pass this new
 object when triggering an event. You will then pull that value back into your
 method.</p>
-<pre class="codehilite"><code class="language-php">use DateTime;
+<p> <pre class=codehilite><code class=language-php>use DateTime;
 
 class ValueObject
 {
@@ -400,25 +400,23 @@ $v-&gt;getEventManager()-&gt;attach('inject', function($e) {
 
 $v-&gt;inject([
     'date' =&gt; '2011-08-10 15:30:29',
-]);</code></pre>
-
+]);</code></pre></p>
 <h2 id="short-circuiting">Short Circuiting</h2>
 <p>One common use case for events is to trigger listeners until either one
 indicates no further processing should be done, or until a return value meets
 specific criteria.</p>
 <p>As an example, a request listener might be able to return a response object, and
 would signal to the target to stop event propagation.</p>
-<pre class="codehilite"><code class="language-php">$listener = function($e) {
+<p> <pre class=codehilite><code class=language-php>$listener = function($e) {
     // do some work
 
     // Stop propagation and return a response
     $e-&gt;stopPropagation(true);
     return $response;
-};</code></pre>
-
+};</code></pre></p>
 <p>Alternately, the request handler could halt execution at the first listener that
 returns a response.</p>
-<pre class="codehilite"><code class="language-php">class Foo implements DispatchableInterface
+<p> <pre class=codehilite><code class=language-php>class Foo implements DispatchableInterface
 {
     // assume composed event manager
 
@@ -429,13 +427,12 @@ returns a response.</p>
             return ($v instanceof Response);
         }, __FUNCTION__, $this, $argv);
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>Typically, you may want to return the value that stopped execution, or use it
 some way. All <code>trigger*()</code> methods return a <code>ResponseCollection</code> instance; call
 its <code>stopped()</code> method to test if execution was stopped, and the <code>last()</code> method
 to retrieve the return value from the last executed listener:</p>
-<pre class="codehilite"><code class="language-php">class Foo implements DispatchableInterface
+<p> <pre class=codehilite><code class=language-php>class Foo implements DispatchableInterface
 {
     // assume composed event manager
 
@@ -453,8 +450,7 @@ to retrieve the return value from the last executed listener:</p>
 
         // continue...
     }
-}</code></pre>
-
+}</code></pre></p>
 <h2 id="assigning-priority-to-listeners">Assigning Priority to Listeners</h2>
 <p>One use case for the <code>EventManager</code> is for implementing caching systems. As
 such, you often want to check the cache early, and save to it late.</p>
@@ -466,7 +462,7 @@ a given priority.</p>
 method start as well as at method end. At method start, we want an event that
 will trigger early; at method end, an event should trigger late.</p>
 <p>Here is the class in which we want caching:</p>
-<pre class="codehilite"><code class="language-php">class SomeValueObject
+<p> <pre class=codehilite><code class=language-php>class SomeValueObject
 {
     // assume it composes an event manager
 
@@ -485,11 +481,10 @@ will trigger early; at method end, an event should trigger late.</p>
         $params['__RESULT__'] = $someComputedContent;
         $this-&gt;getEventManager()-&gt;trigger('get.post', $this, $params);
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>Now, let's create a <code>ListenerAggregateInterface</code> implementation that can handle
 caching for us:</p>
-<pre class="codehilite"><code class="language-php">use Zend\Cache\Cache;
+<p> <pre class=codehilite><code class=language-php>use Zend\Cache\Cache;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -530,13 +525,11 @@ class CacheListener implements ListenerAggregateInterface
         $id = get_class($e-&gt;getTarget()) . '-' . json_encode($params);
         $this-&gt;cache-&gt;save($content, $id);
     }
-}</code></pre>
-
+}</code></pre></p>
 <p>We can then attach the aggregate to an event manager instance.</p>
-<pre class="codehilite"><code class="language-php">$value         = new SomeValueObject();
+<p> <pre class=codehilite><code class=language-php>$value         = new SomeValueObject();
 $cacheListener = new CacheListener($cache);
-$cacheListener-&gt;attach($value-&gt;getEventManager());</code></pre>
-
+$cacheListener-&gt;attach($value-&gt;getEventManager());</code></pre></p>
 <p>Now, as we call <code>get()</code>, if we have a cached entry, it will be returned
 immediately; if not, a computed entry will be cached when we complete the
 method.</p>
@@ -573,7 +566,7 @@ method.</p>
     <div class="help-wanted">
         <p>
             Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/examples.md" target="_blank" class="help-wanted__link">
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/examples.md" target="_blank" class="help-wanted__link">
                 Edit this page on GitHub!
             </a>
         </p>
