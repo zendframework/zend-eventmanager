@@ -21,10 +21,11 @@ use Interop\Container\ContainerInterface;
  * Usage is:
  *
  * <code>
- * $events->attachAggregate(new LazyListenerAggregate(
+ * $aggregate = new LazyListenerAggregate(
  *     $lazyEventListenersOrDefinitions,
  *     $container
- * ));
+ * );
+ * $aggregate->attach($events);
  * </code>
  */
 class LazyListenerAggregate implements ListenerAggregateInterface
