@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
+    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/migration/changed/">
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+
+    <title>Changed Functionality - zend-eventmanager - Zend Framework Docs</title>
+
+    <link rel="stylesheet" href="../../css/styles-5cfabd53ee.css">
+</head>
+<body id="page-top">
+
+    
+    <div class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+
+            
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            
+            <span class="navbar-brand">
+                <a class="logo-link" href="https://framework.zend.com/" data-tooltip data-placement="bottom" title="Go to the ZF homepage">
+                    <img src="../../img/zend-framework-logo.svg" height="28" alt="Zend Framework">
+                </a>
+            </span>
+        </div>
+
+        <div class="navbar-collapse collapse">
+
+            
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="https://framework.zend.com/about">About</a>
+                </li>
+                <li>
+                    <a href="https://framework.zend.com/downloads">Install</a>
+                </li>
+                <li class="active">
+                    <a href="https://docs.zendframework.com">Documentation</a>
+                </li>
+                <li>
+                    <a href="https://www.zend.com/en/services/training">Training</a>
+                </li>
+                <li>
+                    <a href="https://framework.zend.com/blog">Blog</a>
+                </li>
+                <li>
+                    <a href="https://framework.zend.com/participate">Participate</a>
+                </li>
+            </ul>
+
+            
+            
+                <div class="nav navbar-nav navbar-collapse visible-xs-block ">
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="../..">zend-eventmanager</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../intro/" class="subnavigation__link">Intro</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../quick-start/" class="subnavigation__link">Quick Start</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../tutorial/" class="subnavigation__link">Tutorial</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../examples/" class="subnavigation__link">Examples</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Reference</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../aggregates/" class="subnavigation__link">Listener Aggregates</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Lazy Listeners</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/intro/" class="subnavigation__link">Intro</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../api/" class="subnavigation__link">EventManager API</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Migration Guide</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../intro/" class="subnavigation__link">Intro</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../removed/" class="subnavigation__link">Removed Functionality</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Changed Functionality</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                </div>
+            
+
+            
+            <div class="nav navbar-nav navbar-collapse visible-xs-block">
+                <div class="component-selector">
+    <h4 class="component-selector__title">Components</h4>
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <header class="header">
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="col-xs-8">
+                <h1 class="header__title">
+                    Documentation
+
+                    
+                        <small class="header__subtitle">zend-eventmanager</small>
+                    
+                </h1>
+            </div>
+
+            
+            <div class="col-xs-4 text-right">
+                
+                    
+
+                    <a href="#" class="header__link header__link--search" data-toggle="modal" data-target="#mkdocs_search_modal" title="Open search">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                    <a href="https://github.com/zendframework/zend-eventmanager/" class="header__link header__link--github" title="Go to repository of zend-eventmanager">
+                        <i class="fa fa-github"></i> GitHub
+                    </a>
+                
+            </div>
+        </div>
+    </div>
+</header>
+
+    
+    <div class="laminas-announcement">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9 col-xs-12 content" role="main">
+            <!-- content:begin -->
+                
+                    <ol class="breadcrumb" role="navigation" aria-label="breadcrumbs navigation">
+    <li><a href="https://framework.zend.com/">Home</a></li>
+
+    
+        <li><a href="https://docs.zendframework.com/">Documentation</a></li>
+
+        
+            <li><a href="../..">zend-eventmanager</a></li>
+
+            
+                
+                    
+                    
+                        <li>Reference</li>
+                    
+                
+            
+                
+                    
+                    
+                        <li>Migration Guide</li>
+                    
+                
+            
+
+            <li class="active">Changed Functionality</li>
+        
+    
+</ol>
+
+
+
+
+
+
+    
+    
+        <h2 class="chapter__headline">Migration Guide</h2>
+    
+
+    <div>
+        
+    
+
+    
+    
+        <div class="toc">
+            <h6 class="toc__headline">In This Article</h6>
+            <ul class="toc__list">
+                
+                    <li class="toc__entry">
+                        <a href="#eventmanager__construct" class="toc__link">EventManager::__construct()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#eventmanagerinterfacetrigger-and-triggeruntil" class="toc__link">EventManagerInterface::trigger() and triggerUntil()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#eventmanagerinterfaceattach-and-detach" class="toc__link">EventManagerInterface::attach() and detach()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#eventmanagerinterfaceseteventclass-and-seteventprototype" class="toc__link">EventManagerInterface::setEventClass() and setEventPrototype()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#eventmanagerinterfacesetidentifiers-and-addidentifiers" class="toc__link">EventManagerInterface::setIdentifiers() and addIdentifiers()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#sharedeventmanagerinterfacegetlisteners" class="toc__link">SharedEventManagerInterface::getListeners()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#sharedeventmanagerinterfaceattach" class="toc__link">SharedEventManagerInterface::attach()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#sharedeventmanagerinterfacedetach" class="toc__link">SharedEventManagerInterface::detach()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#listeneraggregateinterfaceattach" class="toc__link">ListenerAggregateInterface::attach()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#filterinterfaceattach-and-detach" class="toc__link">FilterInterface::attach() and detach()</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#filteriterator" class="toc__link">FilterIterator</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#responsecollectionsetstopped" class="toc__link">ResponseCollection::setStopped()</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+    </div>
+
+    <h1 id="changed-functionality">Changed Functionality</h1>
+<p>The following methods had changes in signatures.</p>
+<h2 id="eventmanager__construct">EventManager::__construct()</h2>
+<p>In version 2, the signature of <code>__construct()</code> was:</p>
+<p> <pre class=codehilite><code class=language-php>__construct($identifiers = null)</code></pre></p>
+<p>where <code>$identifiers</code> could be a string, array of strings, or <code>Traversable</code> of
+strings.</p>
+<p>Version 3 requires that the shared event manager be injected at instantiation,
+instead of via a setter. This also enforces the idea that identifiers have no
+semantic meaning without a shared event manager composed. As such, the
+constructor now has two arguments, with the first being the shared event
+manager:</p>
+<p> <pre class=codehilite><code class=language-php>__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])</code></pre></p>
+<p>Finally, because we changed the signature of <code>setIdentifiers()</code> and
+<code>addIdentifiers()</code> to only accept arrays (see more below), we changed the
+<code>$identifiers</code> argument to only allow arrays.</p>
+<h2 id="eventmanagerinterfacetrigger-and-triggeruntil">EventManagerInterface::trigger() and triggerUntil()</h2>
+<p>In version 2, the signatures of <code>trigger()</code> and <code>triggerUntil()</code> are:</p>
+<p> <pre class=codehilite><code class=language-php>trigger($event, $target = null, $argv = [], $callback = null);
+triggerUntil($event, $target = null, $argv = [], $callback = null);</code></pre></p>
+<p>The methods allow overloading essentially every argument:</p>
+<ul>
+<li><code>$event</code> could be the event name, array or traversable of event names,  or an
+  <code>EventInterface</code> instance.</li>
+<li><code>$target</code> could be a callable representing the short-circuit callback, an
+  <code>EventInterface</code> instance, or a value representing the target of the event.</li>
+<li><code>$argv</code> could be a callable representing the short-circuit callback, an
+  <code>EventInterface</code> instance, or an array/<code>ArrayAccess</code>/object instance
+  representing the event arguments.</li>
+<li><code>$callback</code> could be either <code>null</code> or a callable.</li>
+</ul>
+<p>The amount of overloading leads to:</p>
+<ul>
+<li>4 x 3 x 3 = 36 permutations of arguments, leading to confusion about how to
+  call the method.</li>
+<li>Dozens of lines used to validate and marshal arguments.</li>
+</ul>
+<p>In version 3, we changed the methods to have the following signatures:</p>
+<p> <pre class=codehilite><code class=language-php>trigger($event, $target = null, $argv = []);
+triggerUntil(callable $callback, $event, $target = null, $argv = []);</code></pre></p>
+<p>with the following definitions:</p>
+<ul>
+<li><code>$event</code> is a string event name.</li>
+<li><code>$target</code> is a value representing the target of the event.</li>
+<li><code>$argv</code> is an array/<code>ArrayAccess</code>/object instance representing the event
+  arguments.</li>
+<li><code>$callback</code> is a callable to use to introspect listener return values in order
+  to determine whether or not to short-circuit.</li>
+</ul>
+<p>In other words, each argument has exactly one possible type. <code>$callback</code> was
+moved to the start of the <code>triggerUntil()</code> method as it's <em>required</em> for that
+usage, and ensures the argument order stays predictable for the remaining
+arguments.</p>
+<p>In order to accommodate other styles of usage, we <strong>added</strong> the following
+methods:</p>
+<p> <pre class=codehilite><code class=language-php>triggerUntil(callable $callback, $event, $target = null, $argv = []);
+triggerEvent(EventInterface $event);
+triggerEventUntil(callable $callback, EventInterface $event);</code></pre></p>
+<p>These allow the other primary use cases for <code>trigger()</code> in v2, but with discrete
+signatures.</p>
+<p>Starting in version 2.6.0, you can use these three additional methods, as the
+<code>EventManager</code> instance defines them starting in that version. We recommend
+evaluating your code to see which of the four possible call styles you are
+using, and that you adapt your code to use one of the 4 discrete methods.</p>
+<p>The following signatures, however, are no longer supported, and will need to be
+updated as illustrated:</p>
+<p> <pre class=codehilite><code class=language-php>// Event instance as second argument:
+$events-&gt;trigger('foo', $event);
+
+// Resolve by setting the event name prior to trigger:
+$event-&gt;setName('foo');
+$events-&gt;triggerEvent($event);
+
+// Event instance as third argument:
+$events-&gt;trigger('foo', $this, $event);
+
+// Resolve by setting the event name and target prior to trigger:
+$event-&gt;setName('foo');
+$event-&gt;setTarget($this);
+$events-&gt;triggerEvent($event);</code></pre></p>
+<p>If you are using a callback to short-circuit, use one of the <code>*Until()</code> methods,
+passing the callback as the first argument:</p>
+<p> <pre class=codehilite><code class=language-php>// Standard trigger:
+$events-&gt;trigger('foo', $this, ['bar' =&gt; 'baz'], $criteria);
+
+// becomes:
+$events-&gt;triggerUntil($criteria, 'foo', $this, ['bar' =&gt; 'baz']);
+
+// Triggering with an event:
+$events-&gt;trigger($event, $criteria);
+
+// becomes:
+$events-&gt;triggerEventUntil($criteria, $event);</code></pre></p>
+<h2 id="eventmanagerinterfaceattach-and-detach">EventManagerInterface::attach() and detach()</h2>
+<p>In version 2, <code>attach()</code> and <code>detach()</code> had the following signatures:</p>
+<p> <pre class=codehilite><code class=language-php>attach($event, $callback = null, $priority = null);
+detach($listener);</code></pre></p>
+<p>with the following argument definitions:</p>
+<ul>
+<li><code>$event</code> could be either a string event name, or an instance of
+  <code>ListenerAggregateInterface</code>.</li>
+<li><code>$callback</code> could be a callable, an instance of <code>Zend\Stdlib\CallbackHandler</code>,
+  or an integer priority (if <code>$event</code> was an aggregate).</li>
+<li><code>$priority</code> could be null or an integer.</li>
+<li><code>$listener</code> could be either a <code>Zend\Stdlib\CallbackHandler</code> (as that was how
+  listeners were stored internally in that version), or an instance of
+  <code>ListenerAggregateInterface</code>.</li>
+</ul>
+<p>Much like we did for the <code>trigger*()</code> methods, we simplified the signatures:</p>
+<p> <pre class=codehilite><code class=language-php>attach($event, callable $listener, $priority = 1);
+detach(callable $listener, $event = null);</code></pre></p>
+<p>Where:</p>
+<ul>
+<li><code>$event</code> is always a string event name (except when not passed to <code>detach()</code>.</li>
+<li><code>$listener</code> is always the <code>callable</code> listener.</li>
+<li><code>$priority</code> is always an integer.</li>
+</ul>
+<p><code>detach()</code> adds the <code>$event</code> argument as the event argument for a couple of
+reasons. First, in version 2, the event was composed in the <code>CallbackHandler</code>,
+which meant it didn't need to be sent separately; since the event managers now
+store the listeners directly, you <em>must</em> pass the <code>$event</code> if you want to detach
+from a specific event. This leads to the second reason: by omitting the
+argument, you can now remove a listener from <em>all</em> events to which it is
+attached — a new capability for version 3.</p>
+<p>In order to migrate to version 3, you will need to make a few changes to your
+application.</p>
+<p>First, if you are attaching or detaching aggregate listeners using <code>attach()</code>
+and <code>detach()</code>, you should change such calls to instead pass the event manager
+to the relevant <code>ListenerAggregateInterface</code> method, as detailed in the
+<a href="../removed/#eventmanagerinterfaceattachaggregate-and-detachaggregate">removed functionality</a>
+documentation. These methods have existed in all released versions, giving
+perfect forwards compatibility.</p>
+<p>Second, if you are manually creating <code>CallbackHandler</code> instances to attach to an
+event manager, stop doing so, and attach the callable listener itself instead.
+This, too, is completely forwards compatible.</p>
+<p>If you are passing <code>CallbackHandler</code> instances to <code>detach()</code>, you will need to
+make the following change after updating to version 3:</p>
+<p> <pre class=codehilite><code class=language-php>// This code:
+$events-&gt;detach($callbackHandler);
+
+// Will become:
+$events-&gt;detach($callbackHandler-&gt;getCallback());</code></pre></p>
+<p>In most cases, the callback handler you are storing is likely the result of
+calling <code>attach()</code> in the first place. Since <code>attach()</code> no longer creates a
+<code>CallbackHandler</code> instance, it instead simply returns the listener back to the
+caller. If you were storing this to pass later to <code>detach()</code> (such as in a
+listener aggregate), you will not need to make any changes when migrating.</p>
+<h2 id="eventmanagerinterfaceseteventclass-and-seteventprototype">EventManagerInterface::setEventClass() and setEventPrototype()</h2>
+<p><code>setEventClass()</code> was renamed to <code>setEventPrototype()</code> and given a new
+signature; see the <a href="./#eventmanagerinterfaceseteventclass">setEventClass() removal information</a>
+for details.</p>
+<h2 id="eventmanagerinterfacesetidentifiers-and-addidentifiers">EventManagerInterface::setIdentifiers() and addIdentifiers()</h2>
+<p><code>EventManagerInterface::setIdentifiers()</code> and <code>addIdentifiers()</code> had a minor
+signature change. In version 2, the <code>$identifiers</code> argument allowed any of
+<code>string</code>, <code>array</code>, or <code>Traversable</code>. In version 3, only arrays are allowed.</p>
+<p>Additionally, neither implements a fluent interface any longer; you cannot chain
+their calls.</p>
+<h2 id="sharedeventmanagerinterfacegetlisteners">SharedEventManagerInterface::getListeners()</h2>
+<p><code>Zend\EventManager\SharedEventManagerInterface::getListeners()</code> has changed. The
+previous signature was:</p>
+<p> <pre class=codehilite><code class=language-php>getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue</code></pre></p>
+<p>Version 3 has the following signature:</p>
+<p> <pre class=codehilite><code class=language-php>getListeners(array $identifiers, $eventName) : array</code></pre></p>
+<p>The changes are:</p>
+<ul>
+<li>The first argument now expects an <em>array</em> of identifiers. This is so an event
+  manager instance can retrieve shared listeners for all identifiers it defines
+  at once.</li>
+<li>The second argument is now <em>required</em>. Since the event manager always knows
+  the event at the time it calls the method, it makes sense to require the
+  argument for all calls. It also reduces complexity in the implementation.</li>
+<li>The method now <em>always</em> returns an array. The array will be of the structure
+  <code>[ 'priority' =&gt; callable[] ]</code>.</li>
+</ul>
+<h2 id="sharedeventmanagerinterfaceattach">SharedEventManagerInterface::attach()</h2>
+<p>The v2 signature of <code>attach()</code> was:</p>
+<p> <pre class=codehilite><code class=language-php>attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]</code></pre></p>
+<p>where:</p>
+<ul>
+<li><code>$id</code> could be a string identifier, or an array or <code>Traversable</code> of
+  identifiers.</li>
+<li><code>$event</code> was a string event name.</li>
+<li><code>$callback</code> could be either a <code>callable</code> listener, or a <code>CallbackHandler</code>
+  instance.</li>
+<li><code>$priority</code> was an integer.</li>
+</ul>
+<p>The v3 signature becomes:</p>
+<p> <pre class=codehilite><code class=language-php>attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre></p>
+<p>where:</p>
+<ul>
+<li><code>$identifier</code> <em>must</em> be a string <em>only</em>.</li>
+<li><code>$eventName</code> must be a string name.</li>
+<li><code>$listener</code> must be a callable <em>only</em>.</li>
+<li><code>$priority</code> is an integer.</li>
+</ul>
+<p>Migration concerns are thus:</p>
+<ul>
+<li>If you are passing arrays of identifiers to which to attach, you must now do
+  so in a loop or using a construct such as <code>array_walk</code>:</li>
+</ul>
+<p>```php
+  foreach ($identifiers as $id) {
+      $sharedEvents-&gt;attach($id, $event, $listener);
+  }</p>
+<p>array_walk($identifiers, function ($id) use ($listener) {
+      $this-&gt;sharedEvents-&gt;attach($id, 'foo', $listener);
+  });
+  ```</p>
+<ul>
+<li>
+<p>If you are passing <code>CallbackHandler</code> arguments, pass the callable listener
+  instead.</p>
+</li>
+<li>
+<p>If you were relying on being returned the <code>CallbackHandler</code>, you may now
+  simply cache the <code>$listener</code> argument.</p>
+</li>
+</ul>
+<h2 id="sharedeventmanagerinterfacedetach">SharedEventManagerInterface::detach()</h2>
+<p>The v2 signature of <code>detach()</code> was:</p>
+<p> <pre class=codehilite><code class=language-php>detach($id, CallbackHandler $listener) : bool</code></pre></p>
+<p>where:</p>
+<ul>
+<li><code>$id</code> was a string identifier</li>
+<li><code>$listener</code> was a <code>CallbackHandler</code> instance</li>
+<li>the method returned a boolean indicating whether or not it removed anything.</li>
+</ul>
+<p>The v3 signature becomes:</p>
+<p> <pre class=codehilite><code class=language-php>detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre></p>
+<p>where:</p>
+<ul>
+<li><code>$listener</code> is the callable listener you wish to remove</li>
+<li><code>$identifier</code>, if provided, is a specific identifier from which you want to remove the
+  <code>$listener</code>.</li>
+<li><code>$eventName</code>, if provided, is a specific event on the specified <code>$id</code> from
+  which to remove the <code>$listener</code></li>
+<li>the method no longer returns a value.</li>
+</ul>
+<p>When not specifying an identifier, the method contract indicates it should
+remove the listener from any identifier; similarly, in the absence of an event
+argument, it should remove the listener from any event on the identifier(s).
+This allows for mass removal!</p>
+<p>As the signatures differ, you will need to update any code calling <code>detach()</code>
+after upgrading to v3. At the minimum, you will need to swap the <code>$identifier</code> and
+<code>$listener</code> arguments, and pass the callable listener instead of a
+<code>CallbackHandler</code> instance. We also recommend auditing your code to determine if
+you want to be more or less specific when detaching the listener.</p>
+<h2 id="listeneraggregateinterfaceattach">ListenerAggregateInterface::attach()</h2>
+<p><code>Zend\EventManager\ListenerAggregateInterface::attach()</code> was updated to add an
+optional argument, <code>$priority = 1</code>. This codifies how the <code>EventManager</code> was
+already implemented.</p>
+<p>Since PHP allows adding optional arguments to concrete implementations of
+abstract methods, you can forward-proof your existing
+<code>ListenerAggregateInterface</code> implementations by adding the argument.</p>
+<p>As an example, if you define your method like this:</p>
+<p> <pre class=codehilite><code class=language-php>public function attach(EventManagerInterface $events)</code></pre></p>
+<p>Simply change it to this:</p>
+<p> <pre class=codehilite><code class=language-php>public function attach(EventManagerInterface $events, $priority = 1)</code></pre></p>
+<p>You do not need to do anything with the <code>$priority</code> argument, though we
+recommend passing it as a default value if you are not specifying a priority for
+any listeners you attach.</p>
+<h2 id="filterinterfaceattach-and-detach">FilterInterface::attach() and detach()</h2>
+<p><code>Zend\EventManager\Filter\FilterInterface::attach()</code> and <code>detach()</code> have changed
+signatures. The originals were:</p>
+<p> <pre class=codehilite><code class=language-php>attach($callback) : CallbackHandler
+detach(CallbackHandler $callback) : bool</code></pre></p>
+<p>where <code>$callback</code> for <code>attach()</code> could be a callable or a <code>CallbackHandler</code>. The
+new signatures are:</p>
+<p> <pre class=codehilite><code class=language-php>attach(callable $callback) : void
+detach(callable $filter) : bool</code></pre></p>
+<p>Typical usage in v2 was to capture the return value of <code>attach()</code> and pass it to
+<code>detach()</code>, as <code>attach()</code> would create a <code>CallbackHandler</code> for you to later pass
+to <code>detach()</code>. Since we can now pass the original callable argument to
+<code>detach()</code> now, you can cache that value instead.</p>
+<h2 id="filteriterator">FilterIterator</h2>
+<p><code>Zend\EventManager\Filter\FilterIterator</code> now defines/overrides the <code>insert()</code>
+method in order to validate the incoming value and ensure it is callable,
+raising an exception when it is not. This simplifies logic in <code>FilterChain</code>, as
+it no longer needs to check if a filter is callable at runtime.</p>
+<p>The main migration change at this time is to know that an
+<code>InvalidArgumentException</code> will now be thrown when adding filters to a filter
+chain, vs at runtime.</p>
+<h2 id="responsecollectionsetstopped">ResponseCollection::setStopped()</h2>
+<p><code>Zend\EventManager\ResponseCollection::setStopped()</code> no longer implements a
+fluent interface.</p>
+
+
+
+
+    <nav>
+    <ul class="page-nav hidden-print">
+
+        
+        <li class="page-nav__item">
+            
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../removed/">
+                    <i class="fa fa-chevron-left"></i> Previous
+                </a>
+            
+        </li>
+
+        
+        <li class="page-nav__item">
+            
+        </li>
+    </ul>
+</nav>
+
+
+
+
+    <div class="help-wanted">
+        <p>
+            Found a mistake or want to contribute to the documentation?
+            <a href="https://github.com/zendframework/zend-eventmanager/edit/master/doc/book/migration/changed.md" target="_blank" class="help-wanted__link">
+                Edit this page on GitHub!
+            </a>
+        </p>
+    </div>
+
+                
+            <!-- content:end -->
+            </div>
+            <div class="col-md-3 col-xs-12 sidebar">
+                
+                    <div class="component-selector">
+    <h4 class="component-selector__title">Components</h4>
+    <h5 class="component-selector__subtitle">Find documentation…</h5>
+    <select class="form-control component-selector__control">
+        <option value="/">Overview</option>
+        <optgroup label="Components"></optgroup>
+    </select>
+</div>
+                    
+    <div class="subnavigation hidden-print">
+        <h4 class="subnavigation__title">
+            <a href="../..">zend-eventmanager</a>
+        </h4>
+
+        <h5 class="subnavigation__subtitle">Table of Contents</h5>
+
+        <ul class="subnavigation__list">
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../intro/" class="subnavigation__link">Intro</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../quick-start/" class="subnavigation__link">Quick Start</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../tutorial/" class="subnavigation__link">Tutorial</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../../examples/" class="subnavigation__link">Examples</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item">
+                                <span class="subnavigation__headline">Reference</span>
+                                <ul class="subnavigation__list">
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../wildcard-listeners/" class="subnavigation__link">Wildcard Listeners</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../aggregates/" class="subnavigation__link">Listener Aggregates</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Lazy Listeners</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/intro/" class="subnavigation__link">Intro</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-listener/" class="subnavigation__link">LazyListener</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-event-listener/" class="subnavigation__link">LazyEventListener</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../../lazy-listeners/lazy-listener-aggregate/" class="subnavigation__link">LazyListenerAggregate</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../api/" class="subnavigation__link">EventManager API</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item ">
+        <a href="../../intercepting-filters/" class="subnavigation__link">Intercepting Filters</a>
+    </li>
+
+                                    
+                                        
+    <li class="subnavigation__list-item">
+        <span class="subnavigation__headline">Migration Guide</span>
+        <ul class="subnavigation__list">
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../intro/" class="subnavigation__link">Intro</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item ">
+        <a href="../removed/" class="subnavigation__link">Removed Functionality</a>
+    </li>
+
+            
+                
+    <li class="subnavigation__list-item subnavigation__list-item--active">
+        <a href="./" class="subnavigation__link">Changed Functionality</a>
+    </li>
+
+            
+        </ul>
+    </li>
+
+                                    
+                                </ul>
+                            </li>
+                        
+                    
+                
+            
+        </ul>
+    </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    
+    <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <h5>Zend Framework</h5>
+                <ul>
+                    <li><a href="https://framework.zend.com/">framework.zend.com</a></li>
+                    <li><a href="https://docs.zendframework.com">docs.zendframework.com</a></li>
+                    <li><a href="https://packages.zendframework.com">packages.zendframework.com</a></li>
+                    <li><a href="https://apigility.org">apigility.org</a></li>
+                    <li><a href="https://getexpressive.org/">getexpressive.org</a></li>
+                </ul>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <a class="footer__button" href="#page-top"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+            </div>
+        </div>
+
+        <div class="row">
+
+            
+            <div class="col-md-9">
+                <h4 class="footer__headline">Copyright</h4>
+                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+            </div>
+
+            
+            <div class="col-md-3">
+                <h4 class="footer__headline">Support</h4>
+                <ul class="support__list">
+                    <li class="support__list-item">
+                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
+                    </li>
+                    <li class="support__list-item">
+                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        var base_url = '../..',
+            siteName = 'zend-eventmanager';
+    </script>
+    <script src="../../js/scripts-8d7ae56abf.js"></script>
+        <script src="../../search/main.js"></script>
+
+    
+    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        From here you can search these documents. Enter your search terms below.
+                    </p>
+                    <form role="form">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                        </div>
+                    </form>
+                    <div id="mkdocs-search-results"></div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+
+</html>
