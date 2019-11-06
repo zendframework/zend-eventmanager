@@ -12,6 +12,11 @@ namespace Zend\EventManager;
 /**
  * Provides logic to easily create aggregate listeners, without worrying about
  * manually detaching events
+ *
+ * @deprecated since 3.3.0. This trait will be removed in version 4.0.0, in
+ *     favor of the ListenerProvider\ListenerSubscriberTrait. In most cases,
+ *     subscribers should fully implement ListenerSubscriberInterface on their
+ *     own, however.
  */
 trait ListenerAggregateTrait
 {

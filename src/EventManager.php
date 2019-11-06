@@ -17,7 +17,11 @@ use ArrayObject;
  * Use the EventManager when you want to create a per-instance notification
  * system for your objects.
  */
-class EventManager implements EventManagerInterface
+class EventManager implements
+    EventDispatcherInterface,
+    EventManagerInterface,
+    ListenerProvider\ListenerProviderInterface,
+    ListenerProvider\PrioritizedListenerAttachmentInterface
 {
     /**
      * Subscribed events and their listeners
@@ -55,11 +59,52 @@ class EventManager implements EventManagerInterface
     protected $identifiers = [];
 
     /**
+     * @var ListenerProvider\PrioritizedListenerAttachmentInterface
+     */
+    protected $prioritizedProvider;
+
+    /**
+     * @var ListenerProvider\ListenerProviderInterface
+     */
+    protected $provider;
+
+    /**
      * Shared event manager
      *
      * @var null|SharedEventManagerInterface
      */
     protected $sharedManager = null;
+
+    /**
+     * Use this method to create an instance that utilizes a specfic listener provider.
+     *
+     * When using the constructor in version 3 releases, the class will create an
+     * empty PrioritizedListenerProvider instance, and push that and any provided
+     * SharedEventManager instance into a PrioritizedAggregateListenerProvider;
+     * this approach allows the class to also act as a provider, keeping backwards
+     * compatibility.
+     *
+     * This method allows you to bypass that behavior, and instead attach a specific
+     * provider to your event manager instance. This can be useful for making your
+     * instance forwards compatible with the proposed version 4, which will only
+     * consume providers.
+     *
+     * @param string[] $identifiers Deprecated. Identifiers to use when
+     *     retrieving events from a prioritized provider. In general, use fully
+     *     qualified event class names instead.
+     * @return self
+     */
+    public static function createUsingListenerProvider(
+        ListenerProvider\ListenerProviderInterface $provider,
+        array $identifiers = []
+    ) {
+        $instance = new self(null, [], true);
+        $instance->provider = $provider;
+        if ($provider instanceof ListenerProvider\PrioritizedListenerAttachmentInterface) {
+            $instance->prioritizedProvider = $provider;
+        }
+        return $instance;
+    }
 
     /**
      * Constructor
@@ -69,19 +114,37 @@ class EventManager implements EventManagerInterface
      *
      * @param SharedEventManagerInterface $sharedEventManager
      * @param array $identifiers
+     * @param bool $skipProviderCreation Internal; used by
+     *     createUsingListenerProvider to ensure that no provider is created during
+     *     instantiation.
      */
-    public function __construct(SharedEventManagerInterface $sharedEventManager = null, array $identifiers = [])
-    {
+    public function __construct(
+        SharedEventManagerInterface $sharedEventManager = null,
+        array $identifiers = [],
+        $skipProviderCreation = false
+    ) {
+        $this->eventPrototype = new Event();
+
+        if ($skipProviderCreation) {
+            // Nothing else to do.
+            return;
+        }
+
         if ($sharedEventManager) {
-            $this->sharedManager = $sharedEventManager;
+            $this->sharedManager = $sharedEventManager instanceof SharedEventManager
+                ? $sharedEventManager
+                : new SharedEventManager\SharedEventManagerDecorator($sharedEventManager);
             $this->setIdentifiers($identifiers);
         }
 
-        $this->eventPrototype = new Event();
+        $this->prioritizedProvider = new ListenerProvider\PrioritizedListenerProvider();
+
+        $this->provider = $this->createProvider($this->prioritizedProvider, $this->sharedManager);
     }
 
     /**
-     * @inheritDoc
+     * @deprecated Will be removed in version 4; use event instances when triggering
+     *     events instead.
      */
     public function setEventPrototype(EventInterface $prototype)
     {
@@ -91,6 +154,8 @@ class EventManager implements EventManagerInterface
     /**
      * Retrieve the shared event manager, if composed.
      *
+     * @deprecated Will be removed in version 4; use a listener provider and
+     *     lazy listeners instead.
      * @return null|SharedEventManagerInterface $sharedEventManager
      */
     public function getSharedManager()
@@ -99,7 +164,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use fully qualified event names
+     *     and the object inheritance hierarchy instead.
      */
     public function getIdentifiers()
     {
@@ -107,7 +174,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use fully qualified event names
+     *     and the object inheritance hierarchy instead.
      */
     public function setIdentifiers(array $identifiers)
     {
@@ -115,7 +184,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use fully qualified event names
+     *     and the object inheritance hierarchy instead.
      */
     public function addIdentifiers(array $identifiers)
     {
@@ -126,7 +197,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use dispatch() with an event
+     *     instance instead.
      */
     public function trigger($eventName, $target = null, $argv = [])
     {
@@ -145,7 +218,10 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use dispatch() with an event
+     *     instance instead, and encapsulate logic for stopping propagation
+     *     within the event itself.
      */
     public function triggerUntil(callable $callback, $eventName, $target = null, $argv = [])
     {
@@ -164,7 +240,8 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use dispatch() instead.
      */
     public function triggerEvent(EventInterface $event)
     {
@@ -172,7 +249,9 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated Will be removed in version 4; use dispatch() instead, and
+     *     encapsulate logic for stopping propagation within the event itself.
      */
     public function triggerEventUntil(callable $callback, EventInterface $event)
     {
@@ -180,79 +259,140 @@ class EventManager implements EventManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function attach($eventName, callable $listener, $priority = 1)
+    public function dispatch($event)
     {
-        if (! is_string($eventName)) {
+        if (! is_object($event)) {
             throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects a string for the event; received %s',
-                __METHOD__,
-                (is_object($eventName) ? get_class($eventName) : gettype($eventName))
+                '%s expects an object; received "%s"',
+                __CLASS__,
+                gettype($event)
             ));
         }
 
-        $this->events[$eventName][(int) $priority][0][] = $listener;
+        $this->triggerListeners($event);
+        return $event;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @deprecated This method will be removed in version 4.0; use listener
+     *     providers and the createUsingListenerProvider method instead.
+     * @throws Exception\RuntimeException if no prioritized provider is composed.
+     */
+    public function attach($eventName, callable $listener, $priority = 1)
+    {
+        if (! $this->prioritizedProvider) {
+            throw new Exception\RuntimeException(sprintf(
+                'The provider composed into this %s instance is not of type %s (received %s);'
+                . ' attach listeners to it directly using its API before passing to the %s constructor',
+                get_class($this),
+                ListenerProvider\PrioritizedListenerAttachmentInterface::class,
+                gettype($this->provider),
+                get_class($this)
+            ));
+        }
+
+        $this->prioritizedProvider->attach($eventName, $listener, $priority);
         return $listener;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated This method will be removed in version 4.0; use listener
+     *     providers and the createUsingListenerProvider method instead.
+     */
+    public function attachWildcardListener(callable $listener, $priority = 1)
+    {
+        if (! $this->prioritizedProvider) {
+            throw new Exception\RuntimeException(sprintf(
+                'The provider composed into this %s instance is not of type %s (received %s);'
+                . ' attach wildcared listeners to it directly using its API before passing to the %s constructor',
+                get_class($this),
+                ListenerProvider\PrioritizedListenerAttachmentInterface::class,
+                gettype($this->provider),
+                get_class($this)
+            ));
+        }
+
+        $this->prioritizedProvider->attachWildcardListener($listener, $priority);
+        return $listener;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @deprecated This method will be removed in version 4.0; use listener
+     *     providers and the createUsingListenerProvider method instead.
      * @throws Exception\InvalidArgumentException for invalid event types.
      */
     public function detach(callable $listener, $eventName = null, $force = false)
     {
-
-        // If event is wildcard, we need to iterate through each listeners
-        if (null === $eventName || ('*' === $eventName && ! $force)) {
-            foreach (array_keys($this->events) as $eventName) {
-                $this->detach($listener, $eventName, true);
-            }
-            return;
-        }
-
-        if (! is_string($eventName)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                '%s expects a string for the event; received %s',
-                __METHOD__,
-                (is_object($eventName) ? get_class($eventName) : gettype($eventName))
+        if (! $this->prioritizedProvider) {
+            throw new Exception\RuntimeException(sprintf(
+                'The provider composed into this %s instance is not of type %s (received %s);'
+                . ' detach listeners from it directly using its API',
+                get_class($this),
+                ListenerProvider\PrioritizedListenerAttachmentInterface::class,
+                gettype($this->provider)
             ));
         }
 
-        if (! isset($this->events[$eventName])) {
-            return;
-        }
-
-        foreach ($this->events[$eventName] as $priority => $listeners) {
-            foreach ($listeners[0] as $index => $evaluatedListener) {
-                if ($evaluatedListener !== $listener) {
-                    continue;
-                }
-
-                // Found the listener; remove it.
-                unset($this->events[$eventName][$priority][0][$index]);
-
-                // If the queue for the given priority is empty, remove it.
-                if (empty($this->events[$eventName][$priority][0])) {
-                    unset($this->events[$eventName][$priority]);
-                    break;
-                }
-            }
-        }
-
-        // If the queue for the given event is empty, remove it.
-        if (empty($this->events[$eventName])) {
-            unset($this->events[$eventName]);
-        }
+        $this->prioritizedProvider->detach($listener, $eventName);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     * @deprecated This method will be removed in version 4.0; use listener
+     *     providers and the createUsingListenerProvider method instead.
+     */
+    public function detachWildcardListener(callable $listener)
+    {
+        if (! $this->prioritizedProvider) {
+            throw new Exception\RuntimeException(sprintf(
+                'The provider composed into this %s instance is not of type %s (received %s);'
+                . ' detach wildcard listeners from it directly using its API',
+                get_class($this),
+                ListenerProvider\PrioritizedListenerAttachmentInterface::class,
+                gettype($this->provider)
+            ));
+        }
+
+        $this->prioritizedProvider->detachWildcardListener($listener);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @deprecated This method will be removed in version 4.0; use listener
+     *     providers and the createUsingListenerProvider method instead.
      */
     public function clearListeners($eventName)
     {
-        if (isset($this->events[$eventName])) {
-            unset($this->events[$eventName]);
+        if (! $this->prioritizedProvider) {
+            throw new Exception\RuntimeException(sprintf(
+                'The provider composed into this %s instance is not of type %s (received %s);'
+                . ' clear wildcard listeners from it directly using its API',
+                get_class($this),
+                ListenerProvider\PrioritizedListenerAttachmentInterface::class,
+                gettype($this->provider)
+            ));
+        }
+
+        $this->prioritizedProvider->clearListeners($eventName);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @todo Use `yield from` once we bump the minimum supported PHP version to 7+.
+     * @deprecated This method will be removed in version 4.0, and EventManager
+     *     will no longer be its own listener provider; use external listener
+     *     providers and the createUsingListenerProvider method instead.
+     */
+    public function getListenersForEvent($event)
+    {
+        // @todo Use `yield from $this->provider->getListenersForEvent(...)
+        foreach ($this->provider->getListenersForEvent($event, $this->identifiers) as $listener) {
+            yield $listener;
         }
     }
 
@@ -263,6 +403,8 @@ class EventManager implements EventManagerInterface
      * listener. It returns an ArrayObject of the arguments, which may then be
      * passed to trigger().
      *
+     * @deprecated This method will be removed in version 4.0; always use context
+     *     specific events with their own mutation methods.
      * @param  array $args
      * @return ArrayObject
      */
@@ -276,68 +418,69 @@ class EventManager implements EventManagerInterface
      *
      * Actual functionality for triggering listeners, to which trigger() delegate.
      *
-     * @param  EventInterface $event
+     * @param  object $event
      * @param  null|callable $callback
      * @return ResponseCollection
      */
-    protected function triggerListeners(EventInterface $event, callable $callback = null)
+    protected function triggerListeners($event, callable $callback = null)
     {
-        $name = $event->getName();
-
-        if (empty($name)) {
-            throw new Exception\RuntimeException('Event is missing a name; cannot trigger!');
-        }
-
-        if (isset($this->events[$name])) {
-            $listOfListenersByPriority = $this->events[$name];
-
-            if (isset($this->events['*'])) {
-                foreach ($this->events['*'] as $priority => $listOfListeners) {
-                    $listOfListenersByPriority[$priority][] = $listOfListeners[0];
-                }
-            }
-        } elseif (isset($this->events['*'])) {
-            $listOfListenersByPriority = $this->events['*'];
-        } else {
-            $listOfListenersByPriority = [];
-        }
-
-        if ($this->sharedManager) {
-            foreach ($this->sharedManager->getListeners($this->identifiers, $name) as $priority => $listeners) {
-                $listOfListenersByPriority[$priority][] = $listeners;
-            }
-        }
-
-        // Sort by priority in reverse order
-        krsort($listOfListenersByPriority);
-
         // Initial value of stop propagation flag should be false
-        $event->stopPropagation(false);
+        if ($event instanceof EventInterface) {
+            $event->stopPropagation(false);
+        }
+
+        $stopMethod = $event instanceof StoppableEventInterface ? 'isPropagationStopped' : 'propagationIsStopped';
 
         // Execute listeners
         $responses = new ResponseCollection();
-        foreach ($listOfListenersByPriority as $listOfListeners) {
-            foreach ($listOfListeners as $listeners) {
-                foreach ($listeners as $listener) {
-                    $response = $listener($event);
-                    $responses->push($response);
 
-                    // If the event was asked to stop propagating, do so
-                    if ($event->propagationIsStopped()) {
-                        $responses->setStopped(true);
-                        return $responses;
-                    }
+        foreach ($this->provider->getListenersForEvent($event, $this->identifiers) as $listener) {
+            $response = $listener($event);
+            $responses->push($response);
 
-                    // If the result causes our validation callback to return true,
-                    // stop propagation
-                    if ($callback && $callback($response)) {
-                        $responses->setStopped(true);
-                        return $responses;
-                    }
-                }
+            // If the event was asked to stop propagating, do so
+            if ($event->{$stopMethod}()) {
+                $responses->setStopped(true);
+                return $responses;
+            }
+
+            // If the result causes our validation callback to return true,
+            // stop propagation
+            if ($callback && $callback($response)) {
+                $responses->setStopped(true);
+                return $responses;
             }
         }
 
         return $responses;
+    }
+
+    /**
+     * Creates the value for the $provider property, based on the
+     * $sharedEventManager argument.
+     *
+     * @param  ListenerProvider\PrioritizedListenerProvider $prioritizedProvider
+     * @param  null|SharedEventManagerInterface $sharedEventManager
+     * @return ListenerProvider\ListenerProviderInterface
+     */
+    private function createProvider(
+        ListenerProvider\PrioritizedListenerProvider $prioritizedProvider,
+        SharedEventManagerInterface $sharedEventManager = null
+    ) {
+        if (! $sharedEventManager) {
+            return $prioritizedProvider;
+        }
+
+        if ($sharedEventManager instanceof ListenerProvider\PrioritizedListenerProviderInterface) {
+            return new ListenerProvider\PrioritizedAggregateListenerProvider([
+                $prioritizedProvider,
+                $sharedEventManager,
+            ]);
+        }
+
+        return new ListenerProvider\PrioritizedAggregateListenerProvider(
+            [$prioritizedProvider],
+            $sharedEventManager
+        );
     }
 }

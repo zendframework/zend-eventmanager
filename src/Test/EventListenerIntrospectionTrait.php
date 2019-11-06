@@ -11,6 +11,7 @@ namespace Zend\EventManager\Test;
 
 use PHPUnit\Framework\Assert;
 use ReflectionProperty;
+use Zend\EventManager\Event;
 use Zend\EventManager\EventManager;
 
 /**
@@ -33,15 +34,20 @@ trait EventListenerIntrospectionTrait
     /**
      * Retrieve a list of event names from an event manager.
      *
-     * @param EventManager $events
+     * @param EventManager $manager
      * @return string[]
      */
-    private function getEventsFromEventManager(EventManager $events)
+    private function getEventsFromEventManager(EventManager $manager)
     {
-        $r = new ReflectionProperty($events, 'events');
+        $r = new ReflectionProperty($manager, 'prioritizedProvider');
         $r->setAccessible(true);
-        $listeners = $r->getValue($events);
-        return array_keys($listeners);
+        $provider = $r->getValue($manager);
+
+        $r = new ReflectionProperty($provider, 'events');
+        $r->setAccessible(true);
+        $events = $r->getValue($provider);
+
+        return array_keys($events);
     }
 
     /**
@@ -64,18 +70,19 @@ trait EventListenerIntrospectionTrait
      */
     private function getListenersForEvent($event, EventManager $events, $withPriority = false)
     {
-        $r = new ReflectionProperty($events, 'events');
-        $r->setAccessible(true);
-        $internal = $r->getValue($events);
+        $event = new Event($event);
 
-        $listeners = [];
-        foreach (isset($internal[$event]) ? $internal[$event] : [] as $p => $listOfListeners) {
-            foreach ($listOfListeners as $l) {
-                $listeners[$p] = isset($listeners[$p]) ? array_merge($listeners[$p], $l) : $l;
-            }
+        if (! $withPriority) {
+            $listeners = $events->getListenersForEvent($event);
+            return iterator_to_array($listeners, false);
         }
 
-        return $this->traverseListeners($listeners, $withPriority);
+        $r = new ReflectionProperty($events, 'provider');
+        $r->setAccessible(true);
+        $provider = $r->getValue($events);
+
+        $listeners = $this->traverseListeners($provider->getListenersForEventByPriority($event), true);
+        return iterator_to_array($listeners);
     }
 
     /**
@@ -125,7 +132,7 @@ trait EventListenerIntrospectionTrait
      */
     private function getArrayOfListenersForEvent($event, EventManager $events)
     {
-        return iterator_to_array($this->getListenersForEvent($event, $events));
+        return $this->getListenersForEvent($event, $events);
     }
 
     /**

@@ -27,6 +27,9 @@ use Interop\Container\ContainerInterface;
  * );
  * $aggregate->attach($events);
  * </code>
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0 in
+ *     favor of the ListenerProvider\LazyListenerSubscriber implementation.
  */
 class LazyListenerAggregate implements ListenerAggregateInterface
 {

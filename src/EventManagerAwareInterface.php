@@ -11,6 +11,8 @@ namespace Zend\EventManager;
 
 /**
  * Interface to automate setter injection for an EventManager instance
+ *
+ * @deprecated since 3.3.0. This interface will be removed in version 4.0.
  */
 interface EventManagerAwareInterface extends EventsCapableInterface
 {

@@ -11,6 +11,9 @@ namespace Zend\EventManager;
 
 /**
  * Interface for messengers
+ *
+ * @deprecated since 3.3.0; this interface will be removed in version 4.0, in
+ *     favor of the PSR-14 EventDispatcherInterface and ListenerProviderInterface.
  */
 interface EventManagerInterface extends SharedEventsCapableInterface
 {

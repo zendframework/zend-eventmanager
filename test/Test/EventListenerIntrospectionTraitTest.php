@@ -52,8 +52,6 @@ class EventListenerIntrospectionTraitTest extends TestCase
         $this->events->attach('foo', $callback2, 5);
 
         $listeners = $this->getListenersForEvent('foo', $this->events);
-        $this->assertInstanceOf(Traversable::class, $listeners);
-        $listeners = iterator_to_array($listeners);
 
         $this->assertEquals([
             $callback5,
@@ -81,8 +79,6 @@ class EventListenerIntrospectionTraitTest extends TestCase
         $this->events->attach('foo', $callback2);
 
         $listeners = $this->getListenersForEvent('foo', $this->events);
-        $this->assertInstanceOf(Traversable::class, $listeners);
-        $listeners = iterator_to_array($listeners);
 
         $this->assertEquals([
             $callback5,
@@ -110,8 +106,6 @@ class EventListenerIntrospectionTraitTest extends TestCase
         $this->events->attach('foo', $callback2, 5);
 
         $listeners = $this->getListenersForEvent('foo', $this->events, true);
-        $this->assertInstanceOf(Traversable::class, $listeners);
-        $listeners = iterator_to_array($listeners);
 
         $this->assertEquals([
             1 => $callback5,

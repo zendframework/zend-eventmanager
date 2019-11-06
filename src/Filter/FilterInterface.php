@@ -13,6 +13,9 @@ use Zend\EventManager\ResponseCollection;
 
 /**
  * Interface for intercepting filter chains
+ *
+ * @deprecated since 3.3.0. This interface will be removed in version 4.0.0. No
+ *     replacement is provided.
  */
 interface FilterInterface
 {

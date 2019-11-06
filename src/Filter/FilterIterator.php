@@ -16,7 +16,10 @@ use Zend\Stdlib\FastPriorityQueue;
  * Specialized priority queue implementation for use with an intercepting
  * filter chain.
  *
- * Allows removal
+ * Allows removal.
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0. No
+ *     replacement is provided.
  */
 class FilterIterator extends FastPriorityQueue
 {

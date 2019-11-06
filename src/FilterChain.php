@@ -11,6 +11,9 @@ namespace Zend\EventManager;
 
 /**
  * FilterChain: intercepting filter manager
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0. No
+ *     replacement is provided.
  */
 class FilterChain implements Filter\FilterInterface
 {

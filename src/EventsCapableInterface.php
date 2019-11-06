@@ -11,6 +11,9 @@ namespace Zend\EventManager;
 
 /**
  * Interface indicating that an object composes an EventManagerInterface instance.
+ *
+ * @deprecated since 3.3.0. This interface will be removed in version 4.0, in
+ *     favor of the EventDispatcherInterface introduced in version 3.3.0.
  */
 interface EventsCapableInterface
 {

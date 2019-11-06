@@ -1,10 +1,8 @@
 <?php
 /**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zend-eventmanager for the canonical source repository
- * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md
+ * @see       https://github.com/zendframework/zend-eventmanager for the canonical source repository
+ * @copyright Copyright (c) 2005-2019 Zend Technologies USA Inc. (https://www.zend.com)
+ * @license   https://github.com/zendframework/zend-eventmanager/blob/master/LICENSE.md New BSD License
  */
 
 namespace Zend\EventManager;
@@ -17,7 +15,7 @@ use ArrayAccess;
  * Encapsulates the target context and parameters passed, and provides some
  * behavior for interacting with the event manager.
  */
-class Event implements EventInterface
+class Event implements EventInterface, StoppableEventInterface
 {
     /**
      * @var string Event name
@@ -192,9 +190,21 @@ class Event implements EventInterface
     /**
      * Is propagation stopped?
      *
+     * @deprecated Use isPropagationStopped instead, to make your application
+     *     forwards-compatible with PSR-14 and zend-eventmanager v4. If you
+     *     plan to override this method, please do so via the `isPropagationStopped`
+     *     method, as this method proxies to that one starting in version 3.3.0.
      * @return bool
      */
     public function propagationIsStopped()
+    {
+        return $this->isPropagationStopped();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isPropagationStopped()
     {
         return $this->stopPropagation;
     }

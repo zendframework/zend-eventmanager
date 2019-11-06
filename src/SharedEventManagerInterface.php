@@ -11,6 +11,9 @@ namespace Zend\EventManager;
 
 /**
  * Interface for shared event listener collections
+ *
+ * @deprecated since 3.3.0. This interface will be removed in version 4.0; use
+ *     listener providers instead.
  */
 interface SharedEventManagerInterface
 {

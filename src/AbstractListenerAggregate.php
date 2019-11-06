@@ -11,6 +11,11 @@ namespace Zend\EventManager;
 
 /**
  * Abstract aggregate listener
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0, in
+ *     favor of the ListenerProvider\AbstractListenerSubscriber. In most cases,
+ *     subscribers should fully implement ListenerSubscriberInterface on their
+ *     own, however.
  */
 abstract class AbstractListenerAggregate implements ListenerAggregateInterface
 {

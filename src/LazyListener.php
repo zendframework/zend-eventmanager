@@ -28,6 +28,9 @@ use Interop\Container\ContainerInterface;
  *
  * Pass instances directly to the event manager's `attach()` method as the
  * listener argument.
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0, in
+ *     favor of the ListenerProvider\LazyListener implementation.
  */
 class LazyListener
 {

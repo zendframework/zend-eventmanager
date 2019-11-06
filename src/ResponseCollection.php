@@ -13,6 +13,11 @@ use SplStack;
 
 /**
  * Collection of signal handler return values
+ *
+ * @deprecated since 3.3.0. This class will be removed in version 4.0.0.
+ *     Listeners should not return values, and any values that should be
+ *     aggregated or used to stop propagation should be injected directly into
+ *     the event instance itself, via its own published API.
  */
 class ResponseCollection extends SplStack
 {

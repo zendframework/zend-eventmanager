@@ -20,6 +20,7 @@ use Traversable;
  * EventManager into your object when it is pulled from the ServiceManager.
  *
  * @see Zend\Mvc\Service\ServiceManagerConfig
+ * @deprecated since 3.3.0. This trait will be removed in version 4.0.
  */
 trait EventManagerAwareTrait
 {
