@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/wildcard-listeners/">
+    <link rel="canonical" href="https://docs.zendframework.com/wildcard-listeners/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Wildcard Listeners - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -365,8 +365,10 @@ instance — or potentially, with a shared event collection, all contexts.</p>
 <h2 id="attaching-using-the-wildcard">Attaching using the wildcard</h2>
 <p>To attach to all events on a given <code>EventManager</code> instance, you can use the
 wildcard event, <code>*</code>:</p>
-<p> <pre class=codehilite><code class=language-php>$events = new EventManager();
-$events-&gt;attach('*', $listener);</code></pre></p>
+<pre><code class="language-php">$events = new EventManager();
+$events-&gt;attach('*', $listener);
+</code></pre>
+
 <p>Note that if you specify a priority, that priority will be used for this
 listener for any event triggered.</p>
 <p>What the above specifies is that <strong>any</strong> event triggered by the event manager
@@ -375,7 +377,7 @@ instance will result in notification of this particular listener.</p>
 <p>Using the <code>SharedEventManager</code>, you can indicate that you want to attach to all
 events of a given identifier, a single named event across all identifiers, or
 all events on all identifiers.</p>
-<p> <pre class=codehilite><code class=language-php>$sharedEvents = new SharedEventManager();
+<pre><code class="language-php">$sharedEvents = new SharedEventManager();
 
 // Attach to all events on the context &quot;foo&quot;
 $sharedEvents-&gt;attach('foo', '*', $listener);
@@ -384,7 +386,9 @@ $sharedEvents-&gt;attach('foo', '*', $listener);
 $sharedEvents-&gt;attach('*', 'foo', $listener);
 
 // Attach to all events on all contexts:
-$sharedEvents-&gt;attach('*', '*', $listener);</code></pre></p>
+$sharedEvents-&gt;attach('*', '*', $listener);
+</code></pre>
+
 <p>Note that if you specify a priority, that priority will be used for all events
 specified.</p>
 
@@ -642,7 +646,7 @@ specified.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -650,10 +654,10 @@ specified.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -661,27 +665,28 @@ specified.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

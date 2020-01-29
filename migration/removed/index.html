@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/migration/removed/">
+    <link rel="canonical" href="https://docs.zendframework.com/migration/removed/">
     <link rel="shortcut icon" href="../../img/favicon.ico">
 
     <title>Removed Functionality - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -417,7 +417,9 @@ listener is not present, checking for presence first is not necessary.</p>
 <p>The method <code>EventManagerInterface::setEventClass()</code> was removed and replaced
 with <code>EventManagerInterface::setEventPrototype()</code>, which has the following
 signature:</p>
-<p> <pre class=codehilite><code class=language-php>setEventPrototype(EventInterface $event);</code></pre></p>
+<pre><code class="language-php">setEventPrototype(EventInterface $event);
+</code></pre>
+
 <p>This was done to prevent errors that occurred when invalid event class names
 were provided. Additionally, internally, event managers will clone the
 instance any time <code>trigger()</code> or <code>triggerUntil()</code> are called — which is
@@ -430,15 +432,23 @@ typically faster and less resource intensive than instantiating a new instance.<
 and <code>detach()</code> methods of the <code>ListenerAggregateInterface</code>. As such, to
 forward-proof your applications, you can alter statements that attach aggregates
 to an event manager reading as follows:</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach($aggregate); // or
-$events-&gt;attachAggregate($aggregate);</code></pre></p>
+<pre><code class="language-php">$events-&gt;attach($aggregate); // or
+$events-&gt;attachAggregate($aggregate);
+</code></pre>
+
 <p>to:</p>
-<p> <pre class=codehilite><code class=language-php>$aggregate-&gt;attach($events);</code></pre></p>
+<pre><code class="language-php">$aggregate-&gt;attach($events);
+</code></pre>
+
 <p>Similarly, for detaching an aggregate, migrate from:</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;detach($aggregate); // or
-$events-&gt;detachAggregate($aggregate);</code></pre></p>
+<pre><code class="language-php">$events-&gt;detach($aggregate); // or
+$events-&gt;detachAggregate($aggregate);
+</code></pre>
+
 <p>to:</p>
-<p> <pre class=codehilite><code class=language-php>$aggregate-&gt;detach($events);</code></pre></p>
+<pre><code class="language-php">$aggregate-&gt;detach($events);
+</code></pre>
+
 <p>The above works in all released versions of the component.</p>
 <h2 id="sharedeventaggregateawareinterface-sharedlisteneraggregateinterface">SharedEventAggregateAwareInterface, SharedListenerAggregateInterface</h2>
 <p>The interfaces <code>Zend\EventManager\SharedEventAggregateAwareInterface</code> and
@@ -465,7 +475,7 @@ aggregate class, and swap attachment of the aggregate.</p>
 methods in your class, but remove the <code>implements
 SharedListenerAggregateInterface</code> from the class declaration. For instance, if
 you had the following:</p>
-<p> <pre class=codehilite><code class=language-php>namespace Foo;
+<pre><code class="language-php">namespace Foo;
 
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\EventManager\SharedListenerAggregateInterface;
@@ -481,9 +491,11 @@ class MySharedAggregate implements SharedListenerAggregateInterface
     {
         // ...
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>then modify it to instead read:</p>
-<p> <pre class=codehilite><code class=language-php>namespace Foo;
+<pre><code class="language-php">namespace Foo;
 
 use Zend\EventManager\SharedEventManagerInterface;
 
@@ -498,13 +510,19 @@ class MySharedAggregate
     {
         // ...
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>For the second step, instead of attaching the aggregate to the shared event
 manager, you will pass the shared event manager to your aggregate. For example,
 if you had the following in your code:</p>
-<p> <pre class=codehilite><code class=language-php>$sharedEvents-&gt;attachAggregate($mySharedAggregate);</code></pre></p>
+<pre><code class="language-php">$sharedEvents-&gt;attachAggregate($mySharedAggregate);
+</code></pre>
+
 <p>then you can change it to:</p>
-<p> <pre class=codehilite><code class=language-php>$mySharedAggregate-&gt;attachShared($sharedEvents);</code></pre></p>
+<pre><code class="language-php">$mySharedAggregate-&gt;attachShared($sharedEvents);
+</code></pre>
+
 <p>This has exactly the same effect, and makes your code forward-compatible with
 v3.</p>
 <h4>SharedEventManagerAwareInterface</h4>
@@ -522,10 +540,11 @@ injected into the <code>EventManager</code> instance at instantiation.</p>
 <li>If you will require injecting the shared manager, use duck typing to determine
   if a class has the <code>setSharedManager()</code> method:</li>
 </ul>
-<p><code>php
-  if (method_exists($instance, 'setSharedManager')) {
+<pre><code class="language-php">  if (method_exists($instance, 'setSharedManager')) {
       $instance-&gt;setSharedManager($sharedEvents);
-  }</code></p>
+  }
+</code></pre>
+
 <p>Alternately, if you control instantiation of the instance, consider injection
   at instantiation, or within the factory used to create your instance.</p>
 <h2 id="sharedeventmanagerinterfacegetevents">SharedEventManagerInterface::getEvents()</h2>
@@ -786,7 +805,7 @@ was not consumed by the event manager, and served no real purpose.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -794,10 +813,10 @@ was not consumed by the event manager, and served no real purpose.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -805,27 +824,28 @@ was not consumed by the event manager, and served no real purpose.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '../..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../../js/scripts-8d7ae56abf.js"></script>
-        <script src="../../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/examples/">
+    <link rel="canonical" href="https://docs.zendframework.com/examples/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Examples - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -364,7 +364,7 @@ a string and convert it to a <code>DateTime</code> argument.</p>
 <p>To do this, you can pass your arguments to <code>prepareArgs()</code>, and pass this new
 object when triggering an event. You will then pull that value back into your
 method.</p>
-<p> <pre class=codehilite><code class=language-php>use DateTime;
+<pre><code class="language-php">use DateTime;
 
 class ValueObject
 {
@@ -400,23 +400,27 @@ $v-&gt;getEventManager()-&gt;attach('inject', function($e) {
 
 $v-&gt;inject([
     'date' =&gt; '2011-08-10 15:30:29',
-]);</code></pre></p>
+]);
+</code></pre>
+
 <h2 id="short-circuiting">Short Circuiting</h2>
 <p>One common use case for events is to trigger listeners until either one
 indicates no further processing should be done, or until a return value meets
 specific criteria.</p>
 <p>As an example, a request listener might be able to return a response object, and
 would signal to the target to stop event propagation.</p>
-<p> <pre class=codehilite><code class=language-php>$listener = function($e) {
+<pre><code class="language-php">$listener = function($e) {
     // do some work
 
     // Stop propagation and return a response
     $e-&gt;stopPropagation(true);
     return $response;
-};</code></pre></p>
+};
+</code></pre>
+
 <p>Alternately, the request handler could halt execution at the first listener that
 returns a response.</p>
-<p> <pre class=codehilite><code class=language-php>class Foo implements DispatchableInterface
+<pre><code class="language-php">class Foo implements DispatchableInterface
 {
     // assume composed event manager
 
@@ -427,12 +431,14 @@ returns a response.</p>
             return ($v instanceof Response);
         }, __FUNCTION__, $this, $argv);
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Typically, you may want to return the value that stopped execution, or use it
 some way. All <code>trigger*()</code> methods return a <code>ResponseCollection</code> instance; call
 its <code>stopped()</code> method to test if execution was stopped, and the <code>last()</code> method
 to retrieve the return value from the last executed listener:</p>
-<p> <pre class=codehilite><code class=language-php>class Foo implements DispatchableInterface
+<pre><code class="language-php">class Foo implements DispatchableInterface
 {
     // assume composed event manager
 
@@ -450,7 +456,9 @@ to retrieve the return value from the last executed listener:</p>
 
         // continue...
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <h2 id="assigning-priority-to-listeners">Assigning Priority to Listeners</h2>
 <p>One use case for the <code>EventManager</code> is for implementing caching systems. As
 such, you often want to check the cache early, and save to it late.</p>
@@ -462,7 +470,7 @@ a given priority.</p>
 method start as well as at method end. At method start, we want an event that
 will trigger early; at method end, an event should trigger late.</p>
 <p>Here is the class in which we want caching:</p>
-<p> <pre class=codehilite><code class=language-php>class SomeValueObject
+<pre><code class="language-php">class SomeValueObject
 {
     // assume it composes an event manager
 
@@ -481,10 +489,12 @@ will trigger early; at method end, an event should trigger late.</p>
         $params['__RESULT__'] = $someComputedContent;
         $this-&gt;getEventManager()-&gt;trigger('get.post', $this, $params);
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Now, let's create a <code>ListenerAggregateInterface</code> implementation that can handle
 caching for us:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Cache\Cache;
+<pre><code class="language-php">use Zend\Cache\Cache;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -525,11 +535,15 @@ class CacheListener implements ListenerAggregateInterface
         $id = get_class($e-&gt;getTarget()) . '-' . json_encode($params);
         $this-&gt;cache-&gt;save($content, $id);
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>We can then attach the aggregate to an event manager instance.</p>
-<p> <pre class=codehilite><code class=language-php>$value         = new SomeValueObject();
+<pre><code class="language-php">$value         = new SomeValueObject();
 $cacheListener = new CacheListener($cache);
-$cacheListener-&gt;attach($value-&gt;getEventManager());</code></pre></p>
+$cacheListener-&gt;attach($value-&gt;getEventManager());
+</code></pre>
+
 <p>Now, as we call <code>get()</code>, if we have a cached entry, it will be returned
 immediately; if not, a computed entry will be cached when we complete the
 method.</p>
@@ -788,7 +802,7 @@ method.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -796,10 +810,10 @@ method.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -807,27 +821,28 @@ method.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

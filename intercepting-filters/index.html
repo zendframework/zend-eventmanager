@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/intercepting-filters/">
+    <link rel="canonical" href="https://docs.zendframework.com/intercepting-filters/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Intercepting Filters - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -386,12 +386,14 @@ take the incoming arguments in order to alter the workflow.</p>
 <h2 id="preparation">Preparation</h2>
 <p>To use the <code>FilterChain</code> implementation, you will need to install zend-stdlib,
 if you have not already:</p>
-<p> <pre class=codehilite><code class=language-bash>$ composer require zendframework/zend-stdlib</code></pre></p>
+<pre><code class="language-bash">$ composer require zendframework/zend-stdlib
+</code></pre>
+
 <h2 id="filterchaininterface">FilterChainInterface</h2>
 <p><code>Zend\EventManager\FilterChain</code> is a concrete implementation of
 <code>Zend\EventManager\Filter\FilterInterface</code>, which defines a workflow for
 intercepting filters. This includes the following methods:</p>
-<p> <pre class=codehilite><code class=language-php>interface FilterInterface
+<pre><code class="language-php">interface FilterInterface
 {
     public function run($context, array $params = []);
 
@@ -401,7 +403,9 @@ intercepting filters. This includes the following methods:</p>
     public function getFilters();
     public function clearFilters();
     public function getResponses();
-}</code></pre></p>
+}
+</code></pre>
+
 <p>In many ways, it's very similar to the <code>EventManagerInterface</code>, but with a few
 key differences:</p>
 <ul>
@@ -425,12 +429,14 @@ call on <code>$chain-&gt;next()</code>, passing the same set of arguments.</p>
 <h2 id="filters">Filters</h2>
 <p>A filter attached to a <code>FilterChain</code> instance can be any callable. However,
 these callables should expect the following arguments:</p>
-<p> <pre class=codehilite><code class=language-php>function ($context, array $argv, FilterIterator $chain)</code></pre></p>
+<pre><code class="language-php">function ($context, array $argv, FilterIterator $chain)
+</code></pre>
+
 <p>A filter can therefore act on the provided <code>$context</code>, using the provided
 arguments.</p>
 <p>Part of that execution can also be deciding that other filters should be called.
 To do so, it will call <code>$chain-&gt;next()</code>, providing it the same arguments:</p>
-<p> <pre class=codehilite><code class=language-php>function ($context, array $argv, FilterIterator $chain)
+<pre><code class="language-php">function ($context, array $argv, FilterIterator $chain)
 {
     $message = isset($argv['message']) ? $argv['message'] : '';
 
@@ -439,7 +445,9 @@ To do so, it will call <code>$chain-&gt;next()</code>, providing it the same arg
     $filtered = $chain-&gt;next($context, ['message' =&gt; $message], $chain);
 
     return str_rot13($filtered);
-}</code></pre></p>
+}
+</code></pre>
+
 <p>You can choose to call <code>$chain-&gt;next()</code> at any point in the filter, allowing you
 to:</p>
 <ul>
@@ -456,7 +464,7 @@ to:</p>
 the object under observation, and arguments, which are typically the arguments
 passed to the method triggering the filter chain.</p>
 <p>As an example, consider the following filter-enabled class:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\FilterChain;
+<pre><code class="language-php">use Zend\EventManager\FilterChain;
 
 class ObservedTarget
 {
@@ -483,9 +491,11 @@ class ObservedTarget
         }
         return $this-&gt;filters[$method];
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Now, let's create an instance of the class, and attach some filters to it.</p>
-<p> <pre class=codehilite><code class=language-php>$observed = new ObservedTarget();
+<pre><code class="language-php">$observed = new ObservedTarget();
 
 $observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
     $args['message'] = isset($args['message'])
@@ -505,9 +515,13 @@ $observed-&gt;attach(function ($context, array $args, FilterIterator $chain) {
     return (isset($args['message'])
         ? strtolower($args['message'])
         : '');
-});</code></pre></p>
+});
+</code></pre>
+
 <p>Finally, we'll call the method, and see what results we get:</p>
-<p> <pre class=codehilite><code class=language-php>$observed-&gt;execute('Hello, world!');</code></pre></p>
+<pre><code class="language-php">$observed-&gt;execute('Hello, world!');
+</code></pre>
+
 <p>Since filters are run in the order in which they are attached, the following
 will occur:</p>
 <ul>
@@ -526,7 +540,7 @@ filters.</p>
 chain in a filter itself, and attaching it at invocation. This allows
 intercepting filters to replace the main logic, while still providing a default
 path. This might look like:</p>
-<p> <pre class=codehilite><code class=language-php>// Assume that the class contains the `attachFilter()` implementation from above.
+<pre><code class="language-php">// Assume that the class contains the `attachFilter()` implementation from above.
 class ObservedTarget
 {
     private $attached = [];
@@ -548,7 +562,9 @@ class ObservedTarget
             return $args['message'];
         };
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Intercepting filters are a powerful way to introduce aspect-oriented programming
 paradigms into your code, as well as general-purpose mechanisms for introducing
 plugins.</p>
@@ -807,7 +823,7 @@ plugins.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -815,10 +831,10 @@ plugins.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -826,27 +842,28 @@ plugins.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

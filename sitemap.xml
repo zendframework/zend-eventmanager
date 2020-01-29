@@ -1,83 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/intro/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/intro/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/quick-start/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/quick-start/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/tutorial/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/tutorial/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/examples/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/examples/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/wildcard-listeners/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/wildcard-listeners/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/aggregates/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/aggregates/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/lazy-listeners/intro/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/lazy-listeners/intro/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/lazy-listeners/lazy-listener/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/lazy-listeners/lazy-listener/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/lazy-listeners/lazy-event-listener/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/lazy-listeners/lazy-event-listener/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/lazy-listeners/lazy-listener-aggregate/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/lazy-listeners/lazy-listener-aggregate/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/api/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/api/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/intercepting-filters/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/intercepting-filters/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/migration/intro/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/migration/intro/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/migration/removed/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/migration/removed/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.zendframework.com/zend-eventmanager/migration/changed/</loc>
-     <lastmod>2019-11-04</lastmod>
+     <loc>https://docs.zendframework.com/migration/changed/</loc>
+     <lastmod>2020-01-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>

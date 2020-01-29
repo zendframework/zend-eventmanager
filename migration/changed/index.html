@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/migration/changed/">
+    <link rel="canonical" href="https://docs.zendframework.com/migration/changed/">
     <link rel="shortcut icon" href="../../img/favicon.ico">
 
     <title>Changed Functionality - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -410,7 +410,9 @@
 <p>The following methods had changes in signatures.</p>
 <h2 id="eventmanager__construct">EventManager::__construct()</h2>
 <p>In version 2, the signature of <code>__construct()</code> was:</p>
-<p> <pre class=codehilite><code class=language-php>__construct($identifiers = null)</code></pre></p>
+<pre><code class="language-php">__construct($identifiers = null)
+</code></pre>
+
 <p>where <code>$identifiers</code> could be a string, array of strings, or <code>Traversable</code> of
 strings.</p>
 <p>Version 3 requires that the shared event manager be injected at instantiation,
@@ -418,14 +420,18 @@ instead of via a setter. This also enforces the idea that identifiers have no
 semantic meaning without a shared event manager composed. As such, the
 constructor now has two arguments, with the first being the shared event
 manager:</p>
-<p> <pre class=codehilite><code class=language-php>__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])</code></pre></p>
+<pre><code class="language-php">__construct(SharedEventManagerInterface $sharedEvents, array $identifiers = [])
+</code></pre>
+
 <p>Finally, because we changed the signature of <code>setIdentifiers()</code> and
 <code>addIdentifiers()</code> to only accept arrays (see more below), we changed the
 <code>$identifiers</code> argument to only allow arrays.</p>
 <h2 id="eventmanagerinterfacetrigger-and-triggeruntil">EventManagerInterface::trigger() and triggerUntil()</h2>
 <p>In version 2, the signatures of <code>trigger()</code> and <code>triggerUntil()</code> are:</p>
-<p> <pre class=codehilite><code class=language-php>trigger($event, $target = null, $argv = [], $callback = null);
-triggerUntil($event, $target = null, $argv = [], $callback = null);</code></pre></p>
+<pre><code class="language-php">trigger($event, $target = null, $argv = [], $callback = null);
+triggerUntil($event, $target = null, $argv = [], $callback = null);
+</code></pre>
+
 <p>The methods allow overloading essentially every argument:</p>
 <ul>
 <li><code>$event</code> could be the event name, array or traversable of event names,  or an
@@ -444,8 +450,10 @@ triggerUntil($event, $target = null, $argv = [], $callback = null);</code></pre>
 <li>Dozens of lines used to validate and marshal arguments.</li>
 </ul>
 <p>In version 3, we changed the methods to have the following signatures:</p>
-<p> <pre class=codehilite><code class=language-php>trigger($event, $target = null, $argv = []);
-triggerUntil(callable $callback, $event, $target = null, $argv = []);</code></pre></p>
+<pre><code class="language-php">trigger($event, $target = null, $argv = []);
+triggerUntil(callable $callback, $event, $target = null, $argv = []);
+</code></pre>
+
 <p>with the following definitions:</p>
 <ul>
 <li><code>$event</code> is a string event name.</li>
@@ -461,9 +469,11 @@ usage, and ensures the argument order stays predictable for the remaining
 arguments.</p>
 <p>In order to accommodate other styles of usage, we <strong>added</strong> the following
 methods:</p>
-<p> <pre class=codehilite><code class=language-php>triggerUntil(callable $callback, $event, $target = null, $argv = []);
+<pre><code class="language-php">triggerUntil(callable $callback, $event, $target = null, $argv = []);
 triggerEvent(EventInterface $event);
-triggerEventUntil(callable $callback, EventInterface $event);</code></pre></p>
+triggerEventUntil(callable $callback, EventInterface $event);
+</code></pre>
+
 <p>These allow the other primary use cases for <code>trigger()</code> in v2, but with discrete
 signatures.</p>
 <p>Starting in version 2.6.0, you can use these three additional methods, as the
@@ -472,7 +482,7 @@ evaluating your code to see which of the four possible call styles you are
 using, and that you adapt your code to use one of the 4 discrete methods.</p>
 <p>The following signatures, however, are no longer supported, and will need to be
 updated as illustrated:</p>
-<p> <pre class=codehilite><code class=language-php>// Event instance as second argument:
+<pre><code class="language-php">// Event instance as second argument:
 $events-&gt;trigger('foo', $event);
 
 // Resolve by setting the event name prior to trigger:
@@ -485,10 +495,12 @@ $events-&gt;trigger('foo', $this, $event);
 // Resolve by setting the event name and target prior to trigger:
 $event-&gt;setName('foo');
 $event-&gt;setTarget($this);
-$events-&gt;triggerEvent($event);</code></pre></p>
+$events-&gt;triggerEvent($event);
+</code></pre>
+
 <p>If you are using a callback to short-circuit, use one of the <code>*Until()</code> methods,
 passing the callback as the first argument:</p>
-<p> <pre class=codehilite><code class=language-php>// Standard trigger:
+<pre><code class="language-php">// Standard trigger:
 $events-&gt;trigger('foo', $this, ['bar' =&gt; 'baz'], $criteria);
 
 // becomes:
@@ -498,11 +510,15 @@ $events-&gt;triggerUntil($criteria, 'foo', $this, ['bar' =&gt; 'baz']);
 $events-&gt;trigger($event, $criteria);
 
 // becomes:
-$events-&gt;triggerEventUntil($criteria, $event);</code></pre></p>
+$events-&gt;triggerEventUntil($criteria, $event);
+</code></pre>
+
 <h2 id="eventmanagerinterfaceattach-and-detach">EventManagerInterface::attach() and detach()</h2>
 <p>In version 2, <code>attach()</code> and <code>detach()</code> had the following signatures:</p>
-<p> <pre class=codehilite><code class=language-php>attach($event, $callback = null, $priority = null);
-detach($listener);</code></pre></p>
+<pre><code class="language-php">attach($event, $callback = null, $priority = null);
+detach($listener);
+</code></pre>
+
 <p>with the following argument definitions:</p>
 <ul>
 <li><code>$event</code> could be either a string event name, or an instance of
@@ -515,8 +531,10 @@ detach($listener);</code></pre></p>
   <code>ListenerAggregateInterface</code>.</li>
 </ul>
 <p>Much like we did for the <code>trigger*()</code> methods, we simplified the signatures:</p>
-<p> <pre class=codehilite><code class=language-php>attach($event, callable $listener, $priority = 1);
-detach(callable $listener, $event = null);</code></pre></p>
+<pre><code class="language-php">attach($event, callable $listener, $priority = 1);
+detach(callable $listener, $event = null);
+</code></pre>
+
 <p>Where:</p>
 <ul>
 <li><code>$event</code> is always a string event name (except when not passed to <code>detach()</code>.</li>
@@ -543,11 +561,13 @@ event manager, stop doing so, and attach the callable listener itself instead.
 This, too, is completely forwards compatible.</p>
 <p>If you are passing <code>CallbackHandler</code> instances to <code>detach()</code>, you will need to
 make the following change after updating to version 3:</p>
-<p> <pre class=codehilite><code class=language-php>// This code:
+<pre><code class="language-php">// This code:
 $events-&gt;detach($callbackHandler);
 
 // Will become:
-$events-&gt;detach($callbackHandler-&gt;getCallback());</code></pre></p>
+$events-&gt;detach($callbackHandler-&gt;getCallback());
+</code></pre>
+
 <p>In most cases, the callback handler you are storing is likely the result of
 calling <code>attach()</code> in the first place. Since <code>attach()</code> no longer creates a
 <code>CallbackHandler</code> instance, it instead simply returns the listener back to the
@@ -566,9 +586,13 @@ their calls.</p>
 <h2 id="sharedeventmanagerinterfacegetlisteners">SharedEventManagerInterface::getListeners()</h2>
 <p><code>Zend\EventManager\SharedEventManagerInterface::getListeners()</code> has changed. The
 previous signature was:</p>
-<p> <pre class=codehilite><code class=language-php>getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue</code></pre></p>
+<pre><code class="language-php">getListeners($id, $event = null): false|Zend\Stdlib\PriorityQueue
+</code></pre>
+
 <p>Version 3 has the following signature:</p>
-<p> <pre class=codehilite><code class=language-php>getListeners(array $identifiers, $eventName) : array</code></pre></p>
+<pre><code class="language-php">getListeners(array $identifiers, $eventName) : array
+</code></pre>
+
 <p>The changes are:</p>
 <ul>
 <li>The first argument now expects an <em>array</em> of identifiers. This is so an event
@@ -582,7 +606,9 @@ previous signature was:</p>
 </ul>
 <h2 id="sharedeventmanagerinterfaceattach">SharedEventManagerInterface::attach()</h2>
 <p>The v2 signature of <code>attach()</code> was:</p>
-<p> <pre class=codehilite><code class=language-php>attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]</code></pre></p>
+<pre><code class="language-php">attach($id, $event, $callback, $priority = 1) : CallbackHandler|CallbackHandler[]
+</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>$id</code> could be a string identifier, or an array or <code>Traversable</code> of
@@ -593,7 +619,9 @@ previous signature was:</p>
 <li><code>$priority</code> was an integer.</li>
 </ul>
 <p>The v3 signature becomes:</p>
-<p> <pre class=codehilite><code class=language-php>attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre></p>
+<pre><code class="language-php">attach($identifier, $eventName, callable $listener, $priority = 1) : void
+</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>$identifier</code> <em>must</em> be a string <em>only</em>.</li>
@@ -606,14 +634,15 @@ previous signature was:</p>
 <li>If you are passing arrays of identifiers to which to attach, you must now do
   so in a loop or using a construct such as <code>array_walk</code>:</li>
 </ul>
-<p>```php
-  foreach ($identifiers as $id) {
+<pre><code class="language-php">  foreach ($identifiers as $id) {
       $sharedEvents-&gt;attach($id, $event, $listener);
-  }</p>
-<p>array_walk($identifiers, function ($id) use ($listener) {
+  }
+
+  array_walk($identifiers, function ($id) use ($listener) {
       $this-&gt;sharedEvents-&gt;attach($id, 'foo', $listener);
   });
-  ```</p>
+</code></pre>
+
 <ul>
 <li>
 <p>If you are passing <code>CallbackHandler</code> arguments, pass the callable listener
@@ -626,7 +655,9 @@ previous signature was:</p>
 </ul>
 <h2 id="sharedeventmanagerinterfacedetach">SharedEventManagerInterface::detach()</h2>
 <p>The v2 signature of <code>detach()</code> was:</p>
-<p> <pre class=codehilite><code class=language-php>detach($id, CallbackHandler $listener) : bool</code></pre></p>
+<pre><code class="language-php">detach($id, CallbackHandler $listener) : bool
+</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>$id</code> was a string identifier</li>
@@ -634,7 +665,9 @@ previous signature was:</p>
 <li>the method returned a boolean indicating whether or not it removed anything.</li>
 </ul>
 <p>The v3 signature becomes:</p>
-<p> <pre class=codehilite><code class=language-php>detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre></p>
+<pre><code class="language-php">detach(callable $listener, $identifier = null, $eventName = null) : void
+</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>$listener</code> is the callable listener you wish to remove</li>
@@ -661,21 +694,29 @@ already implemented.</p>
 abstract methods, you can forward-proof your existing
 <code>ListenerAggregateInterface</code> implementations by adding the argument.</p>
 <p>As an example, if you define your method like this:</p>
-<p> <pre class=codehilite><code class=language-php>public function attach(EventManagerInterface $events)</code></pre></p>
+<pre><code class="language-php">public function attach(EventManagerInterface $events)
+</code></pre>
+
 <p>Simply change it to this:</p>
-<p> <pre class=codehilite><code class=language-php>public function attach(EventManagerInterface $events, $priority = 1)</code></pre></p>
+<pre><code class="language-php">public function attach(EventManagerInterface $events, $priority = 1)
+</code></pre>
+
 <p>You do not need to do anything with the <code>$priority</code> argument, though we
 recommend passing it as a default value if you are not specifying a priority for
 any listeners you attach.</p>
 <h2 id="filterinterfaceattach-and-detach">FilterInterface::attach() and detach()</h2>
 <p><code>Zend\EventManager\Filter\FilterInterface::attach()</code> and <code>detach()</code> have changed
 signatures. The originals were:</p>
-<p> <pre class=codehilite><code class=language-php>attach($callback) : CallbackHandler
-detach(CallbackHandler $callback) : bool</code></pre></p>
+<pre><code class="language-php">attach($callback) : CallbackHandler
+detach(CallbackHandler $callback) : bool
+</code></pre>
+
 <p>where <code>$callback</code> for <code>attach()</code> could be a callable or a <code>CallbackHandler</code>. The
 new signatures are:</p>
-<p> <pre class=codehilite><code class=language-php>attach(callable $callback) : void
-detach(callable $filter) : bool</code></pre></p>
+<pre><code class="language-php">attach(callable $callback) : void
+detach(callable $filter) : bool
+</code></pre>
+
 <p>Typical usage in v2 was to capture the return value of <code>attach()</code> and pass it to
 <code>detach()</code>, as <code>attach()</code> would create a <code>CallbackHandler</code> for you to later pass
 to <code>detach()</code>. Since we can now pass the original callable argument to
@@ -942,7 +983,7 @@ fluent interface.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -950,10 +991,10 @@ fluent interface.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -961,27 +1002,28 @@ fluent interface.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '../..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../../js/scripts-8d7ae56abf.js"></script>
-        <script src="../../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/api/">
+    <link rel="canonical" href="https://docs.zendframework.com/api/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>EventManager API - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -372,34 +372,46 @@
 <code>EventInterface</code>, and <code>ResponseCollection</code>.</p>
 <h2 id="eventmanager">EventManager</h2>
 <h3>Constructor</h3>
-<p> <pre class=codehilite><code class=language-php>public function __construct(
+<pre><code class="language-php">public function __construct(
     SharedEventManagerInterface $sharedEvents = null,
     array $identifiers = []
-)</code></pre></p>
+)
+</code></pre>
+
 <p>The <code>EventManager</code> instance accepts a shared event manager instance and
 identifiers to use with the shared event manager.</p>
 <h3>setEventPrototype()</h3>
-<p> <pre class=codehilite><code class=language-php>public function setEventPrototype(EventInterface $event) : void</code></pre></p>
+<pre><code class="language-php">public function setEventPrototype(EventInterface $event) : void
+</code></pre>
+
 <p>Use this method in order to provide an event prototype. The event prototype is
 used with the <code>trigger()</code> and <code>triggerUntil()</code> methods to create a new event
 instance; the prototype is cloned and populated with the event name, target, and
 arguments passed to the method.</p>
 <h3>getSharedManager()</h3>
-<p> <pre class=codehilite><code class=language-php>public function getSharedManager() : null|SharedEventManagerInterface</code></pre></p>
+<pre><code class="language-php">public function getSharedManager() : null|SharedEventManagerInterface
+</code></pre>
+
 <p>Use this method to retrieve the composed shared event manager instance, if any.</p>
 <h3>getIdentifiers()</h3>
-<p> <pre class=codehilite><code class=language-php>public function getIdentifiers() : array</code></pre></p>
+<pre><code class="language-php">public function getIdentifiers() : array
+</code></pre>
+
 <p>Use this method to retrieve the current list of identifiers the event manager
 defines. Identifiers are used when retrieving listeners from the composed shared
 event manager.</p>
 <h3>setIdentifiers() and addIdentifiers()</h3>
-<p> <pre class=codehilite><code class=language-php>public function setIdentifiers(array $identifiers) : void
-public function addIdentifiers(array $identifiers) : void</code></pre></p>
+<pre><code class="language-php">public function setIdentifiers(array $identifiers) : void
+public function addIdentifiers(array $identifiers) : void
+</code></pre>
+
 <p>Use these methods to manipulate the list of identifiers the event manager
 is interested in. <code>setIdentifiers()</code> will overwrite any identifiers previously
 set, while <code>addIdentifiers()</code> will merge them.</p>
 <h3>trigger()</h3>
-<p> <pre class=codehilite><code class=language-php>trigger($eventName, $target = null, $argv = []) : ResponseCollection</code></pre></p>
+<pre><code class="language-php">trigger($eventName, $target = null, $argv = []) : ResponseCollection
+</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>$eventName</code> is a string event name.</li>
@@ -412,7 +424,9 @@ set, while <code>addIdentifiers()</code> will merge them.</p>
 <p>The target and/or arguments may be omitted, but the event name is required.</p>
 <p>When done triggering, the method returns a <code>ResponseCollection</code>.</p>
 <h3>triggerUntil()</h3>
-<p> <pre class=codehilite><code class=language-php>triggerUntil(callable $callback, $eventName, $target = null, $argv = []) : ResponseCollection</code></pre></p>
+<pre><code class="language-php">triggerUntil(callable $callback, $eventName, $target = null, $argv = []) : ResponseCollection
+</code></pre>
+
 <p><code>triggerUntil()</code> is a sibling to <code>trigger()</code>, and prefixes the argument list
 with a single <code>$callback</code>.</p>
 <p>The <code>$callback</code> is invoked after each listener completes, with the result of
@@ -420,7 +434,7 @@ that listener. The <code>$callback</code> should inspect the result, and determi
 should result in short-circuiting the event loop. Returning a boolean <code>true</code>
 value indicates that the criteria has been met and the event loop should end.</p>
 <p>As an example:</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach('foo', function ($e) {
+<pre><code class="language-php">$events-&gt;attach('foo', function ($e) {
     echo &quot;Triggered first\n&quot;;
     return true;
 });
@@ -435,26 +449,36 @@ $events-&gt;attach('foo', function ($e) {
 
 $events-&gt;triggerUntil(function ($result) {
     return (false === $result);
-}, 'foo');</code></pre></p>
+}, 'foo');
+</code></pre>
+
 <p>In the above example, the event loop will short-circuit after the second
 listener executes, resulting in the following output:</p>
-<p> <pre class=codehilite><code class=language-text>Triggered first
-Triggered second</code></pre></p>
+<pre><code class="language-text">Triggered first
+Triggered second
+</code></pre>
+
 <h3>triggerEvent()</h3>
-<p> <pre class=codehilite><code class=language-php>triggerEvent(EventInterface $event) : ResponseCollection</code></pre></p>
+<pre><code class="language-php">triggerEvent(EventInterface $event) : ResponseCollection
+</code></pre>
+
 <p>This method is a sibling to <code>trigger()</code>, but unlike <code>trigger()</code>, it accepts an
 <code>EventInterface</code> instance as its sole argument. It is up to the caller to ensure
 the event is properly populated.</p>
 <p>This method behaves identically to <code>trigger()</code>, returning a <code>ResponseCollection</code>
 after all listeners have been triggered.</p>
 <h3>triggerEventUntil()</h3>
-<p> <pre class=codehilite><code class=language-php>triggerEventUntil(callable $callback, EventInterface $event) : ResponseCollection</code></pre></p>
+<pre><code class="language-php">triggerEventUntil(callable $callback, EventInterface $event) : ResponseCollection
+</code></pre>
+
 <p>This method is a sibling to <code>triggerEvent()</code> and <code>triggerUntil()</code>. Like
 <code>triggerUntil()</code>, the first argument is a PHP callable to invoke for each
 response, and is used to determine whether or not to short-circuit execution.
 Like <code>triggerEvent()</code>, the next argument is an <code>EventInterface</code> instance.</p>
 <h3>attach()</h3>
-<p> <pre class=codehilite><code class=language-php>attach($eventName, callable $listener, $priority = 1) : callable</code></pre></p>
+<pre><code class="language-php">attach($eventName, callable $listener, $priority = 1) : callable
+</code></pre>
+
 <p>Use <code>attach()</code> to attach a callable listener to a named event. <code>$priority</code> can
 be used to indicate where in the listener queue the event should be executed.
 Priorities <strong>must</strong> be integers. High positive integers indicate higher priority
@@ -463,44 +487,60 @@ execute last). The default priority is 1, and listeners registered with the same
 priority will execute in the order in which they attach to the event manager.</p>
 <p>The method returns the listener attached.</p>
 <h3>detach()</h3>
-<p> <pre class=codehilite><code class=language-php>detach(callable $listener, $eventName = null) : void</code></pre></p>
+<pre><code class="language-php">detach(callable $listener, $eventName = null) : void
+</code></pre>
+
 <p>Use <code>detach()</code> to remove a listener. When a named <code>$eventName</code> is provided, the
 method will detach the listener from that event only (or, if the event does not
 exist in the event manager, nothing will occur). If no event is provided, or the
 wildcard event is provided, the listener will be detached from all events.</p>
 <h3>clearListeners()</h3>
-<p> <pre class=codehilite><code class=language-php>clearListeners($eventName) : void</code></pre></p>
+<pre><code class="language-php">clearListeners($eventName) : void
+</code></pre>
+
 <p>Use this method to remove all listeners for a given named event.</p>
 <h3>prepareArgs()</h3>
-<p> <pre class=codehilite><code class=language-php>prepareArgs(array $args) : ArrayObject</code></pre></p>
+<pre><code class="language-php">prepareArgs(array $args) : ArrayObject
+</code></pre>
+
 <p>Normally when working with an event, if you want to change any arguments in the
 event, you would need to do the following:</p>
-<p> <pre class=codehilite><code class=language-php>$args = $e-&gt;getParams();
+<pre><code class="language-php">$args = $e-&gt;getParams();
 
 // Manipulate args:
 $args['foo'] = 'bar';
 
 // Pass them back in:
-$e-&gt;setParams($args);</code></pre></p>
+$e-&gt;setParams($args);
+</code></pre>
+
 <p>If the arguments you provide are an <em>object</em>, however, you can manipulate them
 directly:</p>
-<p> <pre class=codehilite><code class=language-php>$args = $e-&gt;getParams();
+<pre><code class="language-php">$args = $e-&gt;getParams();
 
 // Manipulate args:
 $args-&gt;foo = 'bar';
 
-// Done!</code></pre></p>
+// Done!
+</code></pre>
+
 <p>Using an object, however, makes accessing individual parameters difficult:</p>
-<p> <pre class=codehilite><code class=language-php>$foo = $e-&gt;getParam('foo'); // How should the event know how to get this?</code></pre></p>
+<pre><code class="language-php">$foo = $e-&gt;getParam('foo'); // How should the event know how to get this?
+</code></pre>
+
 <p>As such, we recommend passing either an array or an <code>ArrayObject</code> instance for
 event arguments. If you pass the latter, you get the benefit of being able to
 manipulate by reference.</p>
 <p><code>prepareArgs()</code> can thus be used to return an <code>ArrayObject</code> representation of
 your arguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach('foo', $this, $events-&gt;prepareArgs(compact('bar', 'baz')));</code></pre></p>
+<pre><code class="language-php">$events-&gt;attach('foo', $this, $events-&gt;prepareArgs(compact('bar', 'baz')));
+</code></pre>
+
 <h2 id="sharedeventmanager">SharedEventManager</h2>
 <h3>attach()</h3>
-<p> <pre class=codehilite><code class=language-php>attach($identifier, $eventName, callable $listener, $priority = 1) : void</code></pre></p>
+<pre><code class="language-php">attach($identifier, $eventName, callable $listener, $priority = 1) : void
+</code></pre>
+
 <p>Attach a listener to a named event triggered by an identified context, where:</p>
 <ul>
 <li><code>$identifier</code> is a string identifier that may be defined by an <code>EventManager</code>
@@ -510,7 +550,9 @@ your arguments to pass to <code>trigger()</code> or <code>triggerUntil()</code>:
 <li><code>$priority</code> is the priority to use when attaching the listener.</li>
 </ul>
 <h3>detach()</h3>
-<p> <pre class=codehilite><code class=language-php>detach(callable $listener, $identifier = null, $eventName = null) : void</code></pre></p>
+<pre><code class="language-php">detach(callable $listener, $identifier = null, $eventName = null) : void
+</code></pre>
+
 <p>Detach a listener, optionally from a single identifier, and optionally from a
 named event, where:</p>
 <ul>
@@ -522,19 +564,25 @@ named event, where:</p>
 identified contexts. If no or a null <code>$eventName</code> is provided, the listener will be
 detached from all named events discovered.</p>
 <h3>getListeners()</h3>
-<p> <pre class=codehilite><code class=language-php>getListeners(array $identifiers, $eventName = null) : array[]</code></pre></p>
+<pre><code class="language-php">getListeners(array $identifiers, $eventName = null) : array[]
+</code></pre>
+
 <p>Retrieves all registered listeners for a given identifier and named event; if
 the event name is omitted, it returns all listeners for the identifier.</p>
 <p>Each value in the array returned is in the form:</p>
-<p> <pre class=codehilite><code class=language-php>[
+<pre><code class="language-php">[
     'listener' =&gt; callable,
     'priority' =&gt; int,
-]</code></pre></p>
+]
+</code></pre>
+
 <p>Implementations should return wildcard listeners in this array.</p>
 <p>This method is used by the <code>EventManager</code> in order to get a set of listeners for
 the event being triggered.</p>
 <h3>clearListeners()</h3>
-<p> <pre class=codehilite><code class=language-php>clearListeners($id, $eventName = null) : bool</code></pre></p>
+<pre><code class="language-php">clearListeners($id, $eventName = null) : bool
+</code></pre>
+
 <p>This event will clear all listeners for a given identifier, or, if specified,
 the specific event for the named identifier.</p>
 <h2 id="eventinterface">EventInterface</h2>
@@ -542,36 +590,56 @@ the specific event for the named identifier.</p>
 define custom events. The <code>EventInterface</code> thus defines the common methods
 across any event implementation.</p>
 <h3>getName()</h3>
-<p> <pre class=codehilite><code class=language-php>getName() : string</code></pre></p>
+<pre><code class="language-php">getName() : string
+</code></pre>
+
 <p>Returns the event name.</p>
 <h3>getTarget()</h3>
-<p> <pre class=codehilite><code class=language-php>getTarget() : null|string|object</code></pre></p>
+<pre><code class="language-php">getTarget() : null|string|object
+</code></pre>
+
 <p>Returns the event target, if any.</p>
 <h3>getParams()</h3>
-<p> <pre class=codehilite><code class=language-php>getParams() : array|ArrayAccess</code></pre></p>
+<pre><code class="language-php">getParams() : array|ArrayAccess
+</code></pre>
+
 <p>Returns the event parameters, if any.</p>
 <h3>getParam()</h3>
-<p> <pre class=codehilite><code class=language-php>getParam($name, $default = null) : mixed</code></pre></p>
+<pre><code class="language-php">getParam($name, $default = null) : mixed
+</code></pre>
+
 <p>Returns a single named parameter, returning the <code>$default</code> if not found.</p>
 <h3>setName()</h3>
-<p> <pre class=codehilite><code class=language-php>setName($name) : void</code></pre></p>
+<pre><code class="language-php">setName($name) : void
+</code></pre>
+
 <p>Sets the event name.</p>
 <h3>setTarget()</h3>
-<p> <pre class=codehilite><code class=language-php>setTarget($target) : void</code></pre></p>
+<pre><code class="language-php">setTarget($target) : void
+</code></pre>
+
 <p>Sets the event target. <code>$target</code> may be a string or object.</p>
 <h3>setParams()</h3>
-<p> <pre class=codehilite><code class=language-php>setParams($params) : void</code></pre></p>
+<pre><code class="language-php">setParams($params) : void
+</code></pre>
+
 <p>Set the event parameters; <code>$params</code> should be an array or object implementing
 <code>ArrayAccess</code>.</p>
 <h3>setParam()</h3>
-<p> <pre class=codehilite><code class=language-php>setParam($name, $value) : void</code></pre></p>
+<pre><code class="language-php">setParam($name, $value) : void
+</code></pre>
+
 <p>Set a single named event parameter value.</p>
 <h3>stopPropagation()</h3>
-<p> <pre class=codehilite><code class=language-php>stopPropagation($flag = true) : void</code></pre></p>
+<pre><code class="language-php">stopPropagation($flag = true) : void
+</code></pre>
+
 <p>Indicate whether or not event propagation should halt (short-circuit). This
 value is what will be returned by <code>propagationIsStopped()</code>.</p>
 <h3>propagationIsStopped()</h3>
-<p> <pre class=codehilite><code class=language-php>propagationIsStopped() : bool</code></pre></p>
+<pre><code class="language-php">propagationIsStopped() : bool
+</code></pre>
+
 <p>Used by the event manager to determine if the event has indicated that the event
 loop should short-circuit.</p>
 <h2 id="responsecollection">ResponseCollection</h2>
@@ -582,16 +650,24 @@ the various results of listener execution.</p>
 responses in the order in which they were provided. In addition, it has the API
 listed below.</p>
 <h3>stopped()</h3>
-<p> <pre class=codehilite><code class=language-php>stopped() : bool</code></pre></p>
+<pre><code class="language-php">stopped() : bool
+</code></pre>
+
 <p>Use this to determine if something caused the event loop to short-circuit.</p>
 <h3>first()</h3>
-<p> <pre class=codehilite><code class=language-php>first() : mixed</code></pre></p>
+<pre><code class="language-php">first() : mixed
+</code></pre>
+
 <p>Returns the result from the first listener executed.</p>
 <h3>last()</h3>
-<p> <pre class=codehilite><code class=language-php>last() : mixed</code></pre></p>
+<pre><code class="language-php">last() : mixed
+</code></pre>
+
 <p>Returns the result from the last listener executed.</p>
 <h3>contains()</h3>
-<p> <pre class=codehilite><code class=language-php>contains($value) : bool</code></pre></p>
+<pre><code class="language-php">contains($value) : bool
+</code></pre>
+
 <p>Query the response collection to determine if a specific value was returned by
 any listener.</p>
 
@@ -849,7 +925,7 @@ any listener.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -857,10 +933,10 @@ any listener.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -868,27 +944,28 @@ any listener.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/quick-start/">
+    <link rel="canonical" href="https://docs.zendframework.com/quick-start/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Quick Start - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -337,7 +337,7 @@
 
     <h1 id="quick-start">Quick Start</h1>
 <p>Typically, you will compose an <code>EventManager</code> instance in a class.</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\EventManagerInterface;
+<pre><code class="language-php">use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 
@@ -362,7 +362,9 @@ class Foo implements EventManagerAwareInterface
         }
         return $this-&gt;events;
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>The above allows users to access the <code>EventManager</code> instance, or reset it with a
 new instance; if one does not exist, it will be lazily instantiated on-demand.</p>
 <p>The instance property <code>$events</code> is a convention for referring to the
@@ -374,7 +376,7 @@ EventManager instance.</p>
 <li>The <em>target</em>, which is usually the current object instance;</li>
 <li>Event <em>arguments</em>, which are usually the arguments provided to the current function/method.</li>
 </ul>
-<p> <pre class=codehilite><code class=language-php>class Foo
+<pre><code class="language-php">class Foo
 {
     // ... assume events definition from above
 
@@ -383,14 +385,16 @@ EventManager instance.</p>
         $params = compact('baz', 'bat');
         $this-&gt;getEventManager()-&gt;trigger(__FUNCTION__, $this, $params);
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <p>In turn, triggering events is only interesting if something is listening for the
 event.</p>
 <p>Listeners attach to the <code>EventManager</code>, specifying a named event and the
 callback to notify. The callback receives an <code>Event</code> object, which has accessors
 for retrieving the event name, target, and parameters. Let's add a listener, and
 trigger the event.</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Log\Factory as LogFactory;
+<pre><code class="language-php">use Zend\Log\Factory as LogFactory;
 
 $log = LogFactory($someConfig);
 $foo = new Foo();
@@ -411,7 +415,9 @@ $foo-&gt;getEventManager()-&gt;attach('bar', function ($e) use ($log) {
 $foo-&gt;bar('baz', 'bat');
 
 // Results in the log message reading:
-// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;</code></pre></p>
+// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;
+</code></pre>
+
 <p>Note that the second argument to <code>attach()</code> is any valid PHP callable; an
 anonymous function is shown in the example in order to keep the example
 self-contained.</p>
@@ -435,7 +441,7 @@ those identifiers from the <code>SharedEventManager</code>.</p>
 been injected in our <code>EventManager</code> instances (for instance, via dependency
 injection), we could change the above example to attach via the shared
 collection:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\Log\Factory as LogFactory;
+<pre><code class="language-php">use Zend\Log\Factory as LogFactory;
 
 // Assume $sharedEvents is a Zend\EventManager\SharedEventManager instance
 
@@ -460,7 +466,9 @@ $foo-&gt;setEventManager(new EventManager($sharedEvents, []));
 // And we can still trigger the above event:
 $foo-&gt;bar('baz', 'bat');
 // results in log message:
-// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;</code></pre></p>
+// bar called on Foo, using params {&quot;baz&quot; : &quot;baz&quot;, &quot;bat&quot; : &quot;bat&quot;}&quot;
+</code></pre>
+
 <p>The <code>EventManager</code> also provides the ability to detach listeners, short-circuit
 execution of an event either from within a listener or by testing return values
 of listeners, test and loop through the results returned by listeners,
@@ -721,7 +729,7 @@ examples.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -729,10 +737,10 @@ examples.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -740,27 +748,28 @@ examples.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">

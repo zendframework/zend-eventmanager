@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Implement events, signal slots, aspects, and observers!">  
-    <link rel="canonical" href="https://docs.zendframework.com/zend-eventmanager/tutorial/">
+    <link rel="canonical" href="https://docs.zendframework.com/tutorial/">
     <link rel="shortcut icon" href="../img/favicon.ico">
 
     <title>Tutorial - zend-eventmanager - Zend Framework Docs</title>
 
-    <link rel="stylesheet" href="../css/styles-5cfabd53ee.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body id="page-top">
 
@@ -289,9 +289,9 @@
     <div class="laminas-announcement">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                Zend Framework transitions to the Linux Foundation. <a href="https://getlaminas.org">Learn More.</a>
-            </div>
+            <div class="col-xs-12"><strong>
+                This package has moved. Visit its replacement, <a href="https://docs.laminas.dev/laminas-eventmanager/">laminas/laminas-eventmanager.</a>
+            </strong></div>
         </div>
     </div>
 </div>
@@ -407,7 +407,7 @@ event.</p>
 <li>A call to <code>trigger()</code> an event</li>
 </ul>
 <p>The simplest example looks something like this:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\EventManager;
+<pre><code class="language-php">use Zend\EventManager\EventManager;
 
 $events = new EventManager();
 $events-&gt;attach('do', function ($e) {
@@ -421,9 +421,13 @@ $events-&gt;attach('do', function ($e) {
 });
 
 $params = ['foo' =&gt; 'bar', 'baz' =&gt; 'bat'];
-$events-&gt;trigger('do', null, $params);</code></pre></p>
+$events-&gt;trigger('do', null, $params);
+</code></pre>
+
 <p>The above will result in the following:</p>
-<p> <pre class=codehilite><code class=language-text>Handled event &quot;do&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}</code></pre></p>
+<pre><code class="language-text">Handled event &quot;do&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}
+</code></pre>
+
 <blockquote>
 <h3>Note</h3>
 <p>Throughout this tutorial, we use closures as listeners. However, any valid PHP
@@ -437,7 +441,7 @@ argument. Why is it there?</p>
 triggering actions within methods. The middle argument to <code>trigger()</code> is the
 "target", and in the case described, would be the current object instance. This
 gives event listeners access to the calling object, which can often be useful.</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\EventManager;
+<pre><code class="language-php">use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerInterface;
 
@@ -484,7 +488,9 @@ $example-&gt;getEventManager()-&gt;attach('doIt', function($e) {
     );
 });
 
-$example-&gt;doIt('bar', 'bat');</code></pre></p>
+$example-&gt;doIt('bar', 'bat');
+</code></pre>
+
 <p>The above is basically the same as the first example. The main difference is
 that we're now using that middle argument in order to pass the target, the
 instance of <code>Example</code>, on to the listeners. Our listener is now retrieving that
@@ -502,7 +508,7 @@ listeners on identifiers it's interested in, and trigger those listeners as
 well.</p>
 <p>How does this work, exactly?</p>
 <p>Consider the following:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\SharedEventManager;
+<pre><code class="language-php">use Zend\EventManager\SharedEventManager;
 
 $sharedEvents = new SharedEventManager();
 $sharedEvents-&gt;attach('Example', 'do', function ($e) {
@@ -515,7 +521,9 @@ $sharedEvents-&gt;attach('Example', 'do', function ($e) {
         $target,
         json_encode($params)
     );
-});</code></pre></p>
+});
+</code></pre>
+
 <p>This looks almost identical to the previous example; the key difference is that
 there is an additional argument at the <em>start</em> of the list, <code>Example</code>. This
 code is basically saying, "Listen to the 'do' event of the 'Example' target,
@@ -527,7 +535,7 @@ or targets the given instance will be interested in.</p>
 registered, and also that the <code>Example</code> class is defined as above. (Note that as of 
 version 3, <code>setSharedManager()</code> is removed from  <code>EventManager</code>; the <code>SharedEventManager</code> 
 instance must instead be injected via the constructor.) We can then execute the following:</p>
-<p> <pre class=codehilite><code class=language-php>$example = new Example();
+<pre><code class="language-php">$example = new Example();
 
 // Prior to version 3:
 $example-&gt;getEventManager()-&gt;setSharedManager($sharedEvents);
@@ -536,13 +544,19 @@ $example-&gt;getEventManager()-&gt;setSharedManager($sharedEvents);
 $example-&gt;setEventManager(new EventManager($sharedEvents));
 
 // Both versions:
-$example-&gt;doIt('bar', 'bat');</code></pre></p>
+$example-&gt;doIt('bar', 'bat');
+</code></pre>
+
 <p>and expect the following output:</p>
-<p> <pre class=codehilite><code class=language-text>Handled event &quot;do&quot; on target &quot;Example&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}</code></pre></p>
+<pre><code class="language-text">Handled event &quot;do&quot; on target &quot;Example&quot;, with parameters {&quot;foo&quot;:&quot;bar&quot;,&quot;baz&quot;:&quot;bat&quot;}
+</code></pre>
+
 <p>Now, let's say we extended <code>Example</code> as follows:</p>
-<p> <pre class=codehilite><code class=language-php>class SubExample extends Example
+<pre><code class="language-php">class SubExample extends Example
 {
-}</code></pre></p>
+}
+</code></pre>
+
 <p>One interesting aspect of our <code>setEventManager()</code> method is that we defined it
 to listen both on <code>__CLASS__</code> and <code>get_class($this)</code>. This means that calling
 <code>do()</code> on our <code>SubExample</code> class would also trigger the shared listener! It also
@@ -567,7 +581,7 @@ representing the event and target names to which we want to attach. What if you
 want to attach a listener to multiple events or targets?</p>
 <p>One answer is to attach to the event manager using the wildcard event, <code>*</code>.</p>
 <p>Consider the following examples:</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach(
+<pre><code class="language-php">$events-&gt;attach(
     '*', // all events
     $listener
 );
@@ -591,7 +605,9 @@ $sharedEvents-&gt;attach(
     '*', // all targets
     '*', // all events
     $listener
-);</code></pre></p>
+);
+</code></pre>
+
 <p>The ability to specify wildcard targets and/or events when attaching can slim
 down your code immensely.</p>
 <h2 id="listener-aggregates">Listener aggregates</h2>
@@ -604,7 +620,7 @@ more instance methods as listeners.</p>
 instance to one and/or the other, and then it's up to the implementing class to
 determine what to do.</p>
 <p>As an example:</p>
-<p> <pre class=codehilite><code class=language-php>use Zend\EventManager\EventInterface;
+<pre><code class="language-php">use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Log\Logger;
@@ -639,7 +655,9 @@ class LogEvents implements ListenerAggregateInterface
         $params = $e-&gt;getParams();
         $this-&gt;log-&gt;info(sprintf('%s: %s', $event, json_encode($params)));
     }
-}</code></pre></p>
+}
+</code></pre>
+
 <blockquote>
 <h3>Note</h3>
 <p>The trait <code>Zend\EventManager\ListenerAggregateTrait</code> can be composed to help
@@ -648,8 +666,10 @@ and the <code>detach()</code> logic as demonstrated above.</p>
 </blockquote>
 <p>You can attach this by passing the event manager to the aggregate's <code>attach()</code>
 method:</p>
-<p> <pre class=codehilite><code class=language-php>$logListener = new LogEvents($logger);
-$logListener-&gt;attach($events);</code></pre></p>
+<pre><code class="language-php">$logListener = new LogEvents($logger);
+$logListener-&gt;attach($events);
+</code></pre>
+
 <p>Any events the aggregate attaches to will then be notified when triggered.</p>
 <p>Why bother? For a couple of reasons:</p>
 <ul>
@@ -690,7 +710,7 @@ use the methods <code>triggerUntil()</code> or <code>triggerEventUntil()</code>.
 callback as their first argument; if that callback returns a boolean <code>true</code>
 value, execution is halted.</p>
 <p>As an example:</p>
-<p> <pre class=codehilite><code class=language-php>public function someExpensiveCall($criteria1, $criteria2)
+<pre><code class="language-php">public function someExpensiveCall($criteria1, $criteria2)
 {
     $params  = compact('criteria1', 'criteria2');
     $results = $this-&gt;getEventManager()-&gt;triggerUntil(
@@ -707,7 +727,9 @@ value, execution is halted.</p>
     }
 
     // ... do some work ...
-}</code></pre></p>
+}
+</code></pre>
+
 <p>With this paradigm, we know that the likely reason of execution halting is due
 to the last result meeting the test callback criteria; as such, we simply return
 that last result.</p>
@@ -715,10 +737,12 @@ that last result.</p>
 object it receives. In this case, the listener calls <code>stopPropagation(true)</code>,
 and the <code>EventManager</code> will then return without notifying any additional
 listeners.</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach('do', function ($e) {
+<pre><code class="language-php">$events-&gt;attach('do', function ($e) {
     $e-&gt;stopPropagation();
     return new SomeResultClass();
-});</code></pre></p>
+});
+</code></pre>
+
 <p>This, of course, raises some ambiguity when using the trigger paradigm, as you
 can no longer be certain that the last result meets the criteria it's searching
 on. As such, we recommend that you standardize on one approach or the other.</p>
@@ -737,7 +761,7 @@ However, if you provide a priority value, you can influence order of execution.<
 <li>Lower (negative) priority values execute <em>later</em>.</li>
 </ul>
 <p>To borrow an example from earlier:</p>
-<p> <pre class=codehilite><code class=language-php>$priority = 100;
+<pre><code class="language-php">$priority = 100;
 $events-&gt;attach('Example', 'do', function($e) {
     $event  = $e-&gt;getName();
     $target = get_class($e-&gt;getTarget()); // &quot;Example&quot;
@@ -748,7 +772,9 @@ $events-&gt;attach('Example', 'do', function($e) {
         $target,
         json_encode($params)
     );
-}, $priority);</code></pre></p>
+}, $priority);
+</code></pre>
+
 <p>This would execute with high priority, meaning it would execute early. If we
 changed <code>$priority</code> to <code>-100</code>, it would execute with low priority, executing
 late.</p>
@@ -762,10 +788,12 @@ passed to <code>trigger()</code> — the event name, target, and parameters. Som
 however, you may want greater control over the object.</p>
 <p>As an example, one thing that looks like a code smell is when you have code like
 this:</p>
-<p> <pre class=codehilite><code class=language-php>$routeMatch = $e-&gt;getParam('route-match', false);
+<pre><code class="language-php">$routeMatch = $e-&gt;getParam('route-match', false);
 if ( !$routeMatch) {
     // Oh noes! we cannot do our work! whatever shall we do?!?!?!
-}</code></pre></p>
+}
+</code></pre>
+
 <p>The problems with this are several. First, relying on string keys is going to
 very quickly run into problems — typos when setting or retrieving the argument
 can lead to hard to debug situations. Second, we now have a documentation issue;
@@ -774,7 +802,7 @@ into the event? Third, as a side effect, we can't use IDE or editor hinting
 support — string keys give these tools nothing to work with.</p>
 <p>Similarly, consider how you might represent a computational result of a method
 when triggering an event. As an example:</p>
-<p> <pre class=codehilite><code class=language-php>// in the method:
+<pre><code class="language-php">// in the method:
 $params['__RESULT'] = $computedResult;
 $events-&gt;trigger(__FUNCTION__ . '.post', $this, $params);
 
@@ -782,20 +810,24 @@ $events-&gt;trigger(__FUNCTION__ . '.post', $this, $params);
 $result = $e-&gt;getParam('__RESULT__');
 if (! $result) {
     // Oh noes! we cannot do our work! whatever shall we do?!?!?!
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Sure, that key may be unique, but it suffers from a lot of the same issues.</p>
 <p>So, the solution is to create custom events. As an example, we have a custom
 <code>MvcEvent</code> in zend-mvc. This event composes the application instance,
 the router, the route match object, request and response objects, the view
 model, and also a result. We end up with code like this in our listeners:</p>
-<p> <pre class=codehilite><code class=language-php>$response = $e-&gt;getResponse();
+<pre><code class="language-php">$response = $e-&gt;getResponse();
 $result   = $e-&gt;getResult();
 if (is_string($result)) {
     $content = $view-&gt;render('layout.phtml', ['content' =&gt; $result]);
     $response-&gt;setContent($content);
-}</code></pre></p>
+}
+</code></pre>
+
 <p>But how do we use this custom event? Simple: the method <code>triggerEvent()</code>.</p>
-<p> <pre class=codehilite><code class=language-php>$event = new CustomEvent();
+<pre><code class="language-php">$event = new CustomEvent();
 $event-&gt;setName('foo');
 $event-&gt;setTarget($this);
 $event-&gt;setSomeKey($value);
@@ -804,7 +836,9 @@ $event-&gt;setSomeKey($value);
 $events-&gt;triggerEvent($event);
 
 // Use triggerEventUntil() for criteria-based short-circuiting:
-$results = $events-&gt;triggerEventUntil($callback, $event);</code></pre></p>
+$results = $events-&gt;triggerEventUntil($callback, $event);
+</code></pre>
+
 <p>This is a really powerful technique for domain-specific event systems, and
 definitely worth experimenting with.</p>
 <h2 id="putting-it-together-implementing-a-simple-caching-system">Putting it together: Implementing a simple caching system</h2>
@@ -826,7 +860,7 @@ example: what name do we give the result of the method? One standard that has
 emerged is the use of <code>__RESULT__</code>, as double-underscored variables are
 typically reserved for the system.</p>
 <p>Here's what the method will look like:</p>
-<p> <pre class=codehilite><code class=language-php>public function someExpensiveCall($criteria1, $criteria2)
+<pre><code class="language-php">public function someExpensiveCall($criteria1, $criteria2)
 {
     $params  = compact('criteria1', 'criteria2');
     $results = $this-&gt;getEventManager()-&gt;triggerUntil(
@@ -847,7 +881,9 @@ typically reserved for the system.</p>
     $params['__RESULT__'] = $calculatedResult;
     $this-&gt;events()-&gt;trigger(__FUNCTION__ . '.post', $this, $params);
     return $calculatedResult;
-}</code></pre></p>
+}
+</code></pre>
+
 <p>Now, to provide some caching listeners. We'll need to attach to each of the
 <code>someExpensiveCall.pre</code> and <code>someExpensiveCall.post</code> methods. In the former;
 case, if a cache hit is detected, we return it, and move on. In the latter, we
@@ -857,7 +893,7 @@ We'll want to return early if a hit is detected, and execute late when saving a
 cache (in case the result is modified by another listener). As such, we'll set
 the <code>someExpensiveCall.pre</code> listener to execute with priority <code>100</code>, and the
 <code>someExpensiveCall.post</code> listener to execute with priority <code>-100</code>.</p>
-<p> <pre class=codehilite><code class=language-php>$events-&gt;attach('someExpensiveCall.pre', function($e) use ($cache) {
+<pre><code class="language-php">$events-&gt;attach('someExpensiveCall.pre', function($e) use ($cache) {
     $params = $e-&gt;getParams();
     $key    = md5(json_encode($params));
     $hit    = $cache-&gt;load($key);
@@ -870,7 +906,9 @@ $events-&gt;attach('someExpensiveCall.post', function($e) use ($cache) {
     unset($params['__RESULT__']);
     $key    = md5(json_encode($params));
     $cache-&gt;save($result, $key);
-}, -100);</code></pre></p>
+}, -100);
+</code></pre>
+
 <blockquote>
 <h3>Note</h3>
 <p>The above could have been done within a <code>ListenerAggregate</code>, which would have
@@ -880,7 +918,7 @@ importing it into closures.</p>
 <p>Another approach would be to move the body of the method to a listener as well,
 which would allow using the priority system in order to implement caching. That
 would look like this:</p>
-<p> <pre class=codehilite><code class=language-php>public function setEventManager(EventManagerInterface $events)
+<pre><code class="language-php">public function setEventManager(EventManagerInterface $events)
 {
     $this-&gt;events = $events;
     $events-&gt;setIdentifiers(array(__CLASS__, get_class($this)));
@@ -906,7 +944,9 @@ public function doSomeExpensiveCall($e)
     // ... do some work ...
     $e-&gt;setParam('__RESULT__', $calculatedResult);
     return $calculatedResult;
-}</code></pre></p>
+}
+</code></pre>
+
 <p>The listeners would then attach to the <code>someExpensiveCall</code> event, with the cache
 lookup listener listening at high priority, and the cache storage listener
 listening at low (negative) priority.</p>
@@ -1176,7 +1216,7 @@ code, and is an important part of your Zend Framework toolbox.</p>
             
             <div class="col-md-9">
                 <h4 class="footer__headline">Copyright</h4>
-                <p>&copy; 2006-2019 by <a href="https://www.zend.com/">Zend</a>, a <a href="https://www.roguewave.com/">Rogue Wave Company</a>.</p>
+                <p>&copy; 2006-2020 by <a href="https://www.zend.com/">Zend</a> by <a href="https://www.perforce.com/">Perforce</a>.</p>
             </div>
 
             
@@ -1184,10 +1224,10 @@ code, and is an important part of your Zend Framework toolbox.</p>
                 <h4 class="footer__headline">Support</h4>
                 <ul class="support__list">
                     <li class="support__list-item">
-                        <a href="https://discourse.zendframework.com" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
+                        <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                     </li>
                     <li class="support__list-item">
-                        <a href="https://zendframework-slack.herokuapp.com" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                        <a href="https://laminas.dev/chat/" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
                     </li>
                     <li class="support__list-item">
                         <a href="https://github.com/zendframework" class="support__link" title="Github"><i class="fa fa-github"></i></a>
@@ -1195,27 +1235,28 @@ code, and is an important part of your Zend Framework toolbox.</p>
                     <li class="support__list-item">
                         <a href="https://twitter.com/zfdevteam" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
                     </li>
-                    <li class="support__list-item">
-                        <a href="https://tinyletter.com/mwopzend" class="support__link" title="Newsletter"><i class="fa fa-envelope"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/blog/feed-rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
-                    </li>
-                    <li class="support__list-item">
-                        <a href="https://framework.zend.com/security/feed" class="support__link" title="Security feed"><i class="fa fa-rss-square"></i></a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </footer>
 
+<nav class="cookie-bar navbar navbar-fixed-bottom navbar-default hidden">
+    <div class="container">
+        <p class="navbar-text">
+            We use cookies to allow you to dismiss dialogs such as the Laminas
+            Project notification.
+        </p>
+        <button type="button" class="cookie-button btn btn-default navbar-btn">Allow Cookies</button>
+    </div>
+</nav>
+
     <script>
         var base_url = '..',
             siteName = 'zend-eventmanager';
     </script>
-    <script src="../js/scripts-8d7ae56abf.js"></script>
-        <script src="../search/main.js"></script>
+    <script src="/js/scripts.js"></script>
+    <script src="../search/main.js"></script>
 
     
     <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
